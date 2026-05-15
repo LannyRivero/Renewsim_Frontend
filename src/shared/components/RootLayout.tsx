@@ -2,6 +2,7 @@ import { Outlet, useLocation, Link } from 'react-router-dom'
 import { Navbar, Footer, DarkModeToggle, type NavLink } from './index'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { ChatWidget } from './ChatWidget'
+import { ToastViewport } from './ToastViewport'
 import { useDarkMode } from '../hooks'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
@@ -77,6 +78,7 @@ export function RootLayout() {
       </main>
       <Footer />
       <ChatWidget />
+      <ToastViewport />
     </div>
   )
 }

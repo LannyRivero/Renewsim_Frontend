@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { PasswordInput } from './PasswordInput'
 import { register } from '../services/authService'
 import { validatePassword } from '../../../shared/utils/validatePassword'
+import { useToastStore } from '@/stores/toastStore'
 
 interface RegisterFormProps {
   onSuccess: (token: string) => void
@@ -30,6 +31,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       onSuccess(token)
     } catch {
       setServerError('No se pudo crear la cuenta. Inténtalo de nuevo.')
+      useToastStore.getState().pushToast({
+        title: 'Error de registro',
+        description: 'No se pudo crear la cuenta. Intentalo de nuevo.',
+        variant: 'error',
+      })
     } finally {
       setIsLoading(false)
     }

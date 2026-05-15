@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { LoginForm } from './components/LoginForm'
 import { useAuthStore } from '@/stores/authStore'
+import { useToastStore } from '@/stores/toastStore'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -12,6 +13,11 @@ export function LoginPage() {
       isAuthenticated: true,
     }))
     localStorage.setItem('renewsim-token', token)
+    useToastStore.getState().pushToast({
+      title: 'Sesion iniciada',
+      description: 'Bienvenido a RenewSim.',
+      variant: 'success',
+    })
     navigate('/')
   }
 
