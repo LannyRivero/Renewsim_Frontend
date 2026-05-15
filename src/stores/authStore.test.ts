@@ -46,7 +46,7 @@ describe('authStore', () => {
       const setSpy = vi.spyOn(Storage.prototype, 'setItem')
       useAuthStore.getState().setTokens('secret-jwt', mockUser)
       const calls = setSpy.mock.calls
-      const tokenLeaked = calls.some(([_key, value]) =>
+      const tokenLeaked = calls.some(([, value]) =>
         typeof value === 'string' && value.includes('secret-jwt'),
       )
       expect(tokenLeaked).toBe(false)
