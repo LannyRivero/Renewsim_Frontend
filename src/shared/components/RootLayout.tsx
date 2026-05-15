@@ -51,12 +51,6 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
       >
         Registrarse
       </button>
-      <button
-        type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:opacity-90 transition-opacity cursor-pointer"
-      >
-        Registrarse
-      </button>
     </div>
   )
 }
