@@ -1,4 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
+import { useAuthStore } from '@/stores/authStore'
 
 interface RequireAuthProps {
   children: React.ReactNode
@@ -6,9 +7,11 @@ interface RequireAuthProps {
 
 export function RequireAuth({ children }: RequireAuthProps) {
   const location = useLocation()
-  const token = localStorage.getItem('renewsim-token')
+  const accessToken = useAuthStore((state) => state.accessToken)
+  const legacyToken = localStorage.getItem('renewsim-token')
+  const hasToken = Boolean(accessToken ?? legacyToken)
 
-  if (!token) {
+  if (!hasToken) {
     return <Navigate to="/iniciar-sesion" state={{ from: location }} replace />
   }
 

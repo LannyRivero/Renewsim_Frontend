@@ -59,7 +59,7 @@ export const httpClient: AxiosInstance = axios.create({
 })
 
 httpClient.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken
+  const token = useAuthStore.getState().accessToken ?? localStorage.getItem('renewsim-token')
   if (token) {
     attachAuthorization(config as RetryableRequest, token)
   }
