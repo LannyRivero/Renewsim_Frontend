@@ -19,3 +19,10 @@ export interface AuthUser {
   username: string
   roles: string[]
 }
+
+// ── Profile ────────────────────────────────────────────────
+export interface UserProfile {
+  id: number
+  username: string
+  roles: string[]
+}
