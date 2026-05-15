@@ -1,6 +1,6 @@
 import { useAuthStore } from './authStore'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { UserProfile } from '@/shared/types'
+import type { UserProfile } from '../shared/types/auth'
 
 const mockUser: UserProfile = {
   id: 1,
