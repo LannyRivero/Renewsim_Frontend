@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 
 const NAV_ITEMS = [
   { to: '/simulador', label: 'Simulaciones', icon: 'insights', end: true },
+  { to: '/simulador/nueva', label: 'Nueva simulacion', icon: 'add_chart' },
   { to: '/simulador/tecnologias', label: 'Tecnologías', icon: 'hub' },
   { to: '/simulador/configuracion', label: 'Configuración', icon: 'settings' },
   { to: '/simulador/admin', label: 'Panel Admin', icon: 'admin_panel_settings' },
