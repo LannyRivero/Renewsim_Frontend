@@ -4,10 +4,11 @@ const IMPACT_IMAGE_URL =
 export function ImpactSection() {
   return (
     <section>
-      <h2 className="text-2xl md:text-3xl font-bold text-content-light dark:text-content-dark mb-6">
+      <h2 className="text-2xl md:text-3xl font-bold text-on-surface dark:text-content-dark mb-4">
         Infografía de Impacto
       </h2>
-      <div className="w-full aspect-[3/2] rounded-xl overflow-hidden shadow-lg">
+      <div className="h-1 w-10 rounded-full accent-bar mb-6" />
+      <div className="w-full aspect-[3/2] rounded-xl overflow-hidden border border-outline-variant dark:border-white/8 shadow-sm">
         <div
           className="w-full h-full bg-center bg-no-repeat bg-cover"
           style={{ backgroundImage: `url("${IMPACT_IMAGE_URL}")` }}

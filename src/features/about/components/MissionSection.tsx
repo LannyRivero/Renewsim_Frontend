@@ -1,7 +1,7 @@
 export function MissionSection() {
   return (
     <section>
-      <p className="text-lg text-subtle-light dark:text-subtle-dark leading-relaxed">
+      <p className="text-lg text-on-surface-variant dark:text-content-dark/60 leading-relaxed">
         En RenewSim, nuestra misión es empoderar a individuos y comunidades para
         que tomen decisiones informadas sobre energías limpias a través de
         simulaciones interactivas y recomendaciones basadas en inteligencia

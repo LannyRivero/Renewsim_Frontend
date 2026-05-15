@@ -41,13 +41,13 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
       <button
         type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container/20 dark:bg-primary-container/30 text-primary dark:text-primary-inverse hover:bg-primary-container/30 dark:hover:bg-primary-container/40 transition-colors cursor-pointer"
+        className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors cursor-pointer"
       >
         Iniciar Sesión
       </button>
       <button
         type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:opacity-90 transition-opacity cursor-pointer"
+        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer"
       >
         Registrarse
       </button>
@@ -61,7 +61,7 @@ export function RootLayout() {
   const links = NAV_LINKS_BY_ROUTE[pathname] ?? DEFAULT_LINKS
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark font-display text-content-light dark:text-content-dark">
+    <div className="flex flex-col min-h-screen bg-surface dark:bg-background-dark font-display text-on-surface dark:text-content-dark">
       <Navbar links={links} cta={<NavActions isDark={isDark} onToggle={toggle} />} />
       <main className="flex-grow">
         <Outlet />

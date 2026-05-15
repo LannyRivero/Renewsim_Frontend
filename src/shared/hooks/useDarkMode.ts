@@ -7,7 +7,7 @@ function getInitialDark(): boolean {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored !== null) return stored === 'dark'
   } catch {
-    // localStorage not available (SSR / private mode)
+    // localStorage not available
   }
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
