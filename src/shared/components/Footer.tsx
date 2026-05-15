@@ -15,7 +15,7 @@ export function Footer() {
               <a
                 key={label}
                 href={href}
-                className="text-sm text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary transition-colors"
+                className="text-sm text-subtle-light dark:text-subtle-dark hover:text-primary dark:hover:text-primary-inverse transition-colors"
               >
                 {label}
               </a>

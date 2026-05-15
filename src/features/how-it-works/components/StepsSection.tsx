@@ -28,8 +28,8 @@ const STEPS: Step[] = [
 function StepCard({ icon, title, description }: Step) {
   return (
     <div className="flex flex-col items-center gap-y-4 w-1/3 text-center">
-      <div className="flex items-center justify-center size-16 rounded-full bg-primary/20 dark:bg-primary/30 border-2 border-primary z-10 bg-background-light dark:bg-background-dark">
-        <span className="material-symbols-outlined text-primary text-4xl">
+      <div className="flex items-center justify-center size-16 rounded-full bg-primary-container/20 dark:bg-primary-container/30 border-2 border-primary-container z-10 bg-background-light dark:bg-background-dark">
+        <span className="material-symbols-outlined text-primary dark:text-primary-inverse text-4xl">
           {icon}
         </span>
       </div>

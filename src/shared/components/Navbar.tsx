@@ -25,13 +25,13 @@ function DefaultCta() {
     <div className="flex items-center gap-2">
       <button
         type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary/20 dark:bg-primary/30 text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors cursor-pointer"
+        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container/20 dark:bg-primary-container/30 text-primary dark:text-primary-inverse hover:bg-primary-container/30 dark:hover:bg-primary-container/40 transition-colors cursor-pointer"
       >
         Iniciar Sesión
       </button>
       <button
         type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary text-background-dark hover:opacity-90 transition-opacity cursor-pointer"
+        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:opacity-90 transition-opacity cursor-pointer"
       >
         Registrarse
       </button>
@@ -60,8 +60,8 @@ export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarPr
                 to={link.href}
                 className={
                   link.active
-                    ? 'text-sm font-bold text-primary'
-                    : 'text-sm font-medium text-content-light dark:text-content-dark hover:text-primary dark:hover:text-primary transition-colors'
+                    ? 'text-sm font-bold text-primary dark:text-primary-inverse'
+                    : 'text-sm font-medium text-content-light dark:text-content-dark hover:text-primary dark:hover:text-primary-inverse transition-colors'
                 }
               >
                 {link.label}
@@ -72,8 +72,8 @@ export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarPr
                 href={link.href}
                 className={
                   link.active
-                    ? 'text-sm font-bold text-primary'
-                    : 'text-sm font-medium text-content-light dark:text-content-dark hover:text-primary dark:hover:text-primary transition-colors'
+                    ? 'text-sm font-bold text-primary dark:text-primary-inverse'
+                    : 'text-sm font-medium text-content-light dark:text-content-dark hover:text-primary dark:hover:text-primary-inverse transition-colors'
                 }
               >
                 {link.label}

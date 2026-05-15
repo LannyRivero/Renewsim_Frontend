@@ -34,7 +34,7 @@ const FEATURES: Feature[] = [
 function FeatureCard({ icon, title, description }: Feature) {
   return (
     <div className="bg-background-light dark:bg-background-dark p-6 rounded-lg border border-border-light dark:border-border-dark flex flex-col items-start text-left gap-4 transition-transform hover:-translate-y-1">
-      <div className="p-3 rounded-full bg-primary/20 text-primary">
+      <div className="p-3 rounded-full bg-primary-container/20 text-primary dark:text-primary-inverse">
         <span className="material-symbols-outlined text-3xl">{icon}</span>
       </div>
       <h3 className="text-lg font-bold text-content-light dark:text-content-dark">
@@ -49,7 +49,7 @@ function FeatureCard({ icon, title, description }: Feature) {
 
 export function FeaturesSection() {
   return (
-    <section className="py-20 sm:py-24 bg-primary/5 dark:bg-primary/10">
+    <section className="py-20 sm:py-24 bg-primary-container/5 dark:bg-primary-container/10">
       <div className="container mx-auto px-6">
         {/* Heading */}
         <div className="text-center max-w-3xl mx-auto">

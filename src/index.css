@@ -4,27 +4,86 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* Brand colors */
-  --color-primary: #1dc962;
+  /* ─── Primary ─────────────────────────────────────────────── */
+  --color-primary:                   #006d31; /* text/icons on light surfaces  */
+  --color-on-primary:                #ffffff; /* text on primary               */
+  --color-primary-container:         #1dc962; /* button backgrounds, accents   */
+  --color-on-primary-container:      #004e20; /* text on primary-container     */
+  --color-primary-inverse:           #44e277; /* primary for dark mode         */
 
-  /* Backgrounds */
-  --color-background-light: #f6f8f7;
-  --color-background-dark: #112117;
+  /* ─── Secondary ───────────────────────────────────────────── */
+  --color-secondary:                 #516356;
+  --color-on-secondary:              #ffffff;
+  --color-secondary-container:       #d1e5d4;
+  --color-on-secondary-container:    #55675a;
 
-  /* Content */
-  --color-content-light: #111714;
-  --color-content-dark: #f6f8f7;
+  /* ─── Tertiary ────────────────────────────────────────────── */
+  --color-tertiary:                  #9b4331;
+  --color-on-tertiary:               #ffffff;
+  --color-tertiary-container:        #ff9179;
+  --color-on-tertiary-container:     #762818;
 
-  /* Subtle / muted text */
-  --color-subtle-light: #648772;
-  --color-subtle-dark: #a0b5ab;
+  /* ─── Error ───────────────────────────────────────────────── */
+  --color-error:                     #ba1a1a;
+  --color-on-error:                  #ffffff;
+  --color-error-container:           #ffdad6;
+  --color-on-error-container:        #93000a;
 
-  /* Borders */
-  --color-border-light: #dce5df;
-  --color-border-dark: #2a3f34;
+  /* ─── Surfaces (light) ────────────────────────────────────── */
+  --color-surface:                   #f3fcef; /* page background               */
+  --color-surface-dim:               #d4ddd0;
+  --color-surface-bright:            #f3fcef;
+  --color-surface-container-lowest:  #ffffff; /* cards                         */
+  --color-surface-container-low:     #edf6ea;
+  --color-surface-container:         #e8f0e4;
+  --color-surface-container-high:    #e2ebde;
+  --color-surface-container-highest: #dce5d9;
+  --color-on-surface:                #161d16; /* main text                     */
+  --color-on-surface-variant:        #3d4a3d; /* muted text                    */
+  --color-surface-variant:           #dce5d9;
+  --color-outline:                   #6c7b6c;
+  --color-outline-variant:           #bbcbb9;
+  --color-surface-tint:              #006d31;
 
-  /* Typography */
+  /* ─── Inverse (dark mode base) ───────────────────────────── */
+  --color-inverse-surface:           #2a322a; /* dark background               */
+  --color-inverse-on-surface:        #eaf3e7; /* dark main text                */
+
+  /* ─── Compatibility aliases (used in existing components) ── */
+  --color-background-light:          #f3fcef;
+  --color-background-dark:           #2a322a;
+  --color-content-light:             #161d16;
+  --color-content-dark:              #eaf3e7;
+  --color-subtle-light:              #3d4a3d;
+  --color-subtle-dark:               #b8cbbc;
+  --color-border-light:              #bbcbb9;
+  --color-border-dark:               #3d4a3d;
+
+  /* ─── Typography ──────────────────────────────────────────── */
   --font-display: "Manrope", sans-serif;
+
+  /* Named font-size scale */
+  --text-display-xl: 1.875rem;  /* 30px / 800 / -0.02em */
+  --text-title-lg:   1.25rem;   /* 20px / 700            */
+  --text-body-md:    1rem;      /* 16px / 400            */
+  --text-label-sm:   0.875rem;  /* 14px / 500            */
+  --text-link-md:    0.875rem;  /* 14px / 600            */
+
+  /* ─── Border radius ───────────────────────────────────────── */
+  --radius-sm:   0.25rem;  /* 4px  */
+  --radius:      0.5rem;   /* 8px  */
+  --radius-md:   0.75rem;  /* 12px */
+  --radius-lg:   1rem;     /* 16px */
+  --radius-xl:   1.5rem;   /* 24px */
+  --radius-full: 9999px;
+
+  /* ─── Spacing ─────────────────────────────────────────────── */
+  --spacing-container-max:  28rem;   /* 448px  */
+  --spacing-gutter:         1.5rem;  /* 24px   */
+  --spacing-stack-sm:       0.25rem; /* 4px    */
+  --spacing-stack-md:       1.5rem;  /* 24px   */
+  --spacing-stack-lg:       2rem;    /* 32px   */
+  --spacing-section:        3rem;    /* 48px   */
 }
 
 /* Global resets */

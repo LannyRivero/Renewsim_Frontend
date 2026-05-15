@@ -12,7 +12,7 @@ export function HeroSection() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tighter text-content-light dark:text-content-dark">
             Simula. Compara.{' '}
             <br className="hidden md:inline" />
-            <span className="text-primary">Optimiza</span> tus decisiones
+            <span className="text-primary dark:text-primary-inverse">Optimiza</span> tus decisiones
             energéticas.
           </h1>
 
@@ -27,13 +27,13 @@ export function HeroSection() {
           <div className="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
             <button
               type="button"
-              className="px-6 py-3 rounded-lg text-base font-bold bg-primary text-background-dark hover:opacity-90 transition-opacity shadow-lg cursor-pointer"
+              className="px-6 py-3 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:opacity-90 transition-opacity shadow-lg cursor-pointer"
             >
               Iniciar Simulación
             </button>
             <Link
               to="/como-funciona"
-              className="px-6 py-3 rounded-lg text-base font-bold bg-primary/20 dark:bg-primary/30 text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors"
+              className="px-6 py-3 rounded-lg text-base font-bold bg-primary-container/20 dark:bg-primary-container/30 text-primary dark:text-primary-inverse hover:bg-primary-container/30 dark:hover:bg-primary-container/40 transition-colors"
             >
               Más Información
             </Link>

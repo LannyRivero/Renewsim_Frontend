@@ -10,7 +10,7 @@ export function CtaSection() {
       <div className="mt-8">
         <button
           type="button"
-          className="flex mx-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-primary text-background-dark text-lg font-bold shadow-lg hover:brightness-110 transition-all"
+          className="flex mx-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center rounded-lg h-12 px-8 bg-primary-container text-on-primary text-lg font-bold shadow-lg hover:brightness-110 transition-all"
         >
           Comenzar Simulación
         </button>
