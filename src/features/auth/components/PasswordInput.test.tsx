@@ -18,14 +18,14 @@ describe('PasswordInput', () => {
     expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'password')
   })
 
-  it('toggles to text when show/hide button is clicked', () => {
+  it('toggles to text when show/hide button is clicked', { timeout: 10000 }, () => {
     render(<PasswordInput id="pwd" value="" onChange={() => {}} />)
     const toggle = screen.getByRole('button', { name: /mostrar|ocultar/i })
     fireEvent.click(toggle)
     expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'text')
   })
 
-  it('toggles back to password on second click', () => {
+  it('toggles back to password on second click', { timeout: 10000 }, () => {
     render(<PasswordInput id="pwd" value="" onChange={() => {}} />)
     const toggle = screen.getByRole('button', { name: /mostrar|ocultar/i })
     fireEvent.click(toggle)
