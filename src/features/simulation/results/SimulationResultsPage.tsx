@@ -38,15 +38,15 @@ export function SimulationResultsPage() {
 
           <div className="flex items-center gap-6">
             <nav className="hidden items-center gap-6 md:flex">
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
                 Simulations
-              </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              </Link>
+              <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
                 Learn
-              </a>
-              <a href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              </Link>
+              <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
                 Community
-              </a>
+              </Link>
             </nav>
             <button
               type="button"
