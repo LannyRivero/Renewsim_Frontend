@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PasswordInput } from './PasswordInput'
 import { login } from '../services/authService'
+import { useToastStore } from '@/stores/toastStore'
 
 interface LoginFormProps {
   onSuccess: (token: string) => void
@@ -23,6 +24,11 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       onSuccess(token)
     } catch {
       setServerError('Credenciales incorrectas. Inténtalo de nuevo.')
+      useToastStore.getState().pushToast({
+        title: 'Error de autenticacion',
+        description: 'Credenciales incorrectas. Intentalo nuevamente.',
+        variant: 'error',
+      })
     } finally {
       setIsLoading(false)
     }
