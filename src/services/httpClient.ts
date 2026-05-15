@@ -89,6 +89,7 @@ httpClient.interceptors.response.use(
       return new Promise<string>((resolve, reject) => {
         failedQueue.push({ resolve, reject })
       }).then((token) => {
+        originalRequest._retry = true
         attachAuthorization(originalRequest, token)
         return httpClient(originalRequest)
       })
