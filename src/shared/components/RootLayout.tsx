@@ -4,30 +4,29 @@ import { Navbar, Footer, type NavLink } from './index'
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
     { label: 'Inicio', href: '/', active: true },
+    { label: 'Cómo Funciona', href: '/como-funciona' },
+    { label: 'Acerca de', href: '/acerca-de' },
     { label: 'Simulador', href: '#' },
-    { label: 'Comunidad', href: '#' },
-    { label: 'Recursos', href: '#' },
   ],
   '/como-funciona': [
     { label: 'Inicio', href: '/' },
-    { label: 'Simulador', href: '#' },
-    { label: 'Fuentes de Energía', href: '#' },
     { label: 'Cómo Funciona', href: '/como-funciona', active: true },
     { label: 'Acerca de', href: '/acerca-de' },
+    { label: 'Simulador', href: '#' },
   ],
   '/acerca-de': [
-    { label: 'Simulador', href: '#' },
-    { label: 'Aprende', href: '#' },
-    { label: 'Comunidad', href: '#' },
+    { label: 'Inicio', href: '/' },
+    { label: 'Cómo Funciona', href: '/como-funciona' },
     { label: 'Acerca de', href: '/acerca-de', active: true },
+    { label: 'Simulador', href: '#' },
   ],
 }
 
 const DEFAULT_LINKS: NavLink[] = [
   { label: 'Inicio', href: '/' },
+  { label: 'Cómo Funciona', href: '/como-funciona' },
+  { label: 'Acerca de', href: '/acerca-de' },
   { label: 'Simulador', href: '#' },
-  { label: 'Comunidad', href: '#' },
-  { label: 'Recursos', href: '#' },
 ]
 
 export function RootLayout() {
