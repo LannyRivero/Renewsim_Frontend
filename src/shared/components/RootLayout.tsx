@@ -1,5 +1,6 @@
 import { Outlet, useLocation, Link } from 'react-router-dom'
 import { Navbar, Footer, DarkModeToggle, type NavLink } from './index'
+import { LocaleSwitcher } from './LocaleSwitcher'
 import { useDarkMode } from '../hooks'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
@@ -44,6 +45,7 @@ interface NavActionsProps {
 function NavActions({ isDark, onToggle }: NavActionsProps) {
   return (
     <div className="flex items-center gap-2">
+      <LocaleSwitcher />
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
       <Link
         to="/iniciar-sesion"
