@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 const HERO_IMAGE_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuBlfUlH7I09N_-5Y-O_oWlHRAaQNAGjelP5ZqmOxu46t8WSlHCty7bi602_7OuB2b2znbgzXcez66lLSxAeROzkW2Yd16Hbl6TMN9ledigYcMgRnrVLhFZM19REXz1eRgJCNyytigdXa2HBUbvGYd_zHDHcUCmo-ysuhdp25xqnKnP1Q1YJzl-1m31fUlfzmch3RNDppWCyFanl42GLSdYN-xUu2MEJyxayZs9Nmd8gfcBCQZ3DAdSLIB5VhZi6_Kg8dmmKhkda-tI'
 
@@ -29,12 +31,12 @@ export function HeroSection() {
             >
               Iniciar Simulación
             </button>
-            <button
-              type="button"
-              className="px-6 py-3 rounded-lg text-base font-bold bg-primary/20 dark:bg-primary/30 text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors cursor-pointer"
+            <Link
+              to="/como-funciona"
+              className="px-6 py-3 rounded-lg text-base font-bold bg-primary/20 dark:bg-primary/30 text-primary hover:bg-primary/30 dark:hover:bg-primary/40 transition-colors"
             >
               Más Información
-            </button>
+            </Link>
           </div>
         </div>
 

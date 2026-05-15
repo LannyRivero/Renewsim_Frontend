@@ -1,1 +1,1 @@
-// Shared custom hooks - useLocalStorage, etc.
+export { useDarkMode } from './useDarkMode'
