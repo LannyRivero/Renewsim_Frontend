@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useSimulatorNav } from '../../../shared/hooks'
 
 const METRICS = [
   { value: '8.4 MWh', label: 'Energía generada / año', icon: 'bolt', delta: '+12%' },
@@ -14,6 +15,7 @@ const STATS = [
 ]
 
 export function HeroSection() {
+  const goToSimulator = useSimulatorNav()
   return (
     <section className="py-20 sm:py-28 lg:py-32">
       <div className="container mx-auto px-6">
@@ -46,6 +48,7 @@ export function HeroSection() {
             <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-3">
               <button
                 type="button"
+                onClick={goToSimulator}
                 className="px-8 py-3.5 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer shadow-sm"
               >
                 Iniciar Simulación

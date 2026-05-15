@@ -1,4 +1,7 @@
+import { useSimulatorNav } from '../../../shared/hooks'
+
 export function CtaSection() {
+  const goToSimulator = useSimulatorNav()
   return (
     <section className="mt-20">
       {/* Accent top bar */}
@@ -14,6 +17,7 @@ export function CtaSection() {
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             type="button"
+            onClick={goToSimulator}
             className="inline-flex cursor-pointer items-center justify-center rounded-lg h-12 px-10 bg-primary-container text-on-primary text-base font-bold hover:brightness-95 transition-all shadow-sm"
           >
             Comenzar Simulación
