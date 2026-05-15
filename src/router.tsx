@@ -6,7 +6,13 @@ import { HowItWorksPage } from './features/how-it-works/HowItWorksPage'
 import { AboutPage } from './features/about/AboutPage'
 import { RegisterPage } from './features/auth/RegisterPage'
 import { LoginPage } from './features/auth/LoginPage'
-import { SimuladorPage } from './features/simulation/SimuladorPage'
+import { SimuladorLayout } from './features/simulation/SimuladorLayout'
+import { DashboardPage } from './features/simulation/dashboard/DashboardPage'
+import {
+  TecnologiasPage,
+  ConfiguracionPage,
+  AdminPage,
+} from './features/simulation/placeholders'
 
 export const router = createBrowserRouter([
   {
@@ -18,14 +24,20 @@ export const router = createBrowserRouter([
       { path: 'acerca-de', element: <AboutPage /> },
       { path: 'registro', element: <RegisterPage /> },
       { path: 'iniciar-sesion', element: <LoginPage /> },
-      {
-        path: 'simulador',
-        element: (
-          <RequireAuth>
-            <SimuladorPage />
-          </RequireAuth>
-        ),
-      },
+    ],
+  },
+  {
+    path: '/simulador',
+    element: (
+      <RequireAuth>
+        <SimuladorLayout />
+      </RequireAuth>
+    ),
+    children: [
+      { index: true, element: <DashboardPage /> },
+      { path: 'tecnologias', element: <TecnologiasPage /> },
+      { path: 'configuracion', element: <ConfiguracionPage /> },
+      { path: 'admin', element: <AdminPage /> },
     ],
   },
 ])

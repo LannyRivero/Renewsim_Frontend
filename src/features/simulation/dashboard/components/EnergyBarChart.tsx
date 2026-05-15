@@ -1,0 +1,86 @@
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Tooltip,
+  Legend,
+} from 'chart.js'
+import { Bar } from 'react-chartjs-2'
+import type { EnergySource } from '../data/dashboardMock'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend)
+
+interface EnergyBarChartProps {
+  data: EnergySource[]
+}
+
+export function EnergyBarChart({ data }: EnergyBarChartProps) {
+  const total = data.reduce((sum, s) => sum + s.kwh, 0)
+  const totalFormatted = total.toLocaleString('es-ES')
+
+  const chartData = {
+    labels: data.map((s) => s.label),
+    datasets: [
+      {
+        label: 'kWh',
+        data: data.map((s) => s.kwh),
+        backgroundColor: 'rgba(29, 201, 98, 0.25)',
+        borderColor: 'rgba(29, 201, 98, 0.8)',
+        borderWidth: 2,
+        borderRadius: 6,
+        hoverBackgroundColor: 'rgba(29, 201, 98, 0.45)',
+      },
+    ],
+  }
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: (ctx: { parsed: { y: number } }) =>
+            `${ctx.parsed.y.toLocaleString('es-ES')} kWh`,
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: '#6b7280', font: { family: 'Manrope', size: 12 } },
+      },
+      y: {
+        grid: { color: 'rgba(0,0,0,0.05)' },
+        ticks: {
+          color: '#6b7280',
+          font: { family: 'Manrope', size: 11 },
+          callback: (value: number | string) => `${Number(value) / 1000}k`,
+        },
+      },
+    },
+  }
+
+  return (
+    <div className="card rounded-xl p-6">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <p className="text-sm font-medium text-on-surface dark:text-content-dark">
+            Energía Generada por Fuente
+          </p>
+          <p className="text-2xl font-extrabold text-on-surface dark:text-content-dark mt-1">
+            {totalFormatted} kWh
+          </p>
+        </div>
+        <div className="flex items-center gap-1 text-xs font-semibold text-primary dark:text-primary-inverse">
+          <span className="material-symbols-outlined text-base">trending_up</span>
+          +10%
+        </div>
+      </div>
+      <div className="h-56" role="img" aria-label="Energía generada por fuente">
+        <Bar data={chartData} options={options as never} />
+      </div>
+    </div>
+  )
+}
