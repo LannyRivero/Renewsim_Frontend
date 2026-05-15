@@ -9,6 +9,7 @@ import { LoginPage } from './features/auth/LoginPage'
 import { SimuladorLayout } from './features/simulation/SimuladorLayout'
 import { DashboardPage } from './features/simulation/dashboard/DashboardPage'
 import { NewSimulationPage } from './features/simulation/new-simulation/NewSimulationPage'
+import { SimulationResultsPage } from './features/simulation/results/SimulationResultsPage'
 import {
   TecnologiasPage,
   ConfiguracionPage,
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'nueva', element: <NewSimulationPage /> },
+      { path: 'resultados', element: <SimulationResultsPage /> },
       { path: 'tecnologias', element: <TecnologiasPage /> },
       { path: 'configuracion', element: <ConfiguracionPage /> },
       { path: 'admin', element: <AdminPage /> },
