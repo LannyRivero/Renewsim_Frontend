@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, Link } from 'react-router-dom'
 import { Navbar, Footer, DarkModeToggle, type NavLink } from './index'
 import { useDarkMode } from '../hooks'
 
@@ -39,18 +39,18 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
   return (
     <div className="flex items-center gap-2">
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
-      <button
-        type="button"
-        className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors cursor-pointer"
+      <Link
+        to="/iniciar-sesion"
+        className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
       >
         Iniciar Sesión
-      </button>
-      <button
-        type="button"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer"
+      </Link>
+      <Link
+        to="/registro"
+        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
       >
         Registrarse
-      </button>
+      </Link>
     </div>
   )
 }
