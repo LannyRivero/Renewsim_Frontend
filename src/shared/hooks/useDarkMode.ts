@@ -11,8 +11,6 @@ function getInitialDark(): boolean {
   }
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-}
 
 export function useDarkMode() {
   const [isDark, setIsDark] = useState<boolean>(getInitialDark)
