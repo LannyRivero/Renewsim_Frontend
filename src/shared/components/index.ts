@@ -1,1 +1,3 @@
-// Shared UI components - Button, Skeleton, Toast, etc.
+export { Logo } from './Logo'
+export { Navbar } from './Navbar'
+export { Footer } from './Footer'
