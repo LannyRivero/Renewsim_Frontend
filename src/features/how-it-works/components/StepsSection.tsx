@@ -1,4 +1,5 @@
 interface Step {
+  number: string
   icon: string
   title: string
   description: string
@@ -6,59 +7,53 @@ interface Step {
 
 const STEPS: Step[] = [
   {
+    number: '01',
     icon: 'database',
-    title: '1. Ingresa tus Datos',
+    title: 'Ingresa tus datos',
     description:
-      'Proporciona información sobre tu ubicación, consumo de energía actual y tus preferencias energéticas.',
+      'Proporciona tu ubicación, consumo actual y preferencias energéticas para una simulación precisa.',
   },
   {
+    number: '02',
     icon: 'calculate',
-    title: '2. Simulación Avanzada',
+    title: 'Simulación avanzada',
     description:
-      'Nuestros algoritmos procesan tus datos para simular el rendimiento y costo de diversas fuentes de energía limpia.',
+      'Nuestros algoritmos procesan tus datos para modelar el rendimiento y costos de cada fuente de energía.',
   },
   {
+    number: '03',
     icon: 'insights',
-    title: '3. Obtén Resultados',
+    title: 'Obtén resultados',
     description:
-      'Recibe un informe detallado con visualizaciones interactivas y recomendaciones personalizadas para tu futuro energético.',
+      'Recibe un informe detallado con visualizaciones interactivas y recomendaciones personalizadas.',
   },
 ]
 
-function StepCard({ icon, title, description }: Step) {
+function StepCard({ number, icon, title, description }: Step) {
   return (
-    <div className="flex flex-col items-center gap-y-4 w-1/3 text-center">
-      <div className="flex items-center justify-center size-16 rounded-full bg-primary-container/20 dark:bg-primary-container/30 border-2 border-primary-container z-10 bg-background-light dark:bg-background-dark">
-        <span className="material-symbols-outlined text-primary dark:text-primary-inverse text-4xl">
-          {icon}
+    <div className="card rounded-2xl p-8 flex flex-col gap-5">
+      <div className="flex items-start justify-between">
+        <span className="text-4xl font-extrabold text-outline-variant dark:text-white/10 leading-none select-none tabular-nums">
+          {number}
         </span>
+        <div className="p-2.5 rounded-xl bg-primary-container/12 dark:bg-primary-container/15">
+          <span className="material-symbols-outlined text-primary dark:text-primary-inverse text-xl">{icon}</span>
+        </div>
       </div>
-      <h3 className="text-xl font-bold text-content-light dark:text-content-dark">
-        {title}
-      </h3>
-      <p className="text-subtle-light dark:text-subtle-dark px-4">
-        {description}
-      </p>
+      <div>
+        <h3 className="text-base font-bold text-on-surface dark:text-content-dark">{title}</h3>
+        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant dark:text-content-dark/55">{description}</p>
+      </div>
     </div>
   )
 }
 
 export function StepsSection() {
   return (
-    <section className="mt-16">
-      <div className="relative">
-        {/* Dashed connecting line */}
-        <div aria-hidden="true" className="absolute inset-0 flex items-start justify-center pt-8">
-          <div className="w-full h-0.5 border-t-2 border-dashed border-border-light dark:border-border-dark" />
-        </div>
-
-        {/* Step cards */}
-        <div className="relative flex justify-between">
-          {STEPS.map((step) => (
-            <StepCard key={step.title} {...step} />
-          ))}
-        </div>
-      </div>
+    <section className="mt-16 grid md:grid-cols-3 gap-5">
+      {STEPS.map((step) => (
+        <StepCard key={step.title} {...step} />
+      ))}
     </section>
   )
 }

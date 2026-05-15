@@ -102,3 +102,42 @@ body {
 .material-symbols-outlined {
   font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
 }
+
+/* ─── Enterprise utility classes ────────────────────────── */
+@layer utilities {
+  /* Cards: white surface, 1px outline, soft ambient shadow  */
+  .card {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-outline-variant);
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  }
+  .card:is(.dark *) {
+    background-color: rgb(255 255 255 / 0.04);
+    border-color: rgb(255 255 255 / 0.08);
+  }
+
+  /* Elevated card: subtle lift for hero / CTA sections      */
+  .card-elevated {
+    background-color: var(--color-surface-container-lowest);
+    border: 1px solid var(--color-outline-variant);
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.08), 0 1px 4px 0 rgb(0 0 0 / 0.04);
+  }
+  .card-elevated:is(.dark *) {
+    background-color: rgb(255 255 255 / 0.05);
+    border-color: rgb(255 255 255 / 0.09);
+    box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.30);
+  }
+
+  /* Primary accent line — used as section divider/badge     */
+  .accent-bar {
+    background: linear-gradient(90deg, var(--color-primary-container) 0%, var(--color-primary) 100%);
+  }
+
+  /* Gradient text — sparingly on hero headline only          */
+  .text-gradient-primary {
+    background: linear-gradient(135deg, var(--color-primary-container) 0%, var(--color-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
