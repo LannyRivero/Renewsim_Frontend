@@ -1,6 +1,20 @@
 import { Link } from 'react-router-dom'
+import { useToastStore } from '@/stores/toastStore'
 
 export function EditSimulationPage() {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+    const simulationName = String(formData.get('simulationName') ?? 'Simulation')
+
+    useToastStore.getState().pushToast({
+      title: 'Cambios guardados',
+      description: `Se actualizo ${simulationName} correctamente.`,
+      variant: 'success',
+    })
+  }
+
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
@@ -48,13 +62,14 @@ export function EditSimulationPage() {
           </p>
         </div>
 
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="simulation-name" className="mb-2 block text-sm font-medium">
               Simulation Name
             </label>
             <input
               id="simulation-name"
+              name="simulationName"
               defaultValue="My Solar Project"
               className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
             />
@@ -66,6 +81,7 @@ export function EditSimulationPage() {
             </label>
             <select
               id="location"
+              name="location"
               className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
               defaultValue="San Francisco, CA"
             >
@@ -82,6 +98,7 @@ export function EditSimulationPage() {
             </label>
             <select
               id="energy-source"
+              name="energySource"
               className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
               defaultValue="Solar Panels"
             >
@@ -98,7 +115,9 @@ export function EditSimulationPage() {
               </label>
               <input
                 id="system-size"
+                name="systemSizeKw"
                 type="number"
+                step="0.1"
                 defaultValue={7.5}
                 className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
               />
@@ -109,6 +128,7 @@ export function EditSimulationPage() {
               </label>
               <input
                 id="energy-consumption"
+                name="annualConsumptionKwh"
                 type="number"
                 defaultValue={10000}
                 className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
@@ -123,6 +143,7 @@ export function EditSimulationPage() {
               </label>
               <input
                 id="incentives"
+                name="incentives"
                 type="number"
                 defaultValue={1500}
                 className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
@@ -134,6 +155,7 @@ export function EditSimulationPage() {
               </label>
               <input
                 id="electricity-rate"
+                name="electricityRate"
                 type="number"
                 step="0.01"
                 defaultValue={0.18}
