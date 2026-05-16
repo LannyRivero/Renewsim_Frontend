@@ -97,13 +97,13 @@ export function SimulationHistoryPage() {
                     <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-primary">{row.roi}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                       <div className="flex items-center justify-end gap-2">
-                        <button
-                          type="button"
+                        <Link
+                          to="/simulador/editar"
                           aria-label={`Ver simulacion ${row.energyType}`}
                           className="rounded-lg p-2 text-primary transition-colors hover:bg-primary/10"
                         >
                           <span className="material-symbols-outlined">visibility</span>
-                        </button>
+                        </Link>
                         <button
                           type="button"
                           aria-label={`Editar simulacion ${row.energyType}`}
