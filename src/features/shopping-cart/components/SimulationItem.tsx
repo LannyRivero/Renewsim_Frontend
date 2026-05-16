@@ -1,1 +1,0 @@
-// SimulationItem component

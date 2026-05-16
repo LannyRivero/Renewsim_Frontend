@@ -1,1 +1,0 @@
-// SimulationCard component
