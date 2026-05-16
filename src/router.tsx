@@ -12,6 +12,7 @@ import { NewSimulationPage } from './features/simulation/new-simulation/NewSimul
 import { SimulationResultsPage } from './features/simulation/results/SimulationResultsPage'
 import { SimulationHistoryPage } from './features/simulation/history/SimulationHistoryPage'
 import { EditSimulationPage } from './features/simulation/edit/EditSimulationPage'
+import { SimulationDetailsPage } from './features/simulation/details/SimulationDetailsPage'
 import {
   TecnologiasPage,
   ConfiguracionPage,
@@ -40,6 +41,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <DashboardPage /> },
       { path: 'historial', element: <SimulationHistoryPage /> },
+      { path: 'detalles', element: <SimulationDetailsPage /> },
       { path: 'editar', element: <EditSimulationPage /> },
       { path: 'nueva', element: <NewSimulationPage /> },
       { path: 'resultados', element: <SimulationResultsPage /> },

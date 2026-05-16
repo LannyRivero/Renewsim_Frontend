@@ -14,28 +14,29 @@ describe('EditSimulationPage', () => {
   it('renders page title and description', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Simulation Details' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Edit Simulation' })).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Review the comprehensive results of your energy simulation, including financial summaries, environmental impact, and educational insights.',
+        'Update the parameters for your existing simulation below.',
       ),
     ).toBeInTheDocument()
   })
 
-  it('renders simulation overview and comparison table', () => {
+  it('renders editable simulation form fields', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Simulation Overview' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Energy Source Comparison' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Energy Source' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Initial Investment' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Simulation Name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Location')).toBeInTheDocument()
+    expect(screen.getByLabelText('Energy Source')).toBeInTheDocument()
+    expect(screen.getByLabelText('System Size (kW)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Annual Energy Consumption (kWh)')).toBeInTheDocument()
   })
 
-  it('renders financial and environmental sections', () => {
+  it('renders financial input fields and save action', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Financial Summary' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Environmental Impact' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Educational Insights' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Incentives/Rebates ($)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Electricity Rate ($/kWh)')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument()
   })
 })
