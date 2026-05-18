@@ -13,9 +13,9 @@ import { SimulationResultsPage } from './features/simulation/results/SimulationR
 import { SimulationHistoryPage } from './features/simulation/history/SimulationHistoryPage'
 import { EditSimulationPage } from './features/simulation/edit/EditSimulationPage'
 import { SimulationDetailsPage } from './features/simulation/details/SimulationDetailsPage'
+import { ProfileSettingsPage } from './features/simulation/settings/ProfileSettingsPage'
 import {
   TecnologiasPage,
-  ConfiguracionPage,
   AdminPage,
 } from './features/simulation/placeholders'
 
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
       { path: 'nueva', element: <NewSimulationPage /> },
       { path: 'resultados', element: <SimulationResultsPage /> },
       { path: 'tecnologias', element: <TecnologiasPage /> },
-      { path: 'configuracion', element: <ConfiguracionPage /> },
+      { path: 'configuracion', element: <ProfileSettingsPage /> },
       { path: 'admin', element: <AdminPage /> },
     ],
   },
