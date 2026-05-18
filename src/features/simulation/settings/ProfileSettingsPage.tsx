@@ -33,7 +33,7 @@ export function ProfileSettingsPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className="mx-auto w-full max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
         <h2 className="mb-8 text-3xl font-bold">Account Settings</h2>
 
         <div className="space-y-10">
@@ -124,7 +124,7 @@ export function ProfileSettingsPage() {
             </button>
           </div>
         </div>
-      </main>
+      </section>
     </section>
   )
 }
