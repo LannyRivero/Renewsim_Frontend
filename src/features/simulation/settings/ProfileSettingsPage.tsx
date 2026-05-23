@@ -13,17 +13,17 @@ export function ProfileSettingsPage() {
             <Link to="/simulador" className="text-sm font-medium transition-colors hover:text-primary">
               Simulations
             </Link>
-            <Link to="/como-funciona" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link to="/how-it-works" className="text-sm font-medium transition-colors hover:text-primary">
               Learn
             </Link>
-            <Link to="/acerca-de" className="text-sm font-medium transition-colors hover:text-primary">
+            <Link to="/about" className="text-sm font-medium transition-colors hover:text-primary">
               Community
             </Link>
           </nav>
           <div className="flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 transition-colors hover:bg-surface-container-low"
             >
               <span className="material-symbols-outlined">notifications</span>
@@ -111,7 +111,7 @@ export function ProfileSettingsPage() {
                 </label>
                 <select id="language" className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark">
                   <option>English</option>
-                  <option>Español</option>
+                  <option>Spanish</option>
                   <option>Français</option>
                 </select>
               </div>

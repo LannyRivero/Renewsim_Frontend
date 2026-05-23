@@ -4,10 +4,10 @@ export function SimuladorPage() {
       <div className="text-center max-w-md">
         <div className="h-1 w-10 rounded-full accent-bar mx-auto mb-6" />
         <h1 className="text-3xl font-extrabold text-on-surface dark:text-content-dark mb-4">
-          Simulador
+          Simulator
         </h1>
         <p className="text-on-surface-variant dark:text-content-dark/50">
-          El simulador de energías renovables estará disponible próximamente.
+          The renewable energy simulator will be available soon.
         </p>
       </div>
     </div>

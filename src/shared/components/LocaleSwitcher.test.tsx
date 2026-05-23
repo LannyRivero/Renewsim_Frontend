@@ -9,12 +9,12 @@ beforeEach(() => {
 describe('LocaleSwitcher', () => {
   it('shows current locale from store', () => {
     render(<LocaleSwitcher />)
-    expect(screen.getByLabelText('Idioma')).toHaveValue('es')
+    expect(screen.getByLabelText('Language')).toHaveValue('es')
   })
 
   it('updates locale in store when user selects en', () => {
     render(<LocaleSwitcher />)
-    fireEvent.change(screen.getByLabelText('Idioma'), { target: { value: 'en' } })
+    fireEvent.change(screen.getByLabelText('Language'), { target: { value: 'en' } })
     expect(useUiStore.getState().locale).toBe('en')
   })
 })

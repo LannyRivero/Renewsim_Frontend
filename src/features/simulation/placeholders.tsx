@@ -5,7 +5,7 @@ function PlaceholderPage({ title }: { title: string }) {
         <div className="h-1 w-10 rounded-full accent-bar mx-auto mb-6" />
         <h1 className="text-2xl font-extrabold text-on-surface dark:text-content-dark">{title}</h1>
         <p className="mt-2 text-on-surface-variant dark:text-content-dark/50 text-sm">
-          Próximamente disponible.
+          Coming soon.
         </p>
       </div>
     </div>
@@ -13,13 +13,13 @@ function PlaceholderPage({ title }: { title: string }) {
 }
 
 export function TecnologiasPage() {
-  return <PlaceholderPage title="Tecnologías" />
+  return <PlaceholderPage title="Technologies" />
 }
 
 export function ConfiguracionPage() {
-  return <PlaceholderPage title="Configuración" />
+  return <PlaceholderPage title="Settings" />
 }
 
 export function AdminPage() {
-  return <PlaceholderPage title="Panel Admin" />
+  return <PlaceholderPage title="Admin Panel" />
 }

@@ -2,7 +2,7 @@ import { renderHook } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { useSimulatorNav } from './useSimulatorNav'
 
-// Captura la última llamada a navigate
+// Captures the latest navigate call
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react-router-dom')>()
@@ -26,10 +26,10 @@ describe('useSimulatorNav', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/simulador')
   })
 
-  it('navigates to /iniciar-sesion with state.from when no token', () => {
+  it('navigates to /login with state.from when no token', () => {
     const { result } = renderHook(() => useSimulatorNav(), { wrapper })
     result.current()
-    expect(mockNavigate).toHaveBeenCalledWith('/iniciar-sesion', {
+    expect(mockNavigate).toHaveBeenCalledWith('/login', {
       state: { from: '/simulador' },
     })
   })

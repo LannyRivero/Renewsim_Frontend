@@ -22,20 +22,20 @@ export function SimulationHistoryPage() {
 
           <nav className="hidden items-center gap-8 md:flex">
             <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
-              Simulador
+              Simulator
             </Link>
-            <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
-              Recursos
+            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
+              Resources
             </Link>
-            <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
-              Comunidad
+            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
+              Community
             </Link>
           </nav>
 
           <div className="flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 transition-colors hover:bg-primary/10 dark:hover:bg-primary/20"
             >
               <span className="material-symbols-outlined text-on-surface-variant dark:text-content-dark/60">
@@ -50,14 +50,14 @@ export function SimulationHistoryPage() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-3xl font-bold tracking-tight text-on-surface dark:text-content-dark">
-            Historial de Simulaciones
+            Simulation History
           </h1>
           <Link
             to="/simulador/nueva"
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white transition hover:opacity-90"
           >
             <span aria-hidden="true" className="material-symbols-outlined text-lg">add</span>
-            Nueva Simulacion
+            New Simulation
           </Link>
         </div>
 
@@ -67,19 +67,19 @@ export function SimulationHistoryPage() {
               <thead className="bg-surface-container-low dark:bg-background-dark">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
-                    Fecha
+                    Date
                   </th>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
-                    Tipo de Energia
+                    Energy Type
                   </th>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
-                    Eficiencia
+                    Efficiency
                   </th>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
                     ROI
                   </th>
                   <th scope="col" className="px-6 py-4 text-right text-sm font-medium">
-                    Acciones
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -99,21 +99,21 @@ export function SimulationHistoryPage() {
                       <div className="flex items-center justify-end gap-2">
                         <Link
                           to="/simulador/detalles"
-                          aria-label={`Ver simulacion ${row.energyType}`}
+                          aria-label={`View simulation ${row.energyType}`}
                           className="rounded-lg p-2 text-primary transition-colors hover:bg-primary/10"
                         >
                           <span className="material-symbols-outlined">visibility</span>
                         </Link>
                         <Link
                           to="/simulador/editar"
-                          aria-label={`Editar simulacion ${row.energyType}`}
+                          aria-label={`Edit simulation ${row.energyType}`}
                           className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-primary/10 dark:text-content-dark/60"
                         >
                           <span className="material-symbols-outlined">edit</span>
                         </Link>
                         <button
                           type="button"
-                          aria-label={`Eliminar simulacion ${row.energyType}`}
+                          aria-label={`Delete simulation ${row.energyType}`}
                           className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-500/10"
                         >
                           <span className="material-symbols-outlined">delete</span>

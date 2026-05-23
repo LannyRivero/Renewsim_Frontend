@@ -1,13 +1,13 @@
 import { NavLink } from 'react-router-dom'
 
 const NAV_ITEMS = [
-  { to: '/simulador', label: 'Simulaciones', icon: 'insights', end: true },
-  { to: '/simulador/historial', label: 'Historial', icon: 'history' },
-  { to: '/simulador/nueva', label: 'Nueva simulacion', icon: 'add_chart' },
-  { to: '/simulador/resultados', label: 'Resultados', icon: 'monitoring' },
-  { to: '/simulador/tecnologias', label: 'Tecnologías', icon: 'hub' },
-  { to: '/simulador/configuracion', label: 'Configuración', icon: 'settings' },
-  { to: '/simulador/admin', label: 'Panel Admin', icon: 'admin_panel_settings' },
+  { to: '/simulador', label: 'Simulations', icon: 'insights', end: true },
+  { to: '/simulador/historial', label: 'History', icon: 'history' },
+  { to: '/simulador/nueva', label: 'New Simulation', icon: 'add_chart' },
+  { to: '/simulador/resultados', label: 'Results', icon: 'monitoring' },
+  { to: '/simulador/tecnologias', label: 'Technologies', icon: 'hub' },
+  { to: '/simulador/configuracion', label: 'Settings', icon: 'settings' },
+  { to: '/simulador/admin', label: 'Admin Panel', icon: 'admin_panel_settings' },
 ]
 
 export function SimuladorSidebar() {
@@ -54,7 +54,7 @@ export function SimuladorSidebar() {
           className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-on-surface-variant dark:text-content-dark/60 hover:bg-surface-container dark:hover:bg-white/5 transition-colors"
         >
           <span className="material-symbols-outlined text-xl">help_outline</span>
-          Ayuda
+          Help
         </a>
       </div>
     </aside>

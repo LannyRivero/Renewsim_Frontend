@@ -14,18 +14,18 @@ describe('SimulationHistoryPage', () => {
   it('renders heading and new simulation action', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Historial de Simulaciones' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Nueva Simulacion' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Simulation History' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'New Simulation' })).toBeInTheDocument()
   })
 
   it('renders history table columns', () => {
     renderPage()
 
-    expect(screen.getByRole('columnheader', { name: 'Fecha' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Tipo de Energia' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Eficiencia' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Date' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Energy Type' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Efficiency' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'ROI' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Acciones' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument()
   })
 
   it('renders simulation rows and action buttons', () => {
@@ -33,8 +33,8 @@ describe('SimulationHistoryPage', () => {
 
     expect(screen.getByText('15 de mayo de 2024')).toBeInTheDocument()
     expect(screen.getByText('Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('Ver simulacion Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('Editar simulacion Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('Eliminar simulacion Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('View simulation Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Edit simulation Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Delete simulation Solar')).toBeInTheDocument()
   })
 })

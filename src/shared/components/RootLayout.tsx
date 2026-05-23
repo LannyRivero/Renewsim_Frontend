@@ -6,36 +6,36 @@ import { useDarkMode } from '../hooks'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
-    { label: 'Inicio', href: '/', active: true },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador' },
+    { label: 'Home', href: '/', active: true },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador' },
   ],
-  '/como-funciona': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona', active: true },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador' },
+  '/how-it-works': [
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works', active: true },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador' },
   ],
-  '/acerca-de': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de', active: true },
-    { label: 'Simulador', href: '/simulador' },
+  '/about': [
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about', active: true },
+    { label: 'Simulator', href: '/simulador' },
   ],
   '/simulador': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador', active: true },
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador', active: true },
   ],
 }
 
 const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Cómo Funciona', href: '/como-funciona' },
-  { label: 'Acerca de', href: '/acerca-de' },
-  { label: 'Simulador', href: '/simulador' },
+  { label: 'Home', href: '/' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'About', href: '/about' },
+  { label: 'Simulator', href: '/simulador' },
 ]
 
 interface NavActionsProps {
@@ -49,16 +49,16 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
       <LocaleSwitcher />
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
       <Link
-        to="/iniciar-sesion"
+        to="/login"
         className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
       >
-        Iniciar Sesión
+        Sign In
       </Link>
       <Link
-        to="/registro"
+        to="/register"
         className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
       >
-        Registrarse
+        Sign Up
       </Link>
     </div>
   )

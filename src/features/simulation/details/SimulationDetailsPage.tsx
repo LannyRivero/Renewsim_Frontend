@@ -17,10 +17,10 @@ export function SimulationDetailsPage() {
             <Link to="/simulador/historial" className="text-sm font-medium text-primary">
               Simulations
             </Link>
-            <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
               Resources
             </Link>
-            <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
               Community
             </Link>
           </nav>
@@ -28,7 +28,7 @@ export function SimulationDetailsPage() {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low dark:text-content-dark/60"
             >
               <span className="material-symbols-outlined">notifications</span>

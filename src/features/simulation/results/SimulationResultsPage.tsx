@@ -41,10 +41,10 @@ export function SimulationResultsPage() {
               <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
                 Simulations
               </Link>
-              <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
                 Learn
               </Link>
-              <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
                 Community
               </Link>
             </nav>
@@ -89,10 +89,10 @@ export function SimulationResultsPage() {
             <div className="space-y-4">
               <h3 className="text-xl font-bold">Solar Power</h3>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/65">
-                Aprovecha la energia del sol con paneles fotovoltaicos para reducir costos y emisiones.
+                Harness solar energy with photovoltaic panels to reduce costs and emissions.
               </p>
               <p className="text-sm text-on-surface dark:text-content-dark">
-                La simulacion indica que la energia solar ofrece el mejor balance entre retorno y sostenibilidad.
+                The simulation indicates that solar energy offers the best balance between returns and sustainability.
               </p>
               <button
                 type="button"

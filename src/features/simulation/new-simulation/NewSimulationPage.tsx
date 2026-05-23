@@ -27,7 +27,7 @@ export function NewSimulationPage() {
           <div className="ml-auto flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-white/5"
             >
               <span className="material-symbols-outlined">notifications</span>
@@ -43,10 +43,10 @@ export function NewSimulationPage() {
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-            Nueva simulacion personalizada
+            New custom simulation
           </h1>
           <p className="mt-2 text-base text-on-surface-variant dark:text-content-dark/60">
-            Configura tu simulacion con parametros especificos de tu proyecto.
+            Configure your simulation with project-specific parameters.
           </p>
         </div>
 
@@ -54,57 +54,57 @@ export function NewSimulationPage() {
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label htmlFor="location" className="mb-1 block text-sm font-medium">
-                Ubicacion
+                Location
               </label>
-              <input id="location" type="text" placeholder="Ingresa ubicacion o usa geolocalizacion" className={FIELD_CLASS} />
+              <input id="location" type="text" placeholder="Enter location or use geolocation" className={FIELD_CLASS} />
             </div>
 
             <div>
               <label htmlFor="energy-type" className="mb-1 block text-sm font-medium">
-                Tipo de energia
+                Energy type
               </label>
               <select id="energy-type" className={FIELD_CLASS} defaultValue="solar">
                 <option value="solar">Solar</option>
-                <option value="wind">Eolica</option>
-                <option value="hydro">Hidroelectrica</option>
+                <option value="wind">Wind</option>
+                <option value="hydro">Hydroelectric</option>
               </select>
             </div>
 
             <div>
               <label htmlFor="project-size" className="mb-1 block text-sm font-medium">
-                Tamano del proyecto (kW/MW)
+                Project size (kW/MW)
               </label>
-              <input id="project-size" type="text" placeholder="Ejemplo: 500 kW" className={FIELD_CLASS} />
+              <input id="project-size" type="text" placeholder="Example: 500 kW" className={FIELD_CLASS} />
             </div>
 
             <div>
               <label htmlFor="budget" className="mb-1 block text-sm font-medium">
-                Presupuesto (EUR)
+                Budget (EUR)
               </label>
-              <input id="budget" type="number" placeholder="Ejemplo: 1000000" className={FIELD_CLASS} />
+              <input id="budget" type="number" placeholder="Example: 1000000" className={FIELD_CLASS} />
             </div>
           </div>
 
           <div>
-            <h2 className="text-lg font-bold text-on-surface dark:text-content-dark">Datos climaticos (solo lectura)</h2>
+            <h2 className="text-lg font-bold text-on-surface dark:text-content-dark">Climate data (read-only)</h2>
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div>
                 <label htmlFor="irradiance" className="mb-1 block text-sm font-medium">
-                  Irradiancia (kWh/m2/dia)
+                  Irradiance (kWh/m2/day)
                 </label>
                 <input id="irradiance" readOnly value="5.4" className={READONLY_CLASS} />
               </div>
 
               <div>
                 <label htmlFor="wind-speed" className="mb-1 block text-sm font-medium">
-                  Velocidad del viento (m/s)
+                  Wind speed (m/s)
                 </label>
                 <input id="wind-speed" readOnly value="7.2" className={READONLY_CLASS} />
               </div>
 
               <div>
                 <label htmlFor="hydrology" className="mb-1 block text-sm font-medium">
-                  Hidrologia (m3/s)
+                  Hydrology (m3/s)
                 </label>
                 <input id="hydrology" readOnly value="12.5" className={READONLY_CLASS} />
               </div>
@@ -116,7 +116,7 @@ export function NewSimulationPage() {
               type="button"
               className="w-full rounded-lg bg-primary-container px-8 py-3 text-base font-semibold text-on-primary transition hover:brightness-95 md:w-auto"
             >
-              Ejecutar simulacion
+               Run simulation
             </button>
           </div>
         </form>
