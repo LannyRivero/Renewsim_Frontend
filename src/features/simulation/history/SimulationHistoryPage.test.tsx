@@ -1,12 +1,16 @@
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import { SimulationHistoryPage } from './SimulationHistoryPage'
 
 function renderPage() {
+  const queryClient = new QueryClient()
   return render(
-    <MemoryRouter>
-      <SimulationHistoryPage />
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <SimulationHistoryPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
 }
 
@@ -31,7 +35,7 @@ describe('SimulationHistoryPage', () => {
   it('renders simulation rows and action buttons', () => {
     renderPage()
 
-    expect(screen.getByText('15 de mayo de 2024')).toBeInTheDocument()
+    expect(screen.getByText('May 15, 2024')).toBeInTheDocument()
     expect(screen.getByText('Solar')).toBeInTheDocument()
     expect(screen.getByLabelText('View simulation Solar')).toBeInTheDocument()
     expect(screen.getByLabelText('Edit simulation Solar')).toBeInTheDocument()

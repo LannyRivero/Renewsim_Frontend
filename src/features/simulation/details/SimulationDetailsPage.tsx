@@ -1,6 +1,40 @@
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { useSearchParams } from 'react-router-dom'
+import { getSimulationById } from '../services/simulationService'
+import { useSimulationStore } from '@/stores/simulationStore'
 
 export function SimulationDetailsPage() {
+  const [searchParams] = useSearchParams()
+  const resultFromStore = useSimulationStore((state) => state.lastResult)
+  const simulationId = searchParams.get('id') ?? resultFromStore?.id ?? null
+
+  const { data } = useQuery({
+    queryKey: ['simulation-details', simulationId],
+    queryFn: async () => {
+      if (!simulationId) return null
+      return getSimulationById(simulationId)
+    },
+    enabled: Boolean(simulationId),
+  })
+
+  const location = data?.location ?? resultFromStore?.location ?? 'N/A'
+  const energyType = data?.energyType ?? resultFromStore?.energyType ?? 'Unknown'
+  const simulationName = `${energyType} Simulation`
+  const date = data?.createdAt
+    ? new Date(data.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+    : 'N/A'
+  const roi = typeof data?.roi === 'number'
+    ? `${data.roi}%`
+    : typeof resultFromStore?.roi === 'number'
+      ? `${resultFromStore.roi}%`
+      : 'N/A'
+  const efficiency = typeof data?.efficiency === 'number'
+    ? `${data.efficiency}%`
+    : typeof resultFromStore?.efficiency === 'number'
+      ? `${resultFromStore.efficiency}%`
+      : 'N/A'
+
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
@@ -53,15 +87,15 @@ export function SimulationDetailsPage() {
             <div className="grid grid-cols-1 gap-6 text-sm md:grid-cols-3">
               <div>
                 <p className="text-on-surface-variant dark:text-content-dark/60">Simulation Name</p>
-                <p className="mt-1 font-medium">Energy Transition Plan</p>
+                <p className="mt-1 font-medium">{simulationName}</p>
               </div>
               <div>
                 <p className="text-on-surface-variant dark:text-content-dark/60">Date</p>
-                <p className="mt-1 font-medium">July 15, 2024</p>
+                <p className="mt-1 font-medium">{date}</p>
               </div>
               <div>
                 <p className="text-on-surface-variant dark:text-content-dark/60">Location</p>
-                <p className="mt-1 font-medium">San Francisco, CA</p>
+                <p className="mt-1 font-medium">{location}</p>
               </div>
             </div>
           </section>
@@ -95,12 +129,12 @@ export function SimulationDetailsPage() {
               <h3 className="font-semibold">Financial Summary</h3>
               <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total Investment: $125,000</p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Total Savings: $15,000/year</p>
-              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Overall ROI: 11.5%</p>
+              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Overall ROI: {roi}</p>
             </section>
             <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
               <h3 className="font-semibold">Environmental Impact</h3>
               <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total CO2 Reduction: 23 tons/year</p>
-              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Equivalent Trees Planted: 380</p>
+              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Efficiency: {efficiency}</p>
             </section>
           </div>
 

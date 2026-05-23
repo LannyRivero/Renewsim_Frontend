@@ -1,14 +1,23 @@
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { getSimulationHistory } from '../services/simulationService'
 
-const SIMULATION_ROWS = [
-  { date: '15 de mayo de 2024', energyType: 'Solar', efficiency: '85%', roi: '12%' },
-  { date: '22 de abril de 2024', energyType: 'Eolica', efficiency: '92%', roi: '15%' },
-  { date: '10 de marzo de 2024', energyType: 'Hidroelectrica', efficiency: '78%', roi: '10%' },
-  { date: '5 de febrero de 2024', energyType: 'Biomasa', efficiency: '80%', roi: '8%' },
-  { date: '1 de enero de 2024', energyType: 'Geotermica', efficiency: '88%', roi: '14%' },
+const FALLBACK_ROWS = [
+  { id: 'mock-1', date: 'May 15, 2024', energyType: 'Solar', efficiency: '85%', roi: '12%' },
+  { id: 'mock-2', date: 'April 22, 2024', energyType: 'Wind', efficiency: '92%', roi: '15%' },
+  { id: 'mock-3', date: 'March 10, 2024', energyType: 'Hydroelectric', efficiency: '78%', roi: '10%' },
+  { id: 'mock-4', date: 'February 5, 2024', energyType: 'Biomass', efficiency: '80%', roi: '8%' },
+  { id: 'mock-5', date: 'January 1, 2024', energyType: 'Geothermal', efficiency: '88%', roi: '14%' },
 ]
 
 export function SimulationHistoryPage() {
+  const { data } = useQuery({
+    queryKey: ['simulation-history'],
+    queryFn: getSimulationHistory,
+  })
+
+  const rows = data && data.length > 0 ? data : FALLBACK_ROWS
+
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
@@ -84,9 +93,9 @@ export function SimulationHistoryPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-outline-variant dark:divide-white/10">
-                {SIMULATION_ROWS.map((row) => (
+                {rows.map((row) => (
                   <tr
-                    key={`${row.date}-${row.energyType}`}
+                    key={row.id}
                     className="transition-colors hover:bg-surface-container-low dark:hover:bg-background-dark"
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-on-surface-variant dark:text-content-dark/60">
@@ -98,7 +107,7 @@ export function SimulationHistoryPage() {
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
                       <div className="flex items-center justify-end gap-2">
                         <Link
-                          to="/simulador/detalles"
+                          to={`/simulador/detalles?id=${encodeURIComponent(row.id)}`}
                           aria-label={`View simulation ${row.energyType}`}
                           className="rounded-lg p-2 text-primary transition-colors hover:bg-primary/10"
                         >
