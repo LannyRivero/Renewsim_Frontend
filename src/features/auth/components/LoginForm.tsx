@@ -23,10 +23,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       const { token } = await login({ email, password })
       onSuccess(token)
     } catch {
-      setServerError('Credenciales incorrectas. Inténtalo de nuevo.')
+      setServerError('Invalid credentials. Please try again.')
       useToastStore.getState().pushToast({
-        title: 'Error de autenticacion',
-        description: 'Credenciales incorrectas. Intentalo nuevamente.',
+        title: 'Authentication Error',
+        description: 'Invalid credentials. Please try again.',
         variant: 'error',
       })
     } finally {
@@ -39,14 +39,14 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       {/* Email */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-on-surface dark:text-content-dark" htmlFor="login-email">
-          Correo electrónico
+          Email
         </label>
         <input
           id="login-email"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ingresa tu correo electrónico"
+          placeholder="Enter your email"
           className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
         />
       </div>
@@ -54,7 +54,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       {/* Password */}
       <PasswordInput
         id="login-password"
-        label="Contraseña"
+        label="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -72,15 +72,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         type="submit"
         disabled={isLoading}
         className="mt-2 h-12 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-        aria-label={isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+        aria-label={isLoading ? 'Signing in...' : 'Sign in'}
       >
-        {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+        {isLoading ? 'Signing in...' : 'Sign in'}
       </button>
 
       <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
-        ¿No tienes cuenta?{' '}
-        <Link to="/registro" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
-          Regístrate
+        Don't have an account?{' '}
+        <Link to="/register" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
+          Sign up
         </Link>
       </p>
     </form>
