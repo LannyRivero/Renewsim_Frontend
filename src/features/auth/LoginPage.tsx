@@ -14,8 +14,8 @@ export function LoginPage() {
     }))
     localStorage.setItem('renewsim-token', token)
     useToastStore.getState().pushToast({
-      title: 'Sesion iniciada',
-      description: 'Bienvenido a RenewSim.',
+      title: 'Signed In',
+      description: 'Welcome to RenewSim.',
       variant: 'success',
     })
     navigate('/simulador')
@@ -28,10 +28,10 @@ export function LoginPage() {
         <div className="text-center mb-10">
           <div className="h-1 w-10 rounded-full accent-bar mx-auto mb-6" />
           <h1 className="text-3xl font-extrabold text-on-surface dark:text-content-dark">
-            Iniciar sesión
+            Sign in
           </h1>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-content-dark/50">
-            Accede a tu cuenta de RenewSim
+            Access your RenewSim account
           </p>
         </div>
 

@@ -11,11 +11,11 @@ export function RegisterPage() {
 
   function handleSuccess() {
     useToastStore.getState().pushToast({
-      title: 'Cuenta creada',
-      description: 'Tu cuenta fue creada. Iniciá sesión para continuar.',
+      title: 'Account Created',
+      description: 'Your account was created. Sign in to continue.',
       variant: 'success',
     })
-    navigate('/iniciar-sesion')
+    navigate('/login')
   }
 
   return (
@@ -26,11 +26,11 @@ export function RegisterPage() {
           className="w-full aspect-[3/1.5] rounded-2xl overflow-hidden mb-8 bg-center bg-cover border border-outline-variant dark:border-white/8"
           style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
           role="img"
-          aria-label="Energías renovables"
+          aria-label="Renewable energy"
         />
 
         <h1 className="text-3xl font-extrabold text-center text-on-surface dark:text-content-dark mb-8">
-          Crea tu cuenta
+          Create your account
         </h1>
 
         <RegisterForm onSuccess={handleSuccess} />
