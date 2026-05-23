@@ -1,6 +1,19 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { SimulationResultsPage } from './SimulationResultsPage'
+import { useSimulationStore } from '@/stores/simulationStore'
+
+beforeEach(() => {
+  useSimulationStore.setState({
+    draft: {
+      location: '',
+      energyType: 'solar',
+      projectSize: 500,
+      budget: 1_000_000,
+    },
+    lastResult: null,
+  })
+})
 
 function renderPage() {
   return render(
@@ -41,5 +54,23 @@ describe('SimulationResultsPage', () => {
     renderPage()
 
     expect(screen.getByRole('link', { name: 'Run Another Simulation' })).toBeInTheDocument()
+  })
+
+  it('renders last simulation context from store', () => {
+    useSimulationStore.setState({
+      lastResult: {
+        id: 'sim-123',
+        location: 'Madrid',
+        energyType: 'wind',
+        roi: 18,
+        efficiency: 91,
+      },
+    })
+
+    renderPage()
+
+    expect(screen.getByText('Location: Madrid | Energy type: wind')).toBeInTheDocument()
+    expect(screen.getByText('Simulation ID: sim-123')).toBeInTheDocument()
+    expect(screen.getByText('18%')).toBeInTheDocument()
   })
 })

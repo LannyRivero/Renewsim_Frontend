@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useSimulationStore } from '@/stores/simulationStore'
 
 function MetricCard({
   label,
@@ -27,6 +28,12 @@ function MetricCard({
 }
 
 export function SimulationResultsPage() {
+  const lastResult = useSimulationStore((state) => state.lastResult)
+  const resultLocation = lastResult?.location ?? 'N/A'
+  const resultEnergyType = lastResult?.energyType ?? 'solar'
+  const roiValue = typeof lastResult?.roi === 'number' ? `${lastResult.roi}%` : '12%'
+  const efficiencyValue = typeof lastResult?.efficiency === 'number' ? `${lastResult.efficiency}%` : '85%'
+
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-background-dark">
@@ -68,13 +75,16 @@ export function SimulationResultsPage() {
           <p className="text-base text-on-surface-variant dark:text-content-dark/60">
             Review the outcomes of your energy simulation and explore the impact of your choices.
           </p>
+          <p className="text-sm text-on-surface-variant dark:text-content-dark/60">
+            Location: {resultLocation} | Energy type: {resultEnergyType}
+          </p>
         </header>
 
         <section>
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">Key Metrics</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Energy Generated" value="15,000 kWh" delta="+5%" />
-          <MetricCard label="Return on Investment (ROI)" value="12%" delta="-2%" positive={false} />
+          <MetricCard label="Energy Generated" value="15,000 kWh" delta={efficiencyValue} />
+          <MetricCard label="Return on Investment (ROI)" value={roiValue} delta="-2%" positive={false} />
           <MetricCard label="Payback Period" value="8 years" delta="+1 year" />
           <MetricCard label="CO2 Emissions Avoided" value="25 tons" delta="+10 tons" />
         </div>
@@ -94,6 +104,11 @@ export function SimulationResultsPage() {
               <p className="text-sm text-on-surface dark:text-content-dark">
                 The simulation indicates that solar energy offers the best balance between returns and sustainability.
               </p>
+              {lastResult ? (
+                <p className="text-xs text-on-surface-variant dark:text-content-dark/70">
+                  Simulation ID: {lastResult.id}
+                </p>
+              ) : null}
               <button
                 type="button"
                 className="rounded-lg bg-primary-container/15 px-4 py-2 text-sm font-bold text-primary hover:bg-primary-container/25"
