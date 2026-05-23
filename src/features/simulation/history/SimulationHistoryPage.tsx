@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { getSimulationHistory } from '../services/simulationService'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { deleteSimulationById, getSimulationHistory } from '../services/simulationService'
+import { useToastStore } from '@/stores/toastStore'
 
 const FALLBACK_ROWS = [
   { id: 'mock-1', date: 'May 15, 2024', energyType: 'Solar', efficiency: '85%', roi: '12%' },
@@ -11,9 +12,44 @@ const FALLBACK_ROWS = [
 ]
 
 export function SimulationHistoryPage() {
+  const queryClient = useQueryClient()
   const { data } = useQuery({
     queryKey: ['simulation-history'],
     queryFn: getSimulationHistory,
+  })
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteSimulationById,
+    onMutate: async (simulationId) => {
+      await queryClient.cancelQueries({ queryKey: ['simulation-history'] })
+
+      const previousHistory = queryClient.getQueryData<typeof data>(['simulation-history'])
+
+      queryClient.setQueryData(['simulation-history'], (current: typeof data) => {
+        if (!current) return current
+        return current.filter((item) => item.id !== simulationId)
+      })
+
+      return { previousHistory }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      useToastStore.getState().pushToast({
+        title: 'Simulation Deleted',
+        description: 'The simulation was deleted successfully.',
+        variant: 'success',
+      })
+    },
+    onError: (_error, _simulationId, context) => {
+      if (context?.previousHistory) {
+        queryClient.setQueryData(['simulation-history'], context.previousHistory)
+      }
+      useToastStore.getState().pushToast({
+        title: 'Delete Error',
+        description: 'Could not delete simulation. Please try again.',
+        variant: 'error',
+      })
+    },
   })
 
   const rows = data && data.length > 0 ? data : FALLBACK_ROWS
@@ -114,7 +150,7 @@ export function SimulationHistoryPage() {
                           <span className="material-symbols-outlined">visibility</span>
                         </Link>
                         <Link
-                          to="/simulador/editar"
+                          to={`/simulador/editar?id=${encodeURIComponent(row.id)}`}
                           aria-label={`Edit simulation ${row.energyType}`}
                           className="rounded-lg p-2 text-on-surface-variant transition-colors hover:bg-primary/10 dark:text-content-dark/60"
                         >
@@ -123,6 +159,7 @@ export function SimulationHistoryPage() {
                         <button
                           type="button"
                           aria-label={`Delete simulation ${row.energyType}`}
+                          onClick={() => deleteMutation.mutate(row.id)}
                           className="rounded-lg p-2 text-red-500 transition-colors hover:bg-red-500/10"
                         >
                           <span className="material-symbols-outlined">delete</span>
