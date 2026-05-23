@@ -1,10 +1,23 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NewSimulationPage } from './NewSimulationPage'
+
+function renderPage() {
+  const queryClient = new QueryClient()
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <NewSimulationPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
+  )
+}
 
 describe('NewSimulationPage', () => {
   it('renders heading and description', () => {
-    render(<NewSimulationPage />)
+    renderPage()
 
     expect(screen.getByRole('heading', { name: 'New custom simulation' })).toBeInTheDocument()
     expect(
@@ -13,7 +26,7 @@ describe('NewSimulationPage', () => {
   })
 
   it('renders top header navigation from stitch design', () => {
-    render(<NewSimulationPage />)
+    renderPage()
 
     expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Simulations' })).toBeInTheDocument()
@@ -23,7 +36,7 @@ describe('NewSimulationPage', () => {
   })
 
   it('renders editable form fields', () => {
-    render(<NewSimulationPage />)
+    renderPage()
 
     expect(screen.getByLabelText('Location')).toBeInTheDocument()
     expect(screen.getByLabelText('Energy type')).toBeInTheDocument()
@@ -32,7 +45,7 @@ describe('NewSimulationPage', () => {
   })
 
   it('renders read-only climate data fields', () => {
-    render(<NewSimulationPage />)
+    renderPage()
 
     expect(screen.getByLabelText('Irradiance (kWh/m2/day)')).toHaveAttribute('readonly')
     expect(screen.getByLabelText('Wind speed (m/s)')).toHaveAttribute('readonly')
@@ -40,7 +53,7 @@ describe('NewSimulationPage', () => {
   })
 
   it('renders submit action', () => {
-    render(<NewSimulationPage />)
+    renderPage()
     expect(screen.getByRole('button', { name: 'Run simulation' })).toBeInTheDocument()
   })
 })
