@@ -47,8 +47,14 @@ describe('RegisterForm', () => {
     expect(mockRegister).not.toHaveBeenCalled()
   })
 
-  it('calls register service with email as username on valid submit', async () => {
-    mockRegister.mockResolvedValueOnce({ token: 'tok123' })
+  it('calls register service with backend register payload on valid submit', async () => {
+    mockRegister.mockResolvedValueOnce({
+      id: 2,
+      email: 'ana@test.com',
+      fullName: 'Ana Lopez',
+      status: 'PENDING_VERIFICATION',
+      message: 'Verification email sent',
+    })
     const onSuccess = vi.fn()
     renderForm(onSuccess)
 
@@ -61,10 +67,11 @@ describe('RegisterForm', () => {
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith({
-        username: 'ana@test.com',
+        email: 'ana@test.com',
         password: 'Secure1!',
+        fullName: 'Ana López',
       })
-      expect(onSuccess).toHaveBeenCalledWith('tok123')
+      expect(onSuccess).toHaveBeenCalledTimes(1)
     })
   })
 

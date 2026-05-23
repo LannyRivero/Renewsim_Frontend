@@ -9,19 +9,13 @@ const HERO_IMAGE =
 export function RegisterPage() {
   const navigate = useNavigate()
 
-  function handleSuccess(token: string) {
-    useAuthStore.setState((state) => ({
-      ...state,
-      accessToken: token,
-      isAuthenticated: true,
-    }))
-    localStorage.setItem('renewsim-token', token)
+  function handleSuccess() {
     useToastStore.getState().pushToast({
       title: 'Cuenta creada',
-      description: 'Tu registro fue exitoso.',
+      description: 'Tu cuenta fue creada. Iniciá sesión para continuar.',
       variant: 'success',
     })
-    navigate('/')
+    navigate('/iniciar-sesion')
   }
 
   return (

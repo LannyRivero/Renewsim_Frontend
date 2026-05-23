@@ -6,7 +6,7 @@ import { validatePassword } from '../../../shared/utils/validatePassword'
 import { useToastStore } from '@/stores/toastStore'
 
 interface RegisterFormProps {
-  onSuccess: (token: string) => void
+  onSuccess: () => void
 }
 
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
@@ -27,8 +27,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
     setIsLoading(true)
     try {
-      const { token } = await register({ username: email, password })
-      onSuccess(token)
+      await register({ email, password, fullName: name })
+      onSuccess()
     } catch {
       setServerError('No se pudo crear la cuenta. Inténtalo de nuevo.')
       useToastStore.getState().pushToast({

@@ -31,7 +31,7 @@ describe('LoginForm', () => {
     expect(screen.getByRole('link', { name: /regístrate/i })).toBeInTheDocument()
   })
 
-  it('calls login service with email as username', async () => {
+  it('calls login service with email payload', async () => {
     mockLogin.mockResolvedValueOnce({ token: 'tok456' })
     const onSuccess = vi.fn()
     renderForm(onSuccess)
@@ -44,7 +44,7 @@ describe('LoginForm', () => {
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
-        username: 'user@test.com',
+        email: 'user@test.com',
         password: 'Pass1!',
       })
       expect(onSuccess).toHaveBeenCalledWith('tok456')

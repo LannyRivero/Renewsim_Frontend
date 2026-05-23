@@ -1,17 +1,26 @@
 // ── Request types ──────────────────────────────────────────
 export interface LoginRequest {
-  username: string
+  email: string
   password: string
 }
 
 export interface RegisterRequest {
-  username: string
+  email: string
   password: string
+  fullName: string
 }
 
 // ── Response types ─────────────────────────────────────────
 export interface AuthResponse {
   token: string
+}
+
+export interface RegisterResponse {
+  id: number
+  email: string
+  fullName: string
+  status: string
+  message: string
 }
 
 export interface AuthUser {

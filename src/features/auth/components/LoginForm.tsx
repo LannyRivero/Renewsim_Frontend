@@ -20,7 +20,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     setIsLoading(true)
 
     try {
-      const { token } = await login({ username: email, password })
+      const { token } = await login({ email, password })
       onSuccess(token)
     } catch {
       setServerError('Credenciales incorrectas. Inténtalo de nuevo.')

@@ -18,7 +18,7 @@ export function LoginPage() {
       description: 'Bienvenido a RenewSim.',
       variant: 'success',
     })
-    navigate('/')
+    navigate('/simulador')
   }
 
   return (
