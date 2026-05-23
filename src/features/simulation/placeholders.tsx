@@ -1,3 +1,6 @@
+import { TechnologiesPage } from './technologies/TechnologiesPage'
+import { AdminPage as AdminPanelPage } from './admin/AdminPage'
+
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <div className="flex flex-1 justify-center items-center py-24">
@@ -13,7 +16,7 @@ function PlaceholderPage({ title }: { title: string }) {
 }
 
 export function TecnologiasPage() {
-  return <PlaceholderPage title="Technologies" />
+  return <TechnologiesPage />
 }
 
 export function ConfiguracionPage() {
@@ -21,5 +24,5 @@ export function ConfiguracionPage() {
 }
 
 export function AdminPage() {
-  return <PlaceholderPage title="Admin Panel" />
+  return <AdminPanelPage />
 }
