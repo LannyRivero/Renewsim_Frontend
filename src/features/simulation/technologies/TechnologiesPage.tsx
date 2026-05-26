@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { createTechnology, deleteTechnologyById, getAllTechnologies } from '../services/technologyService'
-import { technologySchema } from '../schemas/technologySchema'
+import { createTechnology, deleteTechnologyById, getAllTechnologies } from './services/technologyService'
+import { technologySchema } from './schemas/technologySchema'
 import { useTechnologyStore } from '@/stores/technologyStore'
 import { useToastStore } from '@/stores/toastStore'
 
