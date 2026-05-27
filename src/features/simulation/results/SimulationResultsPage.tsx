@@ -14,7 +14,7 @@ function MetricCard({
   positive?: boolean
 }) {
   return (
-    <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+    <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
       <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">{label}</p>
       <p className="mt-2 text-3xl font-bold text-on-surface dark:text-content-dark">{value}</p>
       <p
@@ -41,8 +41,8 @@ export function SimulationResultsPage() {
   const co2Value = `${insights.co2AvoidedTons} tons`
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-background-dark">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-[#0f1a16]">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">      
 
           <div className="flex items-center gap-6">
@@ -96,7 +96,7 @@ export function SimulationResultsPage() {
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">
             Recommended Technology
           </h2>
-        <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-surface-dark">
+        <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-[#111d18]">
           <div className="grid gap-6 p-8 md:grid-cols-2 md:items-stretch">
             <div className="space-y-4">
               <h3 className="text-xl font-bold">{insights.recommendedTechnology}</h3>
@@ -126,7 +126,7 @@ export function SimulationResultsPage() {
         <section>
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">Comparative Analysis</h2>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">
                 Energy Generation (kWh)
               </p>
@@ -137,12 +137,12 @@ export function SimulationResultsPage() {
               </div>
             </article>
 
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">ROI Over Time</p>
               <div className="mt-6 h-52 rounded bg-gradient-to-t from-primary/10 to-primary/30" />
             </article>
 
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">CO2 Reduction (tons)</p>
               <div className="mt-6 space-y-4">
                 <div className="h-4 rounded bg-surface-container">
