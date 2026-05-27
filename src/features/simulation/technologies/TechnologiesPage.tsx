@@ -66,22 +66,22 @@ export function TechnologiesPage() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8 space-y-8">
-      <section className="rounded-xl border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+      <section className="rounded-xl border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
         <h1 className="text-2xl font-extrabold text-on-surface dark:text-content-dark">Technologies</h1>
         <p className="mt-2 text-sm text-on-surface-variant dark:text-content-dark/60">Create and manage renewable technologies.</p>
 
         <form className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2" onSubmit={handleSubmit}>
-          <input value={draft.name} onChange={(e) => setDraftField('name', e.target.value)} placeholder="Technology name" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark" />
-          <select value={draft.energyType} onChange={(e) => setDraftField('energyType', e.target.value as 'SOLAR' | 'WIND' | 'HYDRO')} className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark">
+          <input value={draft.name} onChange={(e) => setDraftField('name', e.target.value)} placeholder="Technology name" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]" />
+          <select value={draft.energyType} onChange={(e) => setDraftField('energyType', e.target.value as 'SOLAR' | 'WIND' | 'HYDRO')} className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]">
             <option value="SOLAR">Solar</option>
             <option value="WIND">Wind</option>
             <option value="HYDRO">Hydro</option>
           </select>
-          <input type="number" value={draft.efficiency} onChange={(e) => setDraftField('efficiency', Number(e.target.value))} placeholder="Efficiency (0-100)" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark" />
-          <input type="number" value={draft.co2Reduction} onChange={(e) => setDraftField('co2Reduction', Number(e.target.value))} placeholder="CO2 reduction" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark" />
-          <input type="number" value={draft.installationCost} onChange={(e) => setDraftField('installationCost', Number(e.target.value))} placeholder="Installation cost" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark" />
-          <input type="number" value={draft.maintenanceCost} onChange={(e) => setDraftField('maintenanceCost', Number(e.target.value))} placeholder="Maintenance cost" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark" />
-          <input type="number" value={draft.environmentalImpact} onChange={(e) => setDraftField('environmentalImpact', Number(e.target.value))} placeholder="Environmental impact (0-100)" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-surface-dark md:col-span-2" />
+          <input type="number" value={draft.efficiency} onChange={(e) => setDraftField('efficiency', Number(e.target.value))} placeholder="Efficiency (0-100)" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]" />
+          <input type="number" value={draft.co2Reduction} onChange={(e) => setDraftField('co2Reduction', Number(e.target.value))} placeholder="CO2 reduction" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]" />
+          <input type="number" value={draft.installationCost} onChange={(e) => setDraftField('installationCost', Number(e.target.value))} placeholder="Installation cost" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]" />
+          <input type="number" value={draft.maintenanceCost} onChange={(e) => setDraftField('maintenanceCost', Number(e.target.value))} placeholder="Maintenance cost" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18]" />
+          <input type="number" value={draft.environmentalImpact} onChange={(e) => setDraftField('environmentalImpact', Number(e.target.value))} placeholder="Environmental impact (0-100)" className="rounded-lg border border-outline-variant bg-surface px-3 py-2 dark:border-white/10 dark:bg-[#111d18] md:col-span-2" />
 
           {formError ? <p role="alert" className="text-sm text-red-500 md:col-span-2">{formError}</p> : null}
 
@@ -93,7 +93,7 @@ export function TechnologiesPage() {
         </form>
       </section>
 
-      <section className="rounded-xl border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+      <section className="rounded-xl border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
         <h2 className="text-xl font-bold text-on-surface dark:text-content-dark">Registered Technologies</h2>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-left text-sm">
