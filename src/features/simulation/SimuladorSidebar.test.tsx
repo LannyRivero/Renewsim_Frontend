@@ -16,6 +16,7 @@ function renderSidebar() {
 describe('SimuladorSidebar', () => {
   beforeEach(() => {
     useAuthStore.getState().clearAuth()
+    localStorage.removeItem('renewsim-theme')
   })
 
   it('hides admin link for non-admin users', () => {
@@ -57,5 +58,19 @@ describe('SimuladorSidebar', () => {
 
     expect(useAuthStore.getState().isAuthenticated).toBe(false)
     expect(localStorage.getItem('renewsim-token')).toBeNull()
+  })
+
+  it('updates theme mode from sidebar appearance controls', () => {
+    useAuthStore.setState({
+      accessToken: 'token',
+      isAuthenticated: true,
+      user: { id: 1, username: 'admin', roles: ['ADMIN'] },
+    })
+
+    renderSidebar()
+    fireEvent.click(screen.getByRole('button', { name: /Appearance/i }))
+    fireEvent.click(screen.getByRole('button', { name: 'dark' }))
+
+    expect(localStorage.getItem('renewsim-theme')).toBe('dark')
   })
 })

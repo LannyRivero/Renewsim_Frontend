@@ -63,7 +63,7 @@ describe('AdminPage', () => {
 
     await screen.findByText('admin')
 
-    fireEvent.change(screen.getByDisplayValue('ADMIN'), { target: { value: 'ADMIN,USER' } })
+    fireEvent.click(screen.getByLabelText('USER'))
     fireEvent.click(screen.getByRole('button', { name: 'Save Roles' }))
 
     await waitFor(() => {
@@ -71,6 +71,7 @@ describe('AdminPage', () => {
     })
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete User' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Delete' }))
 
     await waitFor(() => {
       expect(mockedDeleteUser).toHaveBeenCalled()
