@@ -58,6 +58,17 @@ describe('SimulationResultsPage', () => {
 
   it('renders last simulation context from store', () => {
     useSimulationStore.setState({
+      lastRunInput: {
+        location: 'Madrid',
+        energyType: 'wind',
+        projectSize: 800,
+        budget: 1_000_000,
+        climate: {
+          irradiance: 4.6,
+          windSpeed: 8.3,
+          hydrology: 2.8,
+        },
+      },
       lastResult: {
         id: 'sim-123',
         location: 'Madrid',
@@ -72,5 +83,6 @@ describe('SimulationResultsPage', () => {
     expect(screen.getByText('Location: Madrid | Energy type: wind')).toBeInTheDocument()
     expect(screen.getByText('Simulation ID: sim-123')).toBeInTheDocument()
     expect(screen.getByText('18%')).toBeInTheDocument()
+    expect(screen.getByText('Wind Turbine')).toBeInTheDocument()
   })
 })

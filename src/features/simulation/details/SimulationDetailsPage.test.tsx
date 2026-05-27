@@ -30,6 +30,17 @@ beforeEach(() => {
       roi: 17,
       efficiency: 90,
     },
+    lastRunInput: {
+      location: 'Valencia',
+      energyType: 'wind',
+      projectSize: 650,
+      budget: 900000,
+      climate: {
+        irradiance: 4.8,
+        windSpeed: 8.1,
+        hydrology: 2.4,
+      },
+    },
   })
 })
 
@@ -50,6 +61,7 @@ describe('SimulationDetailsPage', () => {
     renderPage()
     expect(screen.getByRole('heading', { name: 'Financial Summary' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Environmental Impact' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Climate Conditions Used' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Educational Insights' })).toBeInTheDocument()
   })
 

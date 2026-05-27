@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useSimulationStore } from '@/stores/simulationStore'
+import { buildSimulationInsights } from '../utils/simulationInsights'
 
 function MetricCard({
   label,
@@ -29,10 +30,15 @@ function MetricCard({
 
 export function SimulationResultsPage() {
   const lastResult = useSimulationStore((state) => state.lastResult)
+  const lastRunInput = useSimulationStore((state) => state.lastRunInput)
   const resultLocation = lastResult?.location ?? 'N/A'
   const resultEnergyType = lastResult?.energyType ?? 'solar'
-  const roiValue = typeof lastResult?.roi === 'number' ? `${lastResult.roi}%` : '12%'
-  const efficiencyValue = typeof lastResult?.efficiency === 'number' ? `${lastResult.efficiency}%` : '85%'
+  const insights = buildSimulationInsights(lastRunInput, lastResult)
+  const roiValue = `${insights.roiPercent}%`
+  const efficiencyValue = `${insights.efficiencyPercent}%`
+  const energyValue = `${insights.energyGeneratedKwh.toLocaleString('en-US')} kWh`
+  const paybackValue = `${insights.paybackYears} years`
+  const co2Value = `${insights.co2AvoidedTons} tons`
 
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
@@ -79,10 +85,10 @@ export function SimulationResultsPage() {
         <section>
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">Key Metrics</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Energy Generated" value="15,000 kWh" delta={efficiencyValue} />
-          <MetricCard label="Return on Investment (ROI)" value={roiValue} delta="-2%" positive={false} />
-          <MetricCard label="Payback Period" value="8 years" delta="+1 year" />
-          <MetricCard label="CO2 Emissions Avoided" value="25 tons" delta="+10 tons" />
+          <MetricCard label="Energy Generated" value={energyValue} delta={efficiencyValue} />
+          <MetricCard label="Return on Investment (ROI)" value={roiValue} delta="Model-calculated" />
+          <MetricCard label="Payback Period" value={paybackValue} delta="Adjusted by climate" />
+          <MetricCard label="CO2 Emissions Avoided" value={co2Value} delta="Estimated yearly" />
         </div>
         </section>
 
@@ -93,7 +99,7 @@ export function SimulationResultsPage() {
         <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-surface-dark">
           <div className="grid gap-6 p-8 md:grid-cols-2 md:items-stretch">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">Solar Power</h3>
+              <h3 className="text-xl font-bold">{insights.recommendedTechnology}</h3>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/65">
                 Harness solar energy with photovoltaic panels to reduce costs and emissions.
               </p>

@@ -3,10 +3,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'react-router-dom'
 import { getSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
+import { buildSimulationInsights } from '../utils/simulationInsights'
 
 export function SimulationDetailsPage() {
   const [searchParams] = useSearchParams()
   const resultFromStore = useSimulationStore((state) => state.lastResult)
+  const lastRunInput = useSimulationStore((state) => state.lastRunInput)
   const simulationId = searchParams.get('id') ?? resultFromStore?.id ?? null
 
   const { data } = useQuery({
@@ -34,6 +36,7 @@ export function SimulationDetailsPage() {
     : typeof resultFromStore?.efficiency === 'number'
       ? `${resultFromStore.efficiency}%`
       : 'N/A'
+  const insights = buildSimulationInsights(lastRunInput, resultFromStore)
 
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
@@ -128,15 +131,32 @@ export function SimulationDetailsPage() {
             <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
               <h3 className="font-semibold">Financial Summary</h3>
               <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total Investment: $125,000</p>
-              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Total Savings: $15,000/year</p>
+              <p className="text-sm text-on-surface-variant dark:text-content-dark/70">
+                Total Savings: ${(insights.energyGeneratedKwh * 0.12).toLocaleString('en-US')}/year
+              </p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Overall ROI: {roi}</p>
             </section>
             <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
               <h3 className="font-semibold">Environmental Impact</h3>
-              <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total CO2 Reduction: 23 tons/year</p>
+              <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">
+                Total CO2 Reduction: {insights.co2AvoidedTons} tons/year
+              </p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Efficiency: {efficiency}</p>
             </section>
           </div>
+
+          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
+            <h3 className="font-semibold">Climate Conditions Used</h3>
+            <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">
+              Irradiance: {lastRunInput?.climate.irradiance ?? 'N/A'} kWh/m2/day
+            </p>
+            <p className="text-sm text-on-surface-variant dark:text-content-dark/70">
+              Wind speed: {lastRunInput?.climate.windSpeed ?? 'N/A'} m/s
+            </p>
+            <p className="text-sm text-on-surface-variant dark:text-content-dark/70">
+              Hydrology: {lastRunInput?.climate.hydrology ?? 'N/A'} m3/s
+            </p>
+          </section>
 
           <section className="rounded-r-lg border-l-4 border-primary bg-green-50 p-6 dark:bg-green-900/20">
             <h3 className="mb-2 text-xl font-bold">Educational Insights</h3>

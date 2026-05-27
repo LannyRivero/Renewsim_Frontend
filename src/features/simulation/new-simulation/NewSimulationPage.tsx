@@ -19,6 +19,7 @@ export function NewSimulationPage() {
   const draft = useSimulationStore((state) => state.draft)
   const setDraftField = useSimulationStore((state) => state.setDraftField)
   const setLastResult = useSimulationStore((state) => state.setLastResult)
+  const setLastRunInput = useSimulationStore((state) => state.setLastRunInput)
   const [formError, setFormError] = useState<string | null>(null)
   const [isLoadingClimate, setIsLoadingClimate] = useState(false)
   const [isRefreshingClimate, setIsRefreshingClimate] = useState(false)
@@ -172,6 +173,10 @@ export function NewSimulationPage() {
         })
 
         mutation.mutate({
+          ...parsed.data,
+          climate,
+        })
+        setLastRunInput({
           ...parsed.data,
           climate,
         })
