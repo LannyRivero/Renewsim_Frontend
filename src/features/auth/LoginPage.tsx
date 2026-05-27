@@ -1,10 +1,25 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { LoginForm } from './components/LoginForm'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromState =
+    typeof location.state === 'object' && location.state !== null && 'from' in location.state
+      ? (location.state as { from?: unknown }).from
+      : undefined
+
+  const redirectPath =
+    typeof fromState === 'string'
+      ? fromState
+      : typeof fromState === 'object' &&
+          fromState !== null &&
+          'pathname' in fromState &&
+          typeof (fromState as { pathname?: unknown }).pathname === 'string'
+        ? (fromState as { pathname: string }).pathname
+        : '/simulador'
 
   function handleSuccess(token: string) {
     useAuthStore.setState((state) => ({
@@ -18,7 +33,7 @@ export function LoginPage() {
       description: 'Welcome to RenewSim.',
       variant: 'success',
     })
-    navigate('/simulador')
+    navigate(redirectPath)
   }
 
   return (

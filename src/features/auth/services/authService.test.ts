@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 
 describe('authService.login', () => {
-  it('calls POST /api/v1/auth/login with credentials', async () => {
+  it('calls POST /auth/login with credentials', async () => {
     mockPost.mockResolvedValueOnce({
       data: {
         status: 200,
@@ -30,7 +30,7 @@ describe('authService.login', () => {
 
     const result = await login({ email: 'user@test.com', password: 'Pass1!' })
 
-    expect(mockPost).toHaveBeenCalledWith('/api/v1/auth/login', {
+    expect(mockPost).toHaveBeenCalledWith('/auth/login', {
       email: 'user@test.com',
       password: 'Pass1!',
     }, { withCredentials: true })
@@ -45,7 +45,7 @@ describe('authService.login', () => {
 })
 
 describe('authService.register', () => {
-  it('calls POST /api/v1/auth/register with credentials', async () => {
+  it('calls POST /auth/register with credentials', async () => {
     mockPost.mockResolvedValueOnce({
       data: {
         status: 201,
@@ -70,7 +70,7 @@ describe('authService.register', () => {
       fullName: 'New User',
     })
 
-    expect(mockPost).toHaveBeenCalledWith('/api/v1/auth/register', {
+    expect(mockPost).toHaveBeenCalledWith('/auth/register', {
       email: 'new@test.com',
       password: 'Pass1!',
       fullName: 'New User',

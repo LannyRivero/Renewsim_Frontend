@@ -22,7 +22,7 @@ export async function login(credentials: LoginRequest): Promise<AuthResponse> {
     password: credentials.password,
   }
   const { data } = await axiosInstance.post<OperationResponse<{ accessToken: string }>>(
-    '/api/v1/auth/login',
+    '/auth/login',
     payload,
     { withCredentials: true },
   )
@@ -35,6 +35,6 @@ export async function register(credentials: RegisterRequest): Promise<RegisterRe
     password: credentials.password,
     fullName: credentials.fullName.trim(),
   }
-  const { data } = await axiosInstance.post<OperationResponse<RegisterResponse>>('/api/v1/auth/register', payload)
+  const { data } = await axiosInstance.post<OperationResponse<RegisterResponse>>('/auth/register', payload)
   return data.data
 }

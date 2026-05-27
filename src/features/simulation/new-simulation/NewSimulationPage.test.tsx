@@ -50,6 +50,9 @@ describe('NewSimulationPage', () => {
     expect(screen.getByLabelText('Irradiance (kWh/m2/day)')).toHaveAttribute('readonly')
     expect(screen.getByLabelText('Wind speed (m/s)')).toHaveAttribute('readonly')
     expect(screen.getByLabelText('Hydrology (m3/s)')).toHaveAttribute('readonly')
+    expect(screen.getByLabelText('Irradiance (kWh/m2/day)')).toHaveValue('-')
+    expect(screen.getByLabelText('Wind speed (m/s)')).toHaveValue('-')
+    expect(screen.getByLabelText('Hydrology (m3/s)')).toHaveValue('3.0')
   })
 
   it('renders submit action', () => {
