@@ -8,7 +8,7 @@ import { useSimulationStore } from '@/stores/simulationStore'
 import { useToastStore } from '@/stores/toastStore'
 
 const FIELD_CLASS =
-  'w-full h-12 px-4 rounded-lg bg-surface dark:bg-surface-dark border border-outline-variant dark:border-white/10 placeholder:text-on-surface-variant/60 dark:placeholder:text-content-dark/50 focus:outline-none focus:ring-2 focus:ring-primary-container/60 focus:border-primary-container transition'
+  'w-full h-12 px-4 rounded-lg bg-surface dark:bg-[#111d18] border border-outline-variant dark:border-white/10 placeholder:text-on-surface-variant/60 dark:placeholder:text-content-dark/50 focus:outline-none focus:ring-2 focus:ring-primary-container/60 focus:border-primary-container transition'
 
 const READONLY_CLASS =
   'w-full h-12 px-4 rounded-lg bg-surface-container-low dark:bg-white/5 border border-outline-variant dark:border-white/10 text-on-surface-variant dark:text-content-dark/70 cursor-not-allowed'
@@ -198,8 +198,8 @@ export function NewSimulationPage() {
   }
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant dark:border-white/10 bg-surface/90 dark:bg-background-dark/90 backdrop-blur-sm">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant dark:border-white/10 bg-surface/90 dark:bg-[#0f1a16]/90 backdrop-blur-sm">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
           <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
             <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
@@ -263,7 +263,7 @@ export function NewSimulationPage() {
                 <p className="mt-2 text-xs text-red-600 dark:text-red-400">{locationSearchMessage}</p>
               ) : null}
               {locationSuggestions.length > 0 ? (
-                <ul className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-outline-variant bg-surface shadow-lg dark:border-white/10 dark:bg-surface-dark">
+                <ul className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-outline-variant bg-surface shadow-lg dark:border-white/10 dark:bg-[#111d18]">
                   {locationSuggestions.map((suggestion) => (
                     <li key={suggestion}>
                       <button
