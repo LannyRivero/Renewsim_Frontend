@@ -55,8 +55,8 @@ export function SimulationHistoryPage() {
   const rows = data && data.length > 0 ? data : FALLBACK_ROWS
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">         
 
           <nav className="hidden items-center gap-8 md:flex">
@@ -100,10 +100,10 @@ export function SimulationHistoryPage() {
           </Link>
         </div>
 
-        <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-sm dark:border-white/10 dark:bg-surface-dark">
+        <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-sm dark:border-white/10 dark:bg-[#111d18]">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-surface-container-low dark:bg-background-dark">
+              <thead className="bg-surface-container-low dark:bg-[#15241e]">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
                     Date
@@ -126,7 +126,7 @@ export function SimulationHistoryPage() {
                 {rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="transition-colors hover:bg-surface-container-low dark:hover:bg-background-dark"
+                      className="transition-colors hover:bg-surface-container-low dark:hover:bg-[#15241e]"
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-on-surface-variant dark:text-content-dark/60">
                       {row.date}
