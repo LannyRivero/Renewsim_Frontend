@@ -77,8 +77,8 @@ export function EditSimulationPage() {
   }
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="size-7 rounded-full bg-primary-container" />
@@ -132,7 +132,7 @@ export function EditSimulationPage() {
                 id="simulation-name"
                 name="simulationName"
                 defaultValue={initialName}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
 
@@ -143,7 +143,7 @@ export function EditSimulationPage() {
             <select
               id="location"
               name="location"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               defaultValue={initialLocation}
             >
               <option>{initialLocation}</option>
@@ -161,7 +161,7 @@ export function EditSimulationPage() {
             <select
               id="energy-source"
               name="energySource"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               defaultValue={inferredSource}
             >
               <option>Solar Panels</option>
@@ -181,7 +181,7 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.1"
                 defaultValue={7.5}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
             <div>
@@ -193,7 +193,7 @@ export function EditSimulationPage() {
                 name="annualConsumptionKwh"
                 type="number"
                 defaultValue={10000}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
           </div>
@@ -208,7 +208,7 @@ export function EditSimulationPage() {
                 name="incentives"
                 type="number"
                 defaultValue={1500}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
             <div>
@@ -221,7 +221,7 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.01"
                 defaultValue={0.18}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
           </div>
