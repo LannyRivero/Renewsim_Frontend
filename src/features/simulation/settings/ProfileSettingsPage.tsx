@@ -5,10 +5,7 @@ export function ProfileSettingsPage() {
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-background-dark">
         <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4">
-            <div className="size-8 rounded-full bg-primary-container" />
-            <h1 className="text-xl font-bold">RenewSim</h1>
-          </div>
+        
           <nav className="hidden items-center gap-8 md:flex">
             <Link to="/simulador" className="text-sm font-medium transition-colors hover:text-primary">
               Simulations

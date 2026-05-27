@@ -37,11 +37,7 @@ export function SimulationResultsPage() {
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-background-dark">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="size-7 rounded-full bg-primary-container" />
-            <span className="text-xl font-bold">RenewSim</span>
-          </div>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">      
 
           <div className="flex items-center gap-6">
             <nav className="hidden items-center gap-6 md:flex">

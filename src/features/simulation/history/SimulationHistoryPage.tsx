@@ -57,13 +57,7 @@ export function SimulationHistoryPage() {
   return (
     <section className="min-h-screen bg-surface dark:bg-background-dark">
       <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="text-primary">
-              <span className="material-symbols-outlined">air</span>
-            </div>
-            <h2 className="text-xl font-bold">RenewSim</h2>
-          </div>
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">         
 
           <nav className="hidden items-center gap-8 md:flex">
             <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
