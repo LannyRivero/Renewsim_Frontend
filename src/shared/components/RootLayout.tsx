@@ -3,6 +3,8 @@ import { Navbar, Footer, DarkModeToggle, type NavLink } from './index'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { ChatWidget } from './ChatWidget'
 import { useDarkMode } from '../hooks'
+import { useAuthStore } from '@/stores/authStore'
+import { useNavigate } from 'react-router-dom'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
@@ -44,22 +46,52 @@ interface NavActionsProps {
 }
 
 function NavActions({ isDark, onToggle }: NavActionsProps) {
+  const navigate = useNavigate()
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const user = useAuthStore((state) => state.user)
+
+  function handleLogout() {
+    useAuthStore.getState().clearAuth()
+    localStorage.removeItem('renewsim-token')
+    navigate('/login')
+  }
+
   return (
     <div className="flex items-center gap-2">
       <LocaleSwitcher />
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
-      <Link
-        to="/login"
-        className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
-      >
-        Sign In
-      </Link>
-      <Link
-        to="/register"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
-      >
-        Sign Up
-      </Link>
+      {isAuthenticated ? (
+        <>
+          <Link
+            to="/simulador/configuracion"
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+          >
+            {user?.username ? `Hi, ${user.username}` : 'Profile'}
+          </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <Link
+            to="/login"
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
+            to="/register"
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+          >
+            Sign Up
+          </Link>
+        </>
+      )}
     </div>
   )
 }

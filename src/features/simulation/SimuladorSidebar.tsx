@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useAuthStore } from '@/stores/authStore'
 
 const NAV_ITEMS = [
   { to: '/simulador', label: 'Simulations', icon: 'insights', end: true },
@@ -11,6 +12,10 @@ const NAV_ITEMS = [
 ]
 
 export function SimuladorSidebar() {
+  const user = useAuthStore((state) => state.user)
+  const isAdmin = Boolean(user?.roles?.includes('ADMIN'))
+  const navItems = isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.to !== '/simulador/admin')
+
   return (
     <aside className="w-64 shrink-0 bg-surface-container-lowest dark:bg-[#1A2E22] flex flex-col p-6 border-r border-outline-variant dark:border-white/8 min-h-screen">
       {/* Logo */}
@@ -26,7 +31,7 @@ export function SimuladorSidebar() {
       {/* Nav */}
       <nav className="flex-1">
         <ul className="flex flex-col gap-1">
-          {NAV_ITEMS.map(({ to, label, icon, end }) => (
+          {navItems.map(({ to, label, icon, end }) => (
             <li key={to}>
               <NavLink
                 to={to}

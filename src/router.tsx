@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { RootLayout } from './shared/components/RootLayout'
 import { RequireAuth } from './shared/components/RequireAuth'
+import { RequireRole } from './shared/components/RequireRole'
 import { HomePage } from './features/home/HomePage'
 import { HowItWorksPage } from './features/how-it-works/HowItWorksPage'
 import { AboutPage } from './features/about/AboutPage'
@@ -51,7 +52,14 @@ export const router = createBrowserRouter([
       { path: 'resultados', element: <SimulationResultsPage /> },
       { path: 'tecnologias', element: <TecnologiasPage /> },
       { path: 'configuracion', element: <ProfileSettingsPage /> },
-      { path: 'admin', element: <AdminPage /> },
+      {
+        path: 'admin',
+        element: (
+          <RequireRole role="ADMIN">
+            <AdminPage />
+          </RequireRole>
+        ),
+      },
     ],
   },
 ])
