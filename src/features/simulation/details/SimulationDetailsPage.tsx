@@ -39,8 +39,8 @@ export function SimulationDetailsPage() {
   const insights = buildSimulationInsights(lastRunInput, resultFromStore)
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="size-7 rounded-full bg-primary-container" />
@@ -85,7 +85,7 @@ export function SimulationDetailsPage() {
         </div>
 
         <div className="space-y-10">
-          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
+          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-[#15241e]">
             <h2 className="mb-4 text-xl font-bold">Simulation Overview</h2>
             <div className="grid grid-cols-1 gap-6 text-sm md:grid-cols-3">
               <div>
@@ -103,13 +103,13 @@ export function SimulationDetailsPage() {
             </div>
           </section>
 
-          <section className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-surface-dark">
+          <section className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-[#111d18]">
             <div className="p-6">
               <h2 className="text-xl font-bold">Energy Source Comparison</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-surface-container-low dark:bg-background-dark/60">
+                <thead className="bg-surface-container-low dark:bg-[#15241e]">
                   <tr>
                     <th className="px-6 py-3 font-medium" scope="col">Energy Source</th>
                     <th className="px-6 py-3 font-medium" scope="col">Initial Investment</th>
@@ -128,7 +128,7 @@ export function SimulationDetailsPage() {
           </section>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
+            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-[#15241e]">
               <h3 className="font-semibold">Financial Summary</h3>
               <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total Investment: $125,000</p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">
@@ -136,7 +136,7 @@ export function SimulationDetailsPage() {
               </p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Overall ROI: {roi}</p>
             </section>
-            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
+            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-[#15241e]">
               <h3 className="font-semibold">Environmental Impact</h3>
               <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">
                 Total CO2 Reduction: {insights.co2AvoidedTons} tons/year
@@ -145,7 +145,7 @@ export function SimulationDetailsPage() {
             </section>
           </div>
 
-          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
+          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-[#15241e]">
             <h3 className="font-semibold">Climate Conditions Used</h3>
             <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">
               Irradiance: {lastRunInput?.climate.irradiance ?? 'N/A'} kWh/m2/day
