@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import { fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { SimuladorSidebar } from './SimuladorSidebar'
@@ -27,6 +28,7 @@ describe('SimuladorSidebar', () => {
     renderSidebar()
 
     expect(screen.queryByText('Admin Panel')).not.toBeInTheDocument()
+    expect(screen.queryByText('Technologies')).not.toBeInTheDocument()
   })
 
   it('shows admin link for admin users', () => {
@@ -39,5 +41,21 @@ describe('SimuladorSidebar', () => {
     renderSidebar()
 
     expect(screen.getByText('Admin Panel')).toBeInTheDocument()
+    expect(screen.getByText('Technologies')).toBeInTheDocument()
+  })
+
+  it('clears auth and token on logout', () => {
+    localStorage.setItem('renewsim-token', 'legacy-token')
+    useAuthStore.setState({
+      accessToken: 'token',
+      isAuthenticated: true,
+      user: { id: 1, username: 'admin', roles: ['ADMIN'] },
+    })
+
+    renderSidebar()
+    fireEvent.click(screen.getByRole('button', { name: 'Logout' }))
+
+    expect(useAuthStore.getState().isAuthenticated).toBe(false)
+    expect(localStorage.getItem('renewsim-token')).toBeNull()
   })
 })

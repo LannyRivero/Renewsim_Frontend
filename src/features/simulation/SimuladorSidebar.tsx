@@ -1,5 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'
+import { useNavigate } from 'react-router-dom'
+import { hasRole, readDisplayName, readRoles } from '@/shared/utils/authToken'
 
 const NAV_ITEMS = [
   { to: '/simulador', label: 'Simulations', icon: 'insights', end: true },
@@ -12,9 +14,21 @@ const NAV_ITEMS = [
 ]
 
 export function SimuladorSidebar() {
+  const navigate = useNavigate()
+  const accessToken = useAuthStore((state) => state.accessToken) ?? localStorage.getItem('renewsim-token')
   const user = useAuthStore((state) => state.user)
-  const isAdmin = Boolean(user?.roles?.includes('ADMIN'))
-  const navItems = isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((item) => item.to !== '/simulador/admin')
+  const tokenRoles = readRoles(accessToken)
+  const displayName = user?.username ?? readDisplayName(accessToken) ?? 'User'
+  const isAdmin = hasRole(user?.roles, 'ADMIN') || hasRole(tokenRoles, 'ADMIN')
+  const navItems = isAdmin
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((item) => item.to !== '/simulador/admin' && item.to !== '/simulador/tecnologias')
+
+  function handleLogout() {
+    useAuthStore.getState().clearAuth()
+    localStorage.removeItem('renewsim-token')
+    navigate('/login')
+  }
 
   return (
     <aside className="w-64 shrink-0 bg-surface-container-lowest dark:bg-[#1A2E22] flex flex-col p-6 border-r border-outline-variant dark:border-white/8 min-h-screen">
@@ -53,7 +67,20 @@ export function SimuladorSidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="pt-4 border-t border-outline-variant dark:border-white/8">
+      <div className="pt-4 border-t border-outline-variant dark:border-white/8 space-y-3">
+        <div className="px-4 py-2 rounded-lg bg-surface-container dark:bg-white/5">
+          <p className="text-xs text-on-surface-variant dark:text-content-dark/60">Logged in as</p>
+          <p className="text-sm font-semibold text-on-surface dark:text-content-dark">{displayName}</p>
+        </div>
+        <button
+          type="button"
+          aria-label="Logout"
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container dark:hover:bg-white/5 transition-colors"
+        >
+          <span className="material-symbols-outlined text-xl">logout</span>
+          Logout
+        </button>
         <a
           href="#"
           className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium text-on-surface-variant dark:text-content-dark/60 hover:bg-surface-container dark:hover:bg-white/5 transition-colors"

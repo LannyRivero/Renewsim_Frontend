@@ -5,6 +5,7 @@ import { ChatWidget } from './ChatWidget'
 import { useDarkMode } from '../hooks'
 import { useAuthStore } from '@/stores/authStore'
 import { useNavigate } from 'react-router-dom'
+import { readDisplayName } from '@/shared/utils/authToken'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
@@ -47,8 +48,10 @@ interface NavActionsProps {
 
 function NavActions({ isDark, onToggle }: NavActionsProps) {
   const navigate = useNavigate()
+  const accessToken = useAuthStore((state) => state.accessToken) ?? localStorage.getItem('renewsim-token')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const user = useAuthStore((state) => state.user)
+  const displayName = user?.username ?? readDisplayName(accessToken)
 
   function handleLogout() {
     useAuthStore.getState().clearAuth()
@@ -66,7 +69,7 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
             to="/simulador/configuracion"
             className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
           >
-            {user?.username ? `Hi, ${user.username}` : 'Profile'}
+            {displayName ? `Hi, ${displayName}` : 'Profile'}
           </Link>
           <button
             type="button"

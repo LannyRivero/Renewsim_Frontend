@@ -11,7 +11,7 @@ export function AdminPage() {
   const [roleDrafts, setRoleDrafts] = useState<Record<string, string>>({})
   const usersPerPage = 10
 
-  const { data: users = [] } = useQuery({
+  const { data: users = [], isLoading, isError, error } = useQuery({
     queryKey: ['admin-users'],
     queryFn: getAllUsers,
   })
@@ -76,6 +76,16 @@ export function AdminPage() {
       <section className="rounded-xl border border-outline-variant bg-surface p-8 dark:border-white/10 dark:bg-surface-dark">
         <h1 className="text-2xl font-extrabold text-on-surface dark:text-content-dark">Admin Panel</h1>
         <p className="mt-2 text-sm text-on-surface-variant dark:text-content-dark/60">Manage users and roles.</p>
+
+        {isLoading ? (
+          <p className="mt-4 text-sm text-on-surface-variant dark:text-content-dark/70">Loading users...</p>
+        ) : null}
+
+        {isError ? (
+          <p className="mt-4 text-sm text-red-600 dark:text-red-400">
+            {error instanceof Error ? error.message : 'Could not load users.'}
+          </p>
+        ) : null}
 
         <input
           value={search}

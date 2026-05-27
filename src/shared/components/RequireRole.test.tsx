@@ -43,6 +43,32 @@ describe('RequireRole', () => {
     expect(screen.getByText('Admin content')).toBeInTheDocument()
   })
 
+  it('accepts ROLE_ADMIN naming convention', () => {
+    useAuthStore.setState({
+      accessToken: 'token',
+      isAuthenticated: true,
+      user: { id: 1, username: 'admin', roles: ['ROLE_ADMIN'] },
+    })
+
+    render(
+      <MemoryRouter initialEntries={['/simulador/admin']}>
+        <Routes>
+          <Route
+            path="/simulador/admin"
+            element={
+              <RequireRole role="ADMIN">
+                <ProtectedAdmin />
+              </RequireRole>
+            }
+          />
+          <Route path="/simulador" element={<Dashboard />} />
+        </Routes>
+      </MemoryRouter>,
+    )
+
+    expect(screen.getByText('Admin content')).toBeInTheDocument()
+  })
+
   it('redirects to /simulador when user lacks role', () => {
     useAuthStore.setState({
       accessToken: 'token',

@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { LoginForm } from './components/LoginForm'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
+import { readUserFromToken } from '@/shared/utils/authToken'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -22,9 +23,17 @@ export function LoginPage() {
         : '/simulador'
 
   function handleSuccess(token: string) {
+    const userFromToken = readUserFromToken(token)
     useAuthStore.setState((state) => ({
       ...state,
       accessToken: token,
+      user: userFromToken
+        ? {
+            id: 0,
+            username: userFromToken.username,
+            roles: userFromToken.roles,
+          }
+        : state.user,
       isAuthenticated: true,
     }))
     localStorage.setItem('renewsim-token', token)

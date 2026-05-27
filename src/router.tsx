@@ -50,7 +50,14 @@ export const router = createBrowserRouter([
       { path: 'editar', element: <EditSimulationPage /> },
       { path: 'nueva', element: <NewSimulationPage /> },
       { path: 'resultados', element: <SimulationResultsPage /> },
-      { path: 'tecnologias', element: <TecnologiasPage /> },
+      {
+        path: 'tecnologias',
+        element: (
+          <RequireRole role="ADMIN">
+            <TecnologiasPage />
+          </RequireRole>
+        ),
+      },
       { path: 'configuracion', element: <ProfileSettingsPage /> },
       {
         path: 'admin',
