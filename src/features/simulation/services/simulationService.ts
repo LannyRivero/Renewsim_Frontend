@@ -12,6 +12,16 @@ type ApiResponse<T> = {
 
 type RawSimulation = Record<string, unknown>
 
+function isSimulationResult(value: unknown): value is SimulationResult {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Record<string, unknown>
+  return (
+    typeof candidate.id === 'string' &&
+    typeof candidate.location === 'string' &&
+    typeof candidate.energyType === 'string'
+  )
+}
+
 function readString(value: unknown, fallback: string): string {
   return typeof value === 'string' && value.trim().length > 0 ? value : fallback
 }
@@ -57,13 +67,16 @@ export async function getSimulationHistory(): Promise<SimulationHistoryItem[]> {
 
 export async function createSimulation(payload: CreateSimulationPayload): Promise<SimulationResult> {
   const response = await httpClient.post<ApiResponse<SimulationResult> | SimulationResult>('/simulations', payload)
-  const data = 'data' in response.data ? (response.data.data ?? null) : response.data
+  const rawData: unknown =
+    response.data && typeof response.data === 'object' && 'data' in response.data
+      ? (response.data as ApiResponse<SimulationResult>).data
+      : response.data
 
-  if (!data || typeof data.id !== 'string') {
+  if (!isSimulationResult(rawData)) {
     throw new Error('Invalid simulation response from server')
   }
 
-  return data
+  return rawData
 }
 
 export async function getSimulationById(simulationId: string): Promise<SimulationDetails> {
