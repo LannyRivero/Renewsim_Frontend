@@ -3,39 +3,42 @@ import { Navbar, Footer, DarkModeToggle, type NavLink } from './index'
 import { LocaleSwitcher } from './LocaleSwitcher'
 import { ChatWidget } from './ChatWidget'
 import { useDarkMode } from '../hooks'
+import { useAuthStore } from '@/stores/authStore'
+import { useNavigate } from 'react-router-dom'
+import { readDisplayName } from '@/shared/utils/authToken'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
-    { label: 'Inicio', href: '/', active: true },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador' },
+    { label: 'Home', href: '/', active: true },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador' },
   ],
-  '/como-funciona': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona', active: true },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador' },
+  '/how-it-works': [
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works', active: true },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador' },
   ],
-  '/acerca-de': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de', active: true },
-    { label: 'Simulador', href: '/simulador' },
+  '/about': [
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about', active: true },
+    { label: 'Simulator', href: '/simulador' },
   ],
   '/simulador': [
-    { label: 'Inicio', href: '/' },
-    { label: 'Cómo Funciona', href: '/como-funciona' },
-    { label: 'Acerca de', href: '/acerca-de' },
-    { label: 'Simulador', href: '/simulador', active: true },
+    { label: 'Home', href: '/' },
+    { label: 'How It Works', href: '/how-it-works' },
+    { label: 'About', href: '/about' },
+    { label: 'Simulator', href: '/simulador', active: true },
   ],
 }
 
 const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Cómo Funciona', href: '/como-funciona' },
-  { label: 'Acerca de', href: '/acerca-de' },
-  { label: 'Simulador', href: '/simulador' },
+  { label: 'Home', href: '/' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'About', href: '/about' },
+  { label: 'Simulator', href: '/simulador' },
 ]
 
 interface NavActionsProps {
@@ -44,22 +47,54 @@ interface NavActionsProps {
 }
 
 function NavActions({ isDark, onToggle }: NavActionsProps) {
+  const navigate = useNavigate()
+  const accessToken = useAuthStore((state) => state.accessToken) ?? localStorage.getItem('renewsim-token')
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
+  const user = useAuthStore((state) => state.user)
+  const displayName = user?.username ?? readDisplayName(accessToken)
+
+  function handleLogout() {
+    useAuthStore.getState().clearAuth()
+    localStorage.removeItem('renewsim-token')
+    navigate('/login')
+  }
+
   return (
     <div className="flex items-center gap-2">
       <LocaleSwitcher />
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
-      <Link
-        to="/iniciar-sesion"
-        className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
-      >
-        Iniciar Sesión
-      </Link>
-      <Link
-        to="/registro"
-        className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
-      >
-        Registrarse
-      </Link>
+      {isAuthenticated ? (
+        <>
+          <Link
+            to="/simulador/configuracion"
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+          >
+            {displayName ? `Hi, ${displayName}` : 'Profile'}
+          </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <Link
+            to="/login"
+            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+          >
+            Sign In
+          </Link>
+          <Link
+            to="/register"
+            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+          >
+            Sign Up
+          </Link>
+        </>
+      )}
     </div>
   )
 }

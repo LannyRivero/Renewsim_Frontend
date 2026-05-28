@@ -1,14 +1,37 @@
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen } from '@testing-library/react'
 import { EditSimulationPage } from './EditSimulationPage'
+import { useSimulationStore } from '@/stores/simulationStore'
 
 function renderPage() {
+  const queryClient = new QueryClient()
   return render(
-    <MemoryRouter>
-      <EditSimulationPage />
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <EditSimulationPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
 }
+
+beforeEach(() => {
+  useSimulationStore.setState({
+    draft: {
+      location: '',
+      energyType: 'solar',
+      projectSize: 500,
+      budget: 1_000_000,
+    },
+    lastResult: {
+      id: 'sim-edit-1',
+      location: 'Madrid',
+      energyType: 'solar',
+      roi: 12,
+      efficiency: 88,
+    },
+  })
+})
 
 describe('EditSimulationPage', () => {
   it('renders page title and description', () => {

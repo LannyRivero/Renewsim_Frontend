@@ -7,27 +7,27 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: 'settings_suggest',
-    title: 'Simulación personalizada',
+    title: 'Custom simulation',
     description:
-      'Adapta las simulaciones a tus necesidades y escenarios específicos para obtener resultados precisos.',
+      'Adapt simulations to your needs and specific scenarios to obtain accurate results.',
   },
   {
     icon: 'bar_chart',
-    title: 'Comparación visual',
+    title: 'Visual comparison',
     description:
-      'Compara el rendimiento, los costos y el impacto ambiental de diferentes fuentes de energía.',
+      'Compare performance, costs, and environmental impact across different energy sources.',
   },
   {
     icon: 'psychology',
-    title: 'IA predictiva',
+    title: 'Predictive AI',
     description:
-      'Recomendaciones inteligentes basadas en análisis predictivos para optimizar tus decisiones.',
+      'Smart recommendations based on predictive analysis to optimize your decisions.',
   },
   {
     icon: 'eco',
-    title: 'Educación ambiental',
+    title: 'Environmental education',
     description:
-      'Aprende sobre el impacto ambiental de las energías limpias de forma interactiva.',
+      'Learn about the environmental impact of clean energy in an interactive way.',
   },
 ]
 
@@ -49,14 +49,14 @@ export function FeaturesSection() {
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mb-14">
           <p className="text-xs font-semibold tracking-widest uppercase text-primary dark:text-primary-inverse mb-3">
-            Capacidades
+            Capabilities
           </p>
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-            ¿Por qué RenewSim es diferente?
+            Why is RenewSim different?
           </h2>
           <p className="mt-4 text-base text-on-surface-variant dark:text-content-dark/55">
-            Una plataforma diseñada para que profesionales y empresas tomen
-            decisiones energéticas con confianza y precisión.
+            A platform designed so professionals and companies can make
+            energy decisions with confidence and precision.
           </p>
         </div>
 

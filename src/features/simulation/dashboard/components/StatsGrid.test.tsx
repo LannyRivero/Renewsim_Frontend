@@ -10,10 +10,10 @@ describe('StatsGrid', () => {
 
   it('displays the label of each card', () => {
     render(<StatsGrid stats={DASHBOARD_STATS} />)
-    expect(screen.getByText('Simulaciones Totales')).toBeInTheDocument()
-    expect(screen.getByText('CO₂ Ahorrado')).toBeInTheDocument()
-    expect(screen.getByText('Promedio de ROI')).toBeInTheDocument()
-    expect(screen.getByText('Energía Generada')).toBeInTheDocument()
+    expect(screen.getByText('Total Simulations')).toBeInTheDocument()
+    expect(screen.getByText('CO2 Saved')).toBeInTheDocument()
+    expect(screen.getByText('Average ROI')).toBeInTheDocument()
+    expect(screen.getByText('Energy Generated')).toBeInTheDocument()
   })
 
   it('displays the value of each card', () => {

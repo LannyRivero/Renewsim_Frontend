@@ -11,7 +11,7 @@ export function DashboardPage() {
   return (
     <div>
       <h1 className="text-3xl font-extrabold text-on-surface dark:text-content-dark mb-8">
-        Panel de Control
+        Dashboard
       </h1>
 
       {/* KPI cards */}
@@ -19,7 +19,7 @@ export function DashboardPage() {
 
       {/* Charts section */}
       <h2 className="text-xl font-bold text-on-surface dark:text-content-dark mt-10 mb-6">
-        Resumen de Energía
+        Energy Summary
       </h2>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">

@@ -1,23 +1,84 @@
 import { Link } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useToastStore } from '@/stores/toastStore'
+import { useSimulationStore } from '@/stores/simulationStore'
+import { editSimulationSchema } from '../schemas/simulationSchema'
+import { getSimulationById, updateSimulationById } from '../services/simulationService'
 
 export function EditSimulationPage() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+  const lastResult = useSimulationStore((state) => state.lastResult)
+  const simulationId = searchParams.get('id') ?? lastResult?.id ?? null
+
+  const { data } = useQuery({
+    queryKey: ['simulation-details', simulationId],
+    queryFn: async () => {
+      if (!simulationId) return null
+      return getSimulationById(simulationId)
+    },
+    enabled: Boolean(simulationId),
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async (values: Parameters<typeof editSimulationSchema.parse>[0]) => {
+      if (!simulationId) {
+        throw new Error('Missing simulation id')
+      }
+      const payload = editSimulationSchema.parse(values)
+      await updateSimulationById(simulationId, payload)
+    },
+    onSuccess: () => {
+      useToastStore.getState().pushToast({
+        title: 'Changes Saved',
+        description: 'Simulation was updated successfully.',
+        variant: 'success',
+      })
+      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      if (simulationId) {
+        queryClient.invalidateQueries({ queryKey: ['simulation-details', simulationId] })
+      }
+      navigate('/simulador/historial')
+    },
+    onError: () => {
+      useToastStore.getState().pushToast({
+        title: 'Update Error',
+        description: 'Could not update simulation. Please verify the fields.',
+        variant: 'error',
+      })
+    },
+  })
+
+  const inferredSource =
+    data?.energyType?.toLowerCase() === 'wind'
+      ? 'Wind Turbine'
+      : data?.energyType?.toLowerCase() === 'hydro'
+        ? 'Hydroelectric'
+        : 'Solar Panels'
+
+  const initialName = `${data?.energyType ?? lastResult?.energyType ?? 'Energy'} Simulation`
+  const initialLocation = data?.location ?? lastResult?.location ?? 'San Francisco, CA'
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
-    const simulationName = String(formData.get('simulationName') ?? 'Simulation')
-
-    useToastStore.getState().pushToast({
-      title: 'Cambios guardados',
-      description: `Se actualizo ${simulationName} correctamente.`,
-      variant: 'success',
+    updateMutation.mutate({
+      simulationName: String(formData.get('simulationName') ?? ''),
+      location: String(formData.get('location') ?? ''),
+      energySource: String(formData.get('energySource') ?? ''),
+      systemSizeKw: Number(formData.get('systemSizeKw') ?? 0),
+      annualConsumptionKwh: Number(formData.get('annualConsumptionKwh') ?? 0),
+      incentives: Number(formData.get('incentives') ?? 0),
+      electricityRate: Number(formData.get('electricityRate') ?? 0),
     })
   }
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="size-7 rounded-full bg-primary-container" />
@@ -31,10 +92,10 @@ export function EditSimulationPage() {
             <Link to="/simulador/historial" className="text-sm font-medium text-primary">
               Simulations
             </Link>
-            <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
               Resources
             </Link>
-            <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
               Community
             </Link>
           </nav>
@@ -42,7 +103,7 @@ export function EditSimulationPage() {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low dark:text-content-dark/60"
             >
               <span className="material-symbols-outlined">notifications</span>
@@ -67,13 +128,13 @@ export function EditSimulationPage() {
             <label htmlFor="simulation-name" className="mb-2 block text-sm font-medium">
               Simulation Name
             </label>
-            <input
-              id="simulation-name"
-              name="simulationName"
-              defaultValue="My Solar Project"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
-            />
-          </div>
+              <input
+                id="simulation-name"
+                name="simulationName"
+                defaultValue={initialName}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
+            </div>
 
           <div>
             <label htmlFor="location" className="mb-2 block text-sm font-medium">
@@ -82,9 +143,10 @@ export function EditSimulationPage() {
             <select
               id="location"
               name="location"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
-              defaultValue="San Francisco, CA"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              defaultValue={initialLocation}
             >
+              <option>{initialLocation}</option>
               <option>San Francisco, CA</option>
               <option>Austin, TX</option>
               <option>Miami, FL</option>
@@ -99,12 +161,12 @@ export function EditSimulationPage() {
             <select
               id="energy-source"
               name="energySource"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
-              defaultValue="Solar Panels"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              defaultValue={inferredSource}
             >
               <option>Solar Panels</option>
               <option>Wind Turbine</option>
-              <option>Geothermal</option>
+              <option>Hydroelectric</option>
             </select>
           </div>
 
@@ -119,7 +181,7 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.1"
                 defaultValue={7.5}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
             <div>
@@ -131,7 +193,7 @@ export function EditSimulationPage() {
                 name="annualConsumptionKwh"
                 type="number"
                 defaultValue={10000}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
           </div>
@@ -146,7 +208,7 @@ export function EditSimulationPage() {
                 name="incentives"
                 type="number"
                 defaultValue={1500}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
             <div>
@@ -159,7 +221,7 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.01"
                 defaultValue={0.18}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-surface-dark"
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
               />
             </div>
           </div>
@@ -167,9 +229,10 @@ export function EditSimulationPage() {
           <div className="flex justify-end pt-2">
             <button
               type="submit"
+              disabled={updateMutation.isPending}
               className="rounded-lg bg-primary px-6 py-3 text-sm font-bold text-black transition hover:opacity-90"
             >
-              Save Changes
+              {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </form>

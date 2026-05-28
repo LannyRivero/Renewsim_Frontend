@@ -12,7 +12,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
   const hasToken = Boolean(accessToken ?? legacyToken)
 
   if (!hasToken) {
-    return <Navigate to="/iniciar-sesion" state={{ from: location }} replace />
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
   return <>{children}</>
