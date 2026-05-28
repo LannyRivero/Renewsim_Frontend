@@ -10,7 +10,7 @@ export function useSimulatorNav() {
     if (token) {
       navigate('/simulador')
     } else {
-      navigate('/iniciar-sesion', { state: { from: '/simulador' } })
+      navigate('/login', { state: { from: '/simulador' } })
     }
   }
 }

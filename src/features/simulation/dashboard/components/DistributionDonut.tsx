@@ -41,7 +41,7 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
       tooltip: {
         callbacks: {
           label: (ctx: { label: string; parsed: number }) =>
-            `${ctx.label}: ${ctx.parsed.toLocaleString('es-ES')} kWh`,
+            `${ctx.label}: ${ctx.parsed.toLocaleString('en-US')} kWh`,
         },
       },
     },
@@ -52,7 +52,7 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
       <div className="flex items-start justify-between mb-4">
         <div>
           <p className="text-sm font-medium text-on-surface dark:text-content-dark">
-            Distribución
+            Distribution
           </p>
         </div>
         <div className="flex items-center gap-1 text-xs font-semibold text-primary dark:text-primary-inverse">
@@ -65,12 +65,12 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
       <div
         className="relative h-44 flex justify-center items-center"
         role="img"
-        aria-label="Distribución de energía"
+        aria-label="Energy distribution"
       >
         <Doughnut data={chartData} options={options as never} />
         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
           <span className="text-xs text-on-surface-variant dark:text-content-dark/50">
-            fuentes
+            sources
           </span>
           <span className="text-2xl font-extrabold text-on-surface dark:text-content-dark">
             {data.length}
@@ -92,7 +92,7 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
               </span>
             </div>
             <span className="font-semibold text-on-surface dark:text-content-dark">
-              {kwh.toLocaleString('es-ES')} kWh
+              {kwh.toLocaleString('en-US')} kWh
             </span>
           </li>
         ))}

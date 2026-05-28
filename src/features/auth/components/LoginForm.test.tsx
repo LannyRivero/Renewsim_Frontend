@@ -21,30 +21,30 @@ beforeEach(() => vi.clearAllMocks())
 describe('LoginForm', () => {
   it('renders email, password and submit button', () => {
     renderForm()
-    expect(screen.getByLabelText('Correo electrónico')).toBeInTheDocument()
-    expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
+    expect(screen.getByLabelText('Email')).toBeInTheDocument()
+    expect(screen.getByLabelText('Password')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
   })
 
   it('shows link to register page', () => {
     renderForm()
-    expect(screen.getByRole('link', { name: /regístrate/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument()
   })
 
-  it('calls login service with email as username', async () => {
+  it('calls login service with email payload', async () => {
     mockLogin.mockResolvedValueOnce({ token: 'tok456' })
     const onSuccess = vi.fn()
     renderForm(onSuccess)
 
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'user@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Pass1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Pass1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
-        username: 'user@test.com',
+        email: 'user@test.com',
         password: 'Pass1!',
       })
       expect(onSuccess).toHaveBeenCalledWith('tok456')
@@ -55,11 +55,11 @@ describe('LoginForm', () => {
     mockLogin.mockRejectedValueOnce(new Error('Unauthorized'))
     renderForm()
 
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'bad@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Wrong1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Wrong1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
     expect(await screen.findByRole('alert')).toBeInTheDocument()
   })
@@ -68,14 +68,14 @@ describe('LoginForm', () => {
     mockLogin.mockImplementationOnce(() => new Promise(() => {}))
     renderForm()
 
-    fireEvent.change(screen.getByLabelText('Correo electrónico'), {
+    fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'u@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Pass1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /iniciar sesión/i }))
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Pass1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /iniciando|cargando/i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /signing in|loading/i })).toBeDisabled()
     })
   })
 })

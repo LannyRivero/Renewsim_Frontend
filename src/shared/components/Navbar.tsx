@@ -14,10 +14,10 @@ interface NavbarProps {
 }
 
 const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Inicio', href: '/' },
-  { label: 'Cómo Funciona', href: '/como-funciona' },
-  { label: 'Acerca de', href: '/acerca-de' },
-  { label: 'Simulador', href: '#' },
+  { label: 'Home', href: '/' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'About', href: '/about' },
+  { label: 'Simulator', href: '#' },
 ]
 
 function DefaultCta() {
@@ -27,13 +27,13 @@ function DefaultCta() {
         type="button"
         className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors cursor-pointer"
       >
-        Iniciar Sesión
+        Sign In
       </button>
       <button
         type="button"
         className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer"
       >
-        Registrarse
+        Sign Up
       </button>
     </div>
   )

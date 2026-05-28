@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom'
+import { useSimulationStore } from '@/stores/simulationStore'
+import { buildSimulationInsights } from '../utils/simulationInsights'
 
 function MetricCard({
   label,
@@ -12,7 +14,7 @@ function MetricCard({
   positive?: boolean
 }) {
   return (
-    <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+    <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
       <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">{label}</p>
       <p className="mt-2 text-3xl font-bold text-on-surface dark:text-content-dark">{value}</p>
       <p
@@ -27,24 +29,31 @@ function MetricCard({
 }
 
 export function SimulationResultsPage() {
+  const lastResult = useSimulationStore((state) => state.lastResult)
+  const lastRunInput = useSimulationStore((state) => state.lastRunInput)
+  const resultLocation = lastResult?.location ?? 'N/A'
+  const resultEnergyType = lastResult?.energyType ?? 'solar'
+  const insights = buildSimulationInsights(lastRunInput, lastResult)
+  const roiValue = `${insights.roiPercent}%`
+  const efficiencyValue = `${insights.efficiencyPercent}%`
+  const energyValue = `${insights.energyGeneratedKwh.toLocaleString('en-US')} kWh`
+  const paybackValue = `${insights.paybackYears} years`
+  const co2Value = `${insights.co2AvoidedTons} tons`
+
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-background-dark">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="size-7 rounded-full bg-primary-container" />
-            <span className="text-xl font-bold">RenewSim</span>
-          </div>
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="border-b border-outline-variant bg-surface dark:border-white/10 dark:bg-[#0f1a16]">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">      
 
           <div className="flex items-center gap-6">
             <nav className="hidden items-center gap-6 md:flex">
               <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
                 Simulations
               </Link>
-              <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
                 Learn
               </Link>
-              <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
+              <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
                 Community
               </Link>
             </nav>
@@ -68,15 +77,18 @@ export function SimulationResultsPage() {
           <p className="text-base text-on-surface-variant dark:text-content-dark/60">
             Review the outcomes of your energy simulation and explore the impact of your choices.
           </p>
+          <p className="text-sm text-on-surface-variant dark:text-content-dark/60">
+            Location: {resultLocation} | Energy type: {resultEnergyType}
+          </p>
         </header>
 
         <section>
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">Key Metrics</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <MetricCard label="Energy Generated" value="15,000 kWh" delta="+5%" />
-          <MetricCard label="Return on Investment (ROI)" value="12%" delta="-2%" positive={false} />
-          <MetricCard label="Payback Period" value="8 years" delta="+1 year" />
-          <MetricCard label="CO2 Emissions Avoided" value="25 tons" delta="+10 tons" />
+          <MetricCard label="Energy Generated" value={energyValue} delta={efficiencyValue} />
+          <MetricCard label="Return on Investment (ROI)" value={roiValue} delta="Model-calculated" />
+          <MetricCard label="Payback Period" value={paybackValue} delta="Adjusted by climate" />
+          <MetricCard label="CO2 Emissions Avoided" value={co2Value} delta="Estimated yearly" />
         </div>
         </section>
 
@@ -84,16 +96,21 @@ export function SimulationResultsPage() {
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">
             Recommended Technology
           </h2>
-        <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-surface-dark">
+        <div className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-[#111d18]">
           <div className="grid gap-6 p-8 md:grid-cols-2 md:items-stretch">
             <div className="space-y-4">
-              <h3 className="text-xl font-bold">Solar Power</h3>
+              <h3 className="text-xl font-bold">{insights.recommendedTechnology}</h3>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/65">
-                Aprovecha la energia del sol con paneles fotovoltaicos para reducir costos y emisiones.
+                Harness solar energy with photovoltaic panels to reduce costs and emissions.
               </p>
               <p className="text-sm text-on-surface dark:text-content-dark">
-                La simulacion indica que la energia solar ofrece el mejor balance entre retorno y sostenibilidad.
+                The simulation indicates that solar energy offers the best balance between returns and sustainability.
               </p>
+              {lastResult ? (
+                <p className="text-xs text-on-surface-variant dark:text-content-dark/70">
+                  Simulation ID: {lastResult.id}
+                </p>
+              ) : null}
               <button
                 type="button"
                 className="rounded-lg bg-primary-container/15 px-4 py-2 text-sm font-bold text-primary hover:bg-primary-container/25"
@@ -109,7 +126,7 @@ export function SimulationResultsPage() {
         <section>
           <h2 className="mb-6 text-2xl font-bold text-on-surface dark:text-content-dark">Comparative Analysis</h2>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">
                 Energy Generation (kWh)
               </p>
@@ -120,12 +137,12 @@ export function SimulationResultsPage() {
               </div>
             </article>
 
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">ROI Over Time</p>
               <div className="mt-6 h-52 rounded bg-gradient-to-t from-primary/10 to-primary/30" />
             </article>
 
-            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-surface-dark">
+            <article className="rounded-lg border border-outline-variant bg-surface p-6 dark:border-white/10 dark:bg-[#111d18]">
               <p className="text-sm font-medium text-on-surface-variant dark:text-content-dark/60">CO2 Reduction (tons)</p>
               <div className="mt-6 space-y-4">
                 <div className="h-4 rounded bg-surface-container">

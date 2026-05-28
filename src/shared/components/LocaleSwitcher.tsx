@@ -6,9 +6,9 @@ export function LocaleSwitcher() {
 
   return (
     <label className="inline-flex items-center gap-2 text-sm text-on-surface-variant dark:text-content-dark/70">
-      <span className="sr-only">Idioma</span>
+      <span className="sr-only">Language</span>
       <select
-        aria-label="Idioma"
+        aria-label="Language"
         value={locale}
         onChange={(event) => setLocale(event.target.value as 'es' | 'en')}
         className="rounded-lg border border-outline-variant dark:border-white/10 bg-surface dark:bg-surface-dark px-2 py-1 text-sm text-on-surface dark:text-content-dark"

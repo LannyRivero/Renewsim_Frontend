@@ -8,11 +8,11 @@ export function AboutPage() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
       <div className="max-w-4xl mx-auto">
         <p className="text-xs font-semibold tracking-widest uppercase text-primary dark:text-primary-inverse mb-3">
-          Nosotros
+          About Us
         </p>
         <header className="mb-14">
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-            Nuestra Misión y Visión
+            Our Mission and Vision
           </h1>
         </header>
 

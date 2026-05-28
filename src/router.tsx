@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom'
 import { RootLayout } from './shared/components/RootLayout'
 import { RequireAuth } from './shared/components/RequireAuth'
+import { RequireRole } from './shared/components/RequireRole'
 import { HomePage } from './features/home/HomePage'
 import { HowItWorksPage } from './features/how-it-works/HowItWorksPage'
 import { AboutPage } from './features/about/AboutPage'
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'how-it-works', element: <HowItWorksPage /> },
+      { path: 'about', element: <AboutPage /> },
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'login', element: <LoginPage /> },
       { path: 'como-funciona', element: <HowItWorksPage /> },
       { path: 'acerca-de', element: <AboutPage /> },
       { path: 'registro', element: <RegisterPage /> },
@@ -45,9 +50,23 @@ export const router = createBrowserRouter([
       { path: 'editar', element: <EditSimulationPage /> },
       { path: 'nueva', element: <NewSimulationPage /> },
       { path: 'resultados', element: <SimulationResultsPage /> },
-      { path: 'tecnologias', element: <TecnologiasPage /> },
+      {
+        path: 'tecnologias',
+        element: (
+          <RequireRole role="ADMIN">
+            <TecnologiasPage />
+          </RequireRole>
+        ),
+      },
       { path: 'configuracion', element: <ProfileSettingsPage /> },
-      { path: 'admin', element: <AdminPage /> },
+      {
+        path: 'admin',
+        element: (
+          <RequireRole role="ADMIN">
+            <AdminPage />
+          </RequireRole>
+        ),
+      },
     ],
   },
 ])
