@@ -88,4 +88,17 @@ describe('weatherService', () => {
       },
     ])
   })
+
+  it('returns fallback climate data when API key is missing', async () => {
+    vi.stubEnv('VITE_OPENWEATHER_API_KEY', '')
+    const fetchSpy = vi.spyOn(globalThis, 'fetch')
+    const result = await getClimateData('Madrid', 'wind')
+
+    expect(fetchSpy).not.toHaveBeenCalled()
+    expect(result).toEqual({
+      irradiance: 3.78,
+      windSpeed: 6.16,
+      hydrology: 2.29,
+    })
+  })
 })

@@ -63,21 +63,23 @@ export function NewSimulationPage() {
     : mutation.isPending
       ? 'Running simulation...'
       : 'Run simulation'
+  const hasLocationQuery = draft.location.trim().length >= 2
+  const displayedLocationSuggestions = hasLocationQuery ? locationSuggestions : []
+  const displayedLocationSearchMessage = hasLocationQuery ? locationSearchMessage : null
+  const displayedClimatePreview = hasLocationQuery
+    ? climatePreview
+    : { irradiance: '-', windSpeed: '-', hydrology: '3.0' }
 
   useEffect(() => {
     const currentQuery = draft.location.trim()
 
     if (currentQuery.length < 2) {
-      setLocationSuggestions([])
-      setLocationSearchMessage(null)
-      setIsSearchingLocation(false)
       return
     }
 
-    setIsSearchingLocation(true)
-    setLocationSearchMessage(null)
-
     const timer = window.setTimeout(() => {
+      setIsSearchingLocation(true)
+      setLocationSearchMessage(null)
       searchLocations(currentQuery)
         .then((suggestions) => {
           const labels = suggestions.map((item) => item.label)
@@ -106,14 +108,11 @@ export function NewSimulationPage() {
     const energyType = draft.energyType
 
     if (location.length < 2) {
-      setClimatePreview({ irradiance: '-', windSpeed: '-', hydrology: '3.0' })
-      setResolvedClimate(null)
-      setIsRefreshingClimate(false)
       return
     }
 
-    setIsRefreshingClimate(true)
     const timer = window.setTimeout(() => {
+      setIsRefreshingClimate(true)
       getClimateData(location, energyType)
         .then((climate) => {
           setResolvedClimate({ location, energyType, data: climate })
@@ -256,15 +255,15 @@ export function NewSimulationPage() {
                 placeholder="Enter location or use geolocation"
                 className={FIELD_CLASS}
               />
-              {isSearchingLocation ? (
+              {hasLocationQuery && isSearchingLocation ? (
                 <p className="mt-2 text-xs text-on-surface-variant dark:text-content-dark/60">Searching locations...</p>
               ) : null}
-              {locationSearchMessage ? (
-                <p className="mt-2 text-xs text-red-600 dark:text-red-400">{locationSearchMessage}</p>
+              {displayedLocationSearchMessage ? (
+                <p className="mt-2 text-xs text-red-600 dark:text-red-400">{displayedLocationSearchMessage}</p>
               ) : null}
-              {locationSuggestions.length > 0 ? (
+              {displayedLocationSuggestions.length > 0 ? (
                 <ul className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-outline-variant bg-surface shadow-lg dark:border-white/10 dark:bg-[#111d18]">
-                  {locationSuggestions.map((suggestion) => (
+                  {displayedLocationSuggestions.map((suggestion) => (
                     <li key={suggestion}>
                       <button
                         type="button"
@@ -340,7 +339,7 @@ export function NewSimulationPage() {
             <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/60">
               Values are adjusted for {draft.energyType} projects at the selected location.
             </p>
-            {isRefreshingClimate ? (
+            {hasLocationQuery && isRefreshingClimate ? (
               <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/60">Refreshing data for selected location and energy type...</p>
             ) : null}
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -348,21 +347,21 @@ export function NewSimulationPage() {
                 <label htmlFor="irradiance" className="mb-1 block text-sm font-medium">
                   Irradiance (kWh/m2/day)
                 </label>
-                <input id="irradiance" readOnly value={climatePreview.irradiance} className={READONLY_CLASS} />
+                <input id="irradiance" readOnly value={displayedClimatePreview.irradiance} className={READONLY_CLASS} />
               </div>
 
               <div>
                 <label htmlFor="wind-speed" className="mb-1 block text-sm font-medium">
                   Wind speed (m/s)
                 </label>
-                <input id="wind-speed" readOnly value={climatePreview.windSpeed} className={READONLY_CLASS} />
+                <input id="wind-speed" readOnly value={displayedClimatePreview.windSpeed} className={READONLY_CLASS} />
               </div>
 
               <div>
                 <label htmlFor="hydrology" className="mb-1 block text-sm font-medium">
                   Hydrology (m3/s)
                 </label>
-                <input id="hydrology" readOnly value={climatePreview.hydrology} className={READONLY_CLASS} />
+                <input id="hydrology" readOnly value={displayedClimatePreview.hydrology} className={READONLY_CLASS} />
               </div>
             </div>
           </div>

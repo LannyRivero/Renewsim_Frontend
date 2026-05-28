@@ -51,11 +51,11 @@ const OPEN_WEATHER_URL = 'https://api.openweathermap.org/data/2.5/weather'
 const OPEN_WEATHER_GEO_URL = 'https://api.openweathermap.org/geo/1.0/direct'
 const OPEN_WEATHER_ZIP_URL = 'https://api.openweathermap.org/geo/1.0/zip'
 
-function readApiKey(): string {
+function readApiKey(): string | null {
   const apiKey = import.meta.env.VITE_OPENWEATHER_API_KEY
 
   if (typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-    throw new Error('OpenWeather API key is missing. Set VITE_OPENWEATHER_API_KEY.')
+    return null
   }
 
   return apiKey
@@ -123,6 +123,9 @@ function applyEnergyProfile(base: ClimateData, energyType: EnergyType): ClimateD
 
 export async function getClimateData(location: string, energyType: EnergyType): Promise<ClimateData> {
   const apiKey = readApiKey()
+  if (!apiKey) {
+    return applyEnergyProfile({ irradiance: 4.2, windSpeed: 5.6, hydrology: 2.7 }, energyType)
+  }
 
   const targetLocation = location.trim()
   if (targetLocation.length === 0) {
@@ -154,6 +157,7 @@ export async function searchLocations(query: string, limit = 5): Promise<Locatio
   const q = query.trim()
 
   if (q.length < 2) return []
+  if (!apiKey) return []
 
   const postalMatch = q.match(/^(\d{4,10})(?:\s*,\s*([A-Za-z]{2}))?$/)
   if (postalMatch) {

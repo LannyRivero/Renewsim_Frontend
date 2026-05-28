@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prepare": "husky",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
@@ -12,6 +13,9 @@
     "test": "vitest",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "precommit": "pnpm lint && pnpm typecheck",
+    "prepr": "pnpm lint && pnpm typecheck && pnpm test:run",
+    "prepr:ci": "pnpm quality",
     "quality": "pnpm lint && pnpm typecheck && pnpm test:coverage",
     "verify": "pnpm quality && pnpm build"
   },
@@ -51,6 +55,7 @@
     "eslint-plugin-react-refresh": "0.5.2",
     "globals": "17.6.0",
     "jsdom": "29.1.1",
+    "husky": "9.1.7",
     "tailwindcss": "4.3.0",
     "typescript": "6.0.2",
     "typescript-eslint": "8.59.2",

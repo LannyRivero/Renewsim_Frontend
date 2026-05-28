@@ -36,7 +36,10 @@ function formatDate(value: unknown): string {
 }
 
 function normalizeSimulation(item: RawSimulation, index: number): SimulationHistoryItem {
-  const id = readString(item.id, `simulation-${index}`)
+  const id =
+    typeof item.id === 'string' || typeof item.id === 'number'
+      ? String(item.id)
+      : `simulation-${index}`
   const date = formatDate(item.createdAt ?? item.date)
   const energyType = readString(item.energyType ?? item.technologyName ?? item.sourceType, 'Unknown')
   const efficiency = toPercent(item.efficiency ?? item.efficiencyPercent, 'N/A')

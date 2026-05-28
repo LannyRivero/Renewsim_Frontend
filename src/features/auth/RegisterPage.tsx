@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { RegisterForm } from './components/RegisterForm'
-import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 
 const HERO_IMAGE =

@@ -3,17 +3,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteSimulationById, getSimulationHistory } from '../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
 
-const FALLBACK_ROWS = [
-  { id: 'mock-1', date: 'May 15, 2024', energyType: 'Solar', efficiency: '85%', roi: '12%' },
-  { id: 'mock-2', date: 'April 22, 2024', energyType: 'Wind', efficiency: '92%', roi: '15%' },
-  { id: 'mock-3', date: 'March 10, 2024', energyType: 'Hydroelectric', efficiency: '78%', roi: '10%' },
-  { id: 'mock-4', date: 'February 5, 2024', energyType: 'Biomass', efficiency: '80%', roi: '8%' },
-  { id: 'mock-5', date: 'January 1, 2024', energyType: 'Geothermal', efficiency: '88%', roi: '14%' },
-]
-
 export function SimulationHistoryPage() {
   const queryClient = useQueryClient()
-  const { data } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['simulation-history'],
     queryFn: getSimulationHistory,
   })
@@ -52,7 +44,7 @@ export function SimulationHistoryPage() {
     },
   })
 
-  const rows = data && data.length > 0 ? data : FALLBACK_ROWS
+  const rows = data ?? []
 
   return (
     <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
@@ -162,6 +154,33 @@ export function SimulationHistoryPage() {
                     </td>
                   </tr>
                 ))}
+                {!isLoading && !isError && rows.length === 0 ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-sm text-on-surface-variant dark:text-content-dark/60"
+                    >
+                      No simulations yet. Create your first simulation to see results here.
+                    </td>
+                  </tr>
+                ) : null}
+                {isLoading ? (
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-12 text-center text-sm text-on-surface-variant dark:text-content-dark/60"
+                    >
+                      Loading simulation history...
+                    </td>
+                  </tr>
+                ) : null}
+                {isError ? (
+                  <tr>
+                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-red-500">
+                      Could not load simulation history. Please try again.
+                    </td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>

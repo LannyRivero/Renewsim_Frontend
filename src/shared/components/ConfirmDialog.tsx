@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-
 interface ConfirmDialogProps {
   open: boolean
   title: string
@@ -23,34 +21,12 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
-  const [shouldRender, setShouldRender] = useState(open)
-  const [isVisible, setIsVisible] = useState(open)
-
-  useEffect(() => {
-    if (open) {
-      setShouldRender(true)
-      const frame = window.requestAnimationFrame(() => {
-        setIsVisible(true)
-      })
-      return () => window.cancelAnimationFrame(frame)
-    }
-
-    setIsVisible(false)
-    const timeout = window.setTimeout(() => {
-      setShouldRender(false)
-    }, 120)
-
-    return () => window.clearTimeout(timeout)
-  }, [open])
-
-  if (!shouldRender) return null
+  if (!open) return null
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
       <div
-        className={`absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-150 dark:bg-black/65 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        className="absolute inset-0 bg-black/50 backdrop-blur-[2px] transition-opacity duration-150 dark:bg-black/65"
         aria-hidden="true"
         onClick={onCancel}
       />
@@ -59,9 +35,7 @@ export function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-dialog-title"
-        className={`relative w-full max-w-lg rounded-md border border-slate-200 bg-white p-4 shadow-[0_20px_45px_-28px_rgba(15,23,42,0.45)] transition-all duration-150 dark:border-white/12 dark:bg-[#111d18] ${
-          isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-1 scale-[0.985] opacity-0'
-        }`}
+        className="relative w-full max-w-lg rounded-md border border-slate-200 bg-white p-4 shadow-[0_20px_45px_-28px_rgba(15,23,42,0.45)] transition-all duration-150 dark:border-white/12 dark:bg-[#111d18]"
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/65">Confirmation</p>
         <h2 id="confirm-dialog-title" className="mt-2 text-xl font-bold tracking-tight text-slate-900 dark:text-content-dark">
