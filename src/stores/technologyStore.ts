@@ -10,6 +10,8 @@ interface TechnologyState {
 const DEFAULT_DRAFT: TechnologyFormValues = {
   name: '',
   energyType: 'SOLAR',
+  installedPower: 1,
+  capacityFactor: 18,
   efficiency: 50,
   co2Reduction: 0,
   installationCost: 1000,
