@@ -15,3 +15,11 @@ export {
   SimulationSelect,
   SimulationReadonlyInput,
 } from './simulation/controls'
+export {
+  SimulationTableContainer,
+  SimulationTable,
+  SimulationTableHeaderRow,
+  SimulationTableHeadCell,
+  SimulationTableBodyRow,
+  SimulationTableCell,
+} from './simulation/table'
