@@ -9,3 +9,13 @@ export { RequireRole } from './RequireRole'
 export { ConfirmDialog } from './ConfirmDialog'
 export { ChatWidget } from './ChatWidget'
 export { ToastViewport } from './ToastViewport'
+export {
+  SimulationPageShell,
+  SimulationCard,
+  SimulationSectionHeader,
+  SimulationStatusBadge,
+  SimulationActionButton,
+  SimulationToolbar,
+  SimulationStateMessage,
+  SimulationModalActions,
+} from './SimulationPrimitives'

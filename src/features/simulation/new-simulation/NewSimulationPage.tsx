@@ -47,6 +47,7 @@ export function NewSimulationPage() {
         variant: 'success',
       })
       queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
       navigate('/simulador/resultados')
     },
     onError: () => {

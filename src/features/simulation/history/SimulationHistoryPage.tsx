@@ -26,6 +26,7 @@ export function SimulationHistoryPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
       useToastStore.getState().pushToast({
         title: 'Simulation Deleted',
         description: 'The simulation was deleted successfully.',
