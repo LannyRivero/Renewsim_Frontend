@@ -24,6 +24,11 @@ type ApiResponse<T> = {
   data?: T
 }
 
+type ArrayExtractionResult = {
+  items: Record<string, unknown>[]
+  isRecognizedShape: boolean
+}
+
 function toNumber(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value
   if (typeof value === 'string') {
@@ -43,30 +48,61 @@ function normalizeSourceLabel(value: unknown): string {
   return value.trim()
 }
 
-function extractArrayPayload(payload: unknown): Record<string, unknown>[] {
-  if (Array.isArray(payload)) return payload.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+function extractArrayPayload(payload: unknown): ArrayExtractionResult {
+  if (Array.isArray(payload)) {
+    return {
+      items: payload.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object')),
+      isRecognizedShape: true,
+    }
+  }
 
   if (payload && typeof payload === 'object') {
     const record = payload as Record<string, unknown>
     if (Array.isArray(record.data)) {
-      return record.data.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+      return {
+        items: record.data.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object')),
+        isRecognizedShape: true,
+      }
     }
   }
 
-  return []
+  return { items: [], isRecognizedShape: false }
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
   const response = await httpClient.get<ApiResponse<unknown> | unknown>('/simulations/history')
-  const rawItems = extractArrayPayload(response.data)
+  const { items: rawItems, isRecognizedShape } = extractArrayPayload(response.data)
 
-  if (rawItems.length === 0) {
+  if (!isRecognizedShape) {
     return {
       stats: DASHBOARD_STATS,
       energyBySource: ENERGY_BY_SOURCE,
       distribution: DISTRIBUTION,
       efficiencyMetrics: EFFICIENCY_METRICS,
       targetVsActual: TARGET_VS_ACTUAL,
+    }
+  }
+
+  if (rawItems.length === 0) {
+    return {
+      stats: [
+        { label: 'Total Simulations', value: '0', icon: 'insights' },
+        { label: 'CO2 Saved', value: '0 kg', icon: 'eco' },
+        { label: 'Average ROI', value: '0%', icon: 'trending_up' },
+        { label: 'Energy Generated', value: '0 kWh', icon: 'bolt' },
+      ],
+      energyBySource: [],
+      distribution: [],
+      efficiencyMetrics: [
+        { label: 'Capacity factor', value: '0%', hint: 'Plant utilization over period' },
+        { label: 'Cost per kWh', value: '$0.000', hint: 'Blended production cost' },
+        { label: 'Grid availability', value: '0%', hint: 'Operational uptime' },
+      ],
+      targetVsActual: [
+        { label: 'Energy output', actual: 0, target: 0, unit: 'kWh' },
+        { label: 'CO2 reduction', actual: 0, target: 0, unit: 'kg' },
+        { label: 'ROI', actual: 0, target: 0, unit: '%' },
+      ],
     }
   }
 

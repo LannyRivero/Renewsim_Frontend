@@ -37,6 +37,7 @@ export function EditSimulationPage() {
         variant: 'success',
       })
       queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
       if (simulationId) {
         queryClient.invalidateQueries({ queryKey: ['simulation-details', simulationId] })
       }
