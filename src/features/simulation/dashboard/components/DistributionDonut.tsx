@@ -1,6 +1,7 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 import type { DistributionSlice } from '../data/dashboardMock'
+import { formatKwh } from '../services/dashboardFormatters'
 import { SimulationCard, SimulationStatusBadge } from '@/shared/components'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -42,7 +43,7 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
       tooltip: {
         callbacks: {
           label: (ctx: { label: string; parsed: number }) =>
-            `${ctx.label}: ${ctx.parsed.toLocaleString('en-US')} kWh`,
+            `${ctx.label}: ${formatKwh(ctx.parsed)}`,
         },
       },
     },
@@ -92,7 +93,7 @@ export function DistributionDonut({ data }: DistributionDonutProps) {
               </span>
             </div>
             <span className="font-semibold text-slate-900 dark:text-content-dark">
-              {kwh.toLocaleString('en-US')} kWh
+              {formatKwh(kwh)}
             </span>
           </li>
         ))}
