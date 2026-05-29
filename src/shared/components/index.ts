@@ -6,9 +6,10 @@ export { RootLayout } from './RootLayout'
 export { DarkModeToggle } from './DarkModeToggle'
 export { RequireAuth } from './RequireAuth'
 export { RequireRole } from './RequireRole'
-export { ConfirmDialog } from './ConfirmDialog'
+export { ConfirmDialog } from './simulation/dialogs/ConfirmDialog'
 export { ChatWidget } from './ChatWidget'
 export { ToastViewport } from './ToastViewport'
+export { RouteSkeleton } from './RouteSkeleton'
 export {
   SimulationPageShell,
   SimulationCard,
@@ -18,4 +19,6 @@ export {
   SimulationToolbar,
   SimulationStateMessage,
   SimulationModalActions,
+  SimulationTextInput,
+  SimulationSelect,
 } from './SimulationPrimitives'
