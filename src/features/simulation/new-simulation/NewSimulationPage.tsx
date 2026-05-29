@@ -1,383 +1,108 @@
-import { useEffect, useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useNavigate } from 'react-router-dom'
-import { simulationSchema } from '../schemas/simulationSchema'
-import { createSimulation } from '../services/simulationService'
-import { getClimateData, searchLocations } from '../services/weatherService'
+import { ClimatePreviewCard } from './components/ClimatePreviewCard'
+import { LocationField } from './components/LocationField'
+import { SimulationInputFields } from './components/SimulationInputFields'
+import { useClimatePreview } from './hooks/useClimatePreview'
+import { useLocationSuggestions } from './hooks/useLocationSuggestions'
+import { useSimulationSubmission } from './hooks/useSimulationSubmission'
+import {
+  SimulationActionButton,
+  SimulationCard,
+  SimulationPageShell,
+  SimulationSectionHeader,
+  SimulationStateMessage,
+} from '@/shared/components'
 import { useSimulationStore } from '@/stores/simulationStore'
-import { useToastStore } from '@/stores/toastStore'
-
-const FIELD_CLASS =
-  'w-full h-12 px-4 rounded-lg bg-surface dark:bg-[#111d18] border border-outline-variant dark:border-white/10 placeholder:text-on-surface-variant/60 dark:placeholder:text-content-dark/50 focus:outline-none focus:ring-2 focus:ring-primary-container/60 focus:border-primary-container transition'
-
-const READONLY_CLASS =
-  'w-full h-12 px-4 rounded-lg bg-surface-container-low dark:bg-white/5 border border-outline-variant dark:border-white/10 text-on-surface-variant dark:text-content-dark/70 cursor-not-allowed'
 
 export function NewSimulationPage() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
   const draft = useSimulationStore((state) => state.draft)
   const setDraftField = useSimulationStore((state) => state.setDraftField)
   const setLastResult = useSimulationStore((state) => state.setLastResult)
   const setLastRunInput = useSimulationStore((state) => state.setLastRunInput)
-  const [formError, setFormError] = useState<string | null>(null)
-  const [isLoadingClimate, setIsLoadingClimate] = useState(false)
-  const [isRefreshingClimate, setIsRefreshingClimate] = useState(false)
-  const [isSearchingLocation, setIsSearchingLocation] = useState(false)
-  const [locationSuggestions, setLocationSuggestions] = useState<string[]>([])
-  const [locationSearchMessage, setLocationSearchMessage] = useState<string | null>(null)
-  const [climatePreview, setClimatePreview] = useState({
-    irradiance: '-',
-    windSpeed: '-',
-    hydrology: '3.0',
+  const {
+    hasLocationQuery,
+    isSearchingLocation,
+    locationSearchMessage,
+    locationSuggestions,
+    clearLocationSuggestions,
+  } = useLocationSuggestions(draft.location)
+  const {
+    isRefreshingClimate,
+    displayedClimatePreview,
+    resolvedClimate,
+    setResolvedClimate,
+    setClimatePreview,
+  } = useClimatePreview({
+    location: draft.location,
+    energyType: draft.energyType,
   })
-  const [resolvedClimate, setResolvedClimate] = useState<{
-    location: string
-    energyType: 'solar' | 'wind' | 'hydro'
-    data: { irradiance: number; windSpeed: number; hydrology: number }
-  } | null>(null)
-
-  const mutation = useMutation({
-    mutationFn: createSimulation,
-    onSuccess: (result) => {
-      setLastResult(result)
-      useToastStore.getState().pushToast({
-        title: 'Simulation Completed',
-        description: 'Your simulation was created successfully.',
-        variant: 'success',
-      })
-      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
-      queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
-      navigate('/simulador/resultados')
-    },
-    onError: () => {
-      useToastStore.getState().pushToast({
-        title: 'Simulation Error',
-        description: 'Could not run simulation. Please try again.',
-        variant: 'error',
-      })
-    },
+  const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
+    draft,
+    resolvedClimate,
+    setResolvedClimate,
+    setClimatePreview,
+    setLastResult,
+    setLastRunInput,
   })
-
-  const submitLabel = isLoadingClimate
-    ? 'Fetching climate data...'
-    : mutation.isPending
-      ? 'Running simulation...'
-      : 'Run simulation'
-  const hasLocationQuery = draft.location.trim().length >= 2
-  const displayedLocationSuggestions = hasLocationQuery ? locationSuggestions : []
-  const displayedLocationSearchMessage = hasLocationQuery ? locationSearchMessage : null
-  const displayedClimatePreview = hasLocationQuery
-    ? climatePreview
-    : { irradiance: '-', windSpeed: '-', hydrology: '3.0' }
-
-  useEffect(() => {
-    const currentQuery = draft.location.trim()
-
-    if (currentQuery.length < 2) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setIsSearchingLocation(true)
-      setLocationSearchMessage(null)
-      searchLocations(currentQuery)
-        .then((suggestions) => {
-          const labels = suggestions.map((item) => item.label)
-          setLocationSuggestions(labels)
-          if (labels.length === 0) {
-            setLocationSearchMessage('No locations found. Try a more specific city name.')
-          }
-        })
-        .catch((error) => {
-          setLocationSuggestions([])
-          const message = error instanceof Error ? error.message : 'Could not search locations right now.'
-          setLocationSearchMessage(message)
-        })
-        .finally(() => {
-          setIsSearchingLocation(false)
-        })
-    }, 300)
-
-    return () => {
-      window.clearTimeout(timer)
-    }
-  }, [draft.location])
-
-  useEffect(() => {
-    const location = draft.location.trim()
-    const energyType = draft.energyType
-
-    if (location.length < 2) {
-      return
-    }
-
-    const timer = window.setTimeout(() => {
-      setIsRefreshingClimate(true)
-      getClimateData(location, energyType)
-        .then((climate) => {
-          setResolvedClimate({ location, energyType, data: climate })
-          setClimatePreview({
-            irradiance: String(climate.irradiance),
-            windSpeed: String(climate.windSpeed),
-            hydrology: String(climate.hydrology),
-          })
-        })
-        .catch(() => {
-          setClimatePreview((prev) => prev)
-        })
-        .finally(() => {
-          setIsRefreshingClimate(false)
-        })
-    }, 450)
-
-    return () => {
-      window.clearTimeout(timer)
-    }
-  }, [draft.location, draft.energyType])
-
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setFormError(null)
-
-    const parsed = simulationSchema.safeParse(draft)
-    if (!parsed.success) {
-      const firstError = parsed.error.issues[0]?.message ?? 'Invalid form values.'
-      setFormError(firstError)
-      return
-    }
-
-    setIsLoadingClimate(true)
-
-    const normalizedLocation = parsed.data.location.trim()
-    const canReuseClimate =
-      resolvedClimate &&
-      resolvedClimate.location === normalizedLocation &&
-      resolvedClimate.energyType === parsed.data.energyType
-
-    const climatePromise = canReuseClimate
-      ? Promise.resolve(resolvedClimate.data)
-      : getClimateData(normalizedLocation, parsed.data.energyType)
-
-    climatePromise
-      .then((climate) => {
-        setClimatePreview({
-          irradiance: String(climate.irradiance),
-          windSpeed: String(climate.windSpeed),
-          hydrology: String(climate.hydrology),
-        })
-        setResolvedClimate({
-          location: normalizedLocation,
-          energyType: parsed.data.energyType,
-          data: climate,
-        })
-
-        mutation.mutate({
-          ...parsed.data,
-          climate,
-        })
-        setLastRunInput({
-          ...parsed.data,
-          climate,
-        })
-      })
-      .catch((error) => {
-        const description =
-          error instanceof Error ? error.message : 'Could not fetch climate data. Please try again.'
-
-        setFormError(description)
-        useToastStore.getState().pushToast({
-          title: 'Climate Data Error',
-          description,
-          variant: 'error',
-        })
-      })
-      .finally(() => {
-        setIsLoadingClimate(false)
-      })
-  }
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
-      <header className="sticky top-0 z-10 border-b border-outline-variant dark:border-white/10 bg-surface/90 dark:bg-[#0f1a16]/90 backdrop-blur-sm">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-          <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
-            <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-              Dashboard
-            </a>
-            <a href="#" className="text-primary font-bold">
-              Simulations
-            </a>
-            <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-              Resources
-            </a>
-            <a href="#" className="text-on-surface-variant hover:text-primary transition-colors">
-              Community
-            </a>
-          </nav>
+    <SimulationPageShell>
+      <div className="flex flex-col gap-6 lg:h-full">
+        <SimulationSectionHeader
+          eyebrow="Simulation Setup"
+          title="New custom simulation"
+          description="Configure your simulation with project-specific parameters."
+          className="md:items-center"
+        />
 
-          <div className="ml-auto flex items-center gap-4">
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-low dark:hover:bg-white/5"
-            >
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <div
-              aria-label="Avatar"
-              className="h-10 w-10 rounded-full bg-primary-container/30 border border-outline-variant dark:border-white/10"
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <SimulationCard className="grid grid-cols-1 gap-6" density="comfortable">
+            <LocationField
+              location={draft.location}
+              onLocationChange={(value) => setDraftField('location', value)}
+              isSearchingLocation={isSearchingLocation}
+              searchMessage={locationSearchMessage}
+              suggestions={locationSuggestions}
+              onSuggestionSelect={(suggestion) => {
+                setDraftField('location', suggestion)
+                clearLocationSuggestions()
+              }}
+              hasLocationQuery={hasLocationQuery}
             />
-          </div>
-        </div>
-      </header>
 
-      <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-            New custom simulation
-          </h1>
-          <p className="mt-2 text-base text-on-surface-variant dark:text-content-dark/60">
-            Configure your simulation with project-specific parameters.
-          </p>
-        </div>
-
-        <form className="space-y-8" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-6">
-            <div className="relative">
-              <label htmlFor="location" className="mb-1 block text-sm font-medium">
-                Location
-              </label>
-              <input
-                id="location"
-                type="text"
-                value={draft.location}
-                onChange={(event) => setDraftField('location', event.target.value)}
-                placeholder="Enter location or use geolocation"
-                className={FIELD_CLASS}
-              />
-              {hasLocationQuery && isSearchingLocation ? (
-                <p className="mt-2 text-xs text-on-surface-variant dark:text-content-dark/60">Searching locations...</p>
-              ) : null}
-              {displayedLocationSearchMessage ? (
-                <p className="mt-2 text-xs text-red-600 dark:text-red-400">{displayedLocationSearchMessage}</p>
-              ) : null}
-              {displayedLocationSuggestions.length > 0 ? (
-                <ul className="absolute z-20 mt-1 max-h-48 w-full overflow-y-auto rounded-lg border border-outline-variant bg-surface shadow-lg dark:border-white/10 dark:bg-[#111d18]">
-                  {displayedLocationSuggestions.map((suggestion) => (
-                    <li key={suggestion}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setDraftField('location', suggestion)
-                          setLocationSuggestions([])
-                        }}
-                        className="w-full px-3 py-2 text-left text-sm text-on-surface hover:bg-surface-container-low dark:text-content-dark dark:hover:bg-white/5"
-                      >
-                        {suggestion}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </div>
-
-            <div>
-              <label htmlFor="energy-type" className="mb-1 block text-sm font-medium">
-                Energy type
-              </label>
-              <select
-                id="energy-type"
-                className={FIELD_CLASS}
-                value={draft.energyType}
-                onChange={(event) => setDraftField('energyType', event.target.value as 'solar' | 'wind' | 'hydro')}
-              >
-                <option value="solar">Solar</option>
-                <option value="wind">Wind</option>
-                <option value="hydro">Hydroelectric</option>
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="project-size" className="mb-1 block text-sm font-medium">
-                Project size (kW/MW)
-              </label>
-              <input
-                id="project-size"
-                type="number"
-                min={1}
-                value={draft.projectSize}
-                onChange={(event) => setDraftField('projectSize', Number(event.target.value))}
-                placeholder="Example: 500 kW"
-                className={FIELD_CLASS}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="budget" className="mb-1 block text-sm font-medium">
-                Budget (EUR)
-              </label>
-              <input
-                id="budget"
-                type="number"
-                min={1}
-                value={draft.budget}
-                onChange={(event) => setDraftField('budget', Number(event.target.value))}
-                placeholder="Example: 1000000"
-                className={FIELD_CLASS}
-              />
-            </div>
-          </div>
+            <SimulationInputFields
+              energyType={draft.energyType}
+              projectSize={draft.projectSize}
+              budget={draft.budget}
+              onEnergyTypeChange={(value) => setDraftField('energyType', value)}
+              onProjectSizeChange={(value) => setDraftField('projectSize', value)}
+              onBudgetChange={(value) => setDraftField('budget', value)}
+            />
+          </SimulationCard>
 
           {formError ? (
-            <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+            <SimulationStateMessage tone="error" className="text-sm">
               {formError}
-            </p>
+            </SimulationStateMessage>
           ) : null}
 
-          <div>
-            <h2 className="text-lg font-bold text-on-surface dark:text-content-dark">Climate data (read-only)</h2>
-            <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/60">
-              Values are adjusted for {draft.energyType} projects at the selected location.
-            </p>
-            {hasLocationQuery && isRefreshingClimate ? (
-              <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/60">Refreshing data for selected location and energy type...</p>
-            ) : null}
-            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              <div>
-                <label htmlFor="irradiance" className="mb-1 block text-sm font-medium">
-                  Irradiance (kWh/m2/day)
-                </label>
-                <input id="irradiance" readOnly value={displayedClimatePreview.irradiance} className={READONLY_CLASS} />
-              </div>
-
-              <div>
-                <label htmlFor="wind-speed" className="mb-1 block text-sm font-medium">
-                  Wind speed (m/s)
-                </label>
-                <input id="wind-speed" readOnly value={displayedClimatePreview.windSpeed} className={READONLY_CLASS} />
-              </div>
-
-              <div>
-                <label htmlFor="hydrology" className="mb-1 block text-sm font-medium">
-                  Hydrology (m3/s)
-                </label>
-                <input id="hydrology" readOnly value={displayedClimatePreview.hydrology} className={READONLY_CLASS} />
-              </div>
-            </div>
-          </div>
+          <ClimatePreviewCard
+            energyType={draft.energyType}
+            hasLocationQuery={hasLocationQuery}
+            isRefreshingClimate={isRefreshingClimate}
+            preview={displayedClimatePreview}
+          />
 
           <div className="flex justify-end">
-            <button
+            <SimulationActionButton
               type="submit"
-              disabled={mutation.isPending || isLoadingClimate}
-              className="w-full rounded-lg bg-primary-container px-8 py-3 text-base font-semibold text-on-primary transition hover:brightness-95 md:w-auto"
+              disabled={isSubmitting}
+              className="w-full bg-primary-container px-8 py-3 text-base font-semibold text-on-primary hover:brightness-95 md:w-auto"
             >
               {submitLabel}
-            </button>
+            </SimulationActionButton>
           </div>
         </form>
       </div>
-    </section>
+    </SimulationPageShell>
   )
 }

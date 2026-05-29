@@ -25,14 +25,10 @@ describe('NewSimulationPage', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders top header navigation from stitch design', () => {
+  it('renders simulation setup section header', () => {
     renderPage()
 
-    expect(screen.getByRole('link', { name: 'Dashboard' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Simulations' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Resources' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'Community' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Notifications')).toBeInTheDocument()
+    expect(screen.getByText('Simulation Setup')).toBeInTheDocument()
   })
 
   it('renders editable form fields', () => {

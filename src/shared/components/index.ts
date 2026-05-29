@@ -21,4 +21,5 @@ export {
   SimulationModalActions,
   SimulationTextInput,
   SimulationSelect,
+  SimulationReadonlyInput,
 } from './SimulationPrimitives'

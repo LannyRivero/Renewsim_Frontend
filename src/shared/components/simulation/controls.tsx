@@ -43,3 +43,16 @@ export function SimulationSelect({ className, ...props }: ComponentPropsWithoutR
     />
   )
 }
+
+export function SimulationReadonlyInput({ className, ...props }: ComponentPropsWithoutRef<'input'>) {
+  return (
+    <input
+      readOnly
+      className={cn(
+        'w-full h-12 rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-content-dark/70 cursor-not-allowed',
+        className,
+      )}
+      {...props}
+    />
+  )
+}

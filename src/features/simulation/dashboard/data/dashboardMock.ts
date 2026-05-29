@@ -27,6 +27,13 @@ export interface TargetVsActual {
   unit: string
 }
 
+const BASE_SOURCE_DISTRIBUTION = [
+  { label: 'Solar', kwh: 4000 },
+  { label: 'Wind', kwh: 3000 },
+  { label: 'Hydroelectric', kwh: 5000 },
+  { label: 'Biomasa', kwh: 8000 },
+] as const
+
 export const DASHBOARD_STATS: StatCard[] = [
   { label: 'Total Simulations', value: '125', icon: 'insights' },
   { label: 'CO2 Saved', value: '5,000 kg', icon: 'eco' },
@@ -34,19 +41,9 @@ export const DASHBOARD_STATS: StatCard[] = [
   { label: 'Energy Generated', value: '25,000 kWh', icon: 'bolt' },
 ]
 
-export const ENERGY_BY_SOURCE: EnergySource[] = [
-  { label: 'Solar', kwh: 4000 },
-  { label: 'Wind', kwh: 3000 },
-  { label: 'Hydroelectric', kwh: 5000 },
-  { label: 'Biomasa', kwh: 8000 },
-]
+export const ENERGY_BY_SOURCE: EnergySource[] = BASE_SOURCE_DISTRIBUTION.map((item) => ({ ...item }))
 
-export const DISTRIBUTION: DistributionSlice[] = [
-  { label: 'Solar', kwh: 4000 },
-  { label: 'Wind', kwh: 3000 },
-  { label: 'Hydroelectric', kwh: 5000 },
-  { label: 'Biomasa', kwh: 8000 },
-]
+export const DISTRIBUTION: DistributionSlice[] = BASE_SOURCE_DISTRIBUTION.map((item) => ({ ...item }))
 
 export const EFFICIENCY_METRICS: EfficiencyMetric[] = [
   { label: 'Capacity factor', value: '82.4%', hint: 'Plant utilization over period' },

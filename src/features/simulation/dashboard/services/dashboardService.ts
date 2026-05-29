@@ -29,6 +29,16 @@ type ArrayExtractionResult = {
   isRecognizedShape: boolean
 }
 
+const MIN_ESTIMATED_KWH = 1500
+const DEFAULT_EFFICIENCY_FOR_ESTIMATION = 75
+const EFFICIENCY_TO_KWH_FACTOR = 90
+const DEFAULT_AVG_ROI = 15
+const DEFAULT_AVG_EFFICIENCY = 82.4
+const CO2_SAVED_FACTOR = 0.2
+const ENERGY_OUTPUT_TARGET_FACTOR = 1.1
+const CO2_REDUCTION_TARGET_FACTOR = 1.08
+const ROI_TARGET_INCREMENT = 1
+
 function toNumber(value: unknown): number | null {
   if (typeof value === 'number' && Number.isFinite(value)) return value
   if (typeof value === 'string') {
@@ -118,7 +128,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     const efficiency = toNumber(item.efficiency ?? item.efficiencyPercent)
     const roi = toNumber(item.roi ?? item.roiPercent)
     const explicitKwh = toNumber(item.energyGeneratedKwh ?? item.generatedKwh ?? item.energyKwh)
-    const estimatedKwh = explicitKwh ?? Math.max(1500, Math.round((efficiency ?? 75) * 90))
+    const estimatedKwh = explicitKwh ?? Math.max(MIN_ESTIMATED_KWH, Math.round((efficiency ?? DEFAULT_EFFICIENCY_FOR_ESTIMATION) * EFFICIENCY_TO_KWH_FACTOR))
 
     bySource.set(sourceLabel, (bySource.get(sourceLabel) ?? 0) + estimatedKwh)
     totalKwh += estimatedKwh
@@ -136,9 +146,9 @@ export async function getDashboardData(): Promise<DashboardData> {
 
   const energyBySource = Array.from(bySource.entries()).map(([label, kwh]) => ({ label, kwh }))
   const distribution = energyBySource
-  const avgRoi = roiCount > 0 ? totalRoi / roiCount : 15
-  const avgEfficiency = efficiencyCount > 0 ? totalEfficiency / efficiencyCount : 82.4
-  const co2SavedKg = Math.round(totalKwh * 0.2)
+  const avgRoi = roiCount > 0 ? totalRoi / roiCount : DEFAULT_AVG_ROI
+  const avgEfficiency = efficiencyCount > 0 ? totalEfficiency / efficiencyCount : DEFAULT_AVG_EFFICIENCY
+  const co2SavedKg = Math.round(totalKwh * CO2_SAVED_FACTOR)
 
   return {
     stats: [
@@ -155,9 +165,9 @@ export async function getDashboardData(): Promise<DashboardData> {
       { label: 'Grid availability', value: '99.2%', hint: 'Operational uptime' },
     ],
     targetVsActual: [
-      { label: 'Energy output', actual: totalKwh, target: Math.round(totalKwh * 1.1), unit: 'kWh' },
-      { label: 'CO2 reduction', actual: co2SavedKg, target: Math.round(co2SavedKg * 1.08), unit: 'kg' },
-      { label: 'ROI', actual: Number(avgRoi.toFixed(1)), target: Number((avgRoi + 1).toFixed(1)), unit: '%' },
+      { label: 'Energy output', actual: totalKwh, target: Math.round(totalKwh * ENERGY_OUTPUT_TARGET_FACTOR), unit: 'kWh' },
+      { label: 'CO2 reduction', actual: co2SavedKg, target: Math.round(co2SavedKg * CO2_REDUCTION_TARGET_FACTOR), unit: 'kg' },
+      { label: 'ROI', actual: Number(avgRoi.toFixed(1)), target: Number((avgRoi + ROI_TARGET_INCREMENT).toFixed(1)), unit: '%' },
     ],
   }
 }
