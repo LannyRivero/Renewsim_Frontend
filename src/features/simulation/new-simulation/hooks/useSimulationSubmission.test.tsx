@@ -48,11 +48,15 @@ describe('useSimulationSubmission', () => {
       () =>
         useSimulationSubmission({
           draft: { location: '', energyType: 'solar', projectSize: 500, budget: 1000 },
-          resolvedClimate: null,
-          setResolvedClimate,
-          setClimatePreview,
-          setLastResult,
-          setLastRunInput,
+          climateState: {
+            resolvedClimate: null,
+            setResolvedClimate,
+            setClimatePreview,
+          },
+          simulationActions: {
+            setLastResult,
+            setLastRunInput,
+          },
         }),
       { wrapper: createWrapper() },
     )
@@ -80,15 +84,19 @@ describe('useSimulationSubmission', () => {
       () =>
         useSimulationSubmission({
           draft: { location: 'Madrid', energyType: 'solar', projectSize: 500, budget: 1000 },
-          resolvedClimate: {
-            location: 'Madrid',
-            energyType: 'solar',
-            data: { irradiance: 5, windSpeed: 4, hydrology: 3 },
+          climateState: {
+            resolvedClimate: {
+              location: 'Madrid',
+              energyType: 'solar',
+              data: { irradiance: 5, windSpeed: 4, hydrology: 3 },
+            },
+            setResolvedClimate,
+            setClimatePreview,
           },
-          setResolvedClimate,
-          setClimatePreview,
-          setLastResult,
-          setLastRunInput,
+          simulationActions: {
+            setLastResult,
+            setLastRunInput,
+          },
         }),
       { wrapper: createWrapper() },
     )

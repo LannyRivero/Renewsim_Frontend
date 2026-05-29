@@ -13,20 +13,21 @@ import { useToastStore } from '@/stores/toastStore'
 
 interface UseSimulationSubmissionParams {
   draft: SimulationFormValues
-  resolvedClimate: ResolvedClimate | null
-  setResolvedClimate: (value: ResolvedClimate) => void
-  setClimatePreview: (value: ReturnType<typeof toClimatePreview>) => void
-  setLastResult: (result: Awaited<ReturnType<typeof createSimulation>>) => void
-  setLastRunInput: (payload: Parameters<typeof createSimulation>[0]) => void
+  climateState: {
+    resolvedClimate: ResolvedClimate | null
+    setResolvedClimate: (value: ResolvedClimate) => void
+    setClimatePreview: (value: ReturnType<typeof toClimatePreview>) => void
+  }
+  simulationActions: {
+    setLastResult: (result: Awaited<ReturnType<typeof createSimulation>>) => void
+    setLastRunInput: (payload: Parameters<typeof createSimulation>[0]) => void
+  }
 }
 
 export function useSimulationSubmission({
   draft,
-  resolvedClimate,
-  setResolvedClimate,
-  setClimatePreview,
-  setLastResult,
-  setLastRunInput,
+  climateState,
+  simulationActions,
 }: UseSimulationSubmissionParams) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -36,7 +37,7 @@ export function useSimulationSubmission({
   const mutation = useMutation({
     mutationFn: createSimulation,
     onSuccess: (result) => {
-      setLastResult(result)
+      simulationActions.setLastResult(result)
       useToastStore.getState().pushToast({
         title: 'Simulation Completed',
         description: 'Your simulation was created successfully.',
@@ -76,19 +77,19 @@ export function useSimulationSubmission({
 
     const normalizedLocation = parsed.data.location.trim()
     const canReuseClimate = canReuseResolvedClimate(
-      resolvedClimate,
+      climateState.resolvedClimate,
       normalizedLocation,
       parsed.data.energyType,
     )
 
     const climatePromise = canReuseClimate
-      ? Promise.resolve(resolvedClimate.data)
+      ? Promise.resolve(climateState.resolvedClimate!.data)
       : getClimateData(normalizedLocation, parsed.data.energyType)
 
     climatePromise
       .then((climate) => {
-        setClimatePreview(toClimatePreview(climate))
-        setResolvedClimate({
+        climateState.setClimatePreview(toClimatePreview(climate))
+        climateState.setResolvedClimate({
           location: normalizedLocation,
           energyType: parsed.data.energyType,
           data: climate,
@@ -99,7 +100,7 @@ export function useSimulationSubmission({
           climate,
         })
 
-        setLastRunInput({
+        simulationActions.setLastRunInput({
           ...parsed.data,
           climate,
         })

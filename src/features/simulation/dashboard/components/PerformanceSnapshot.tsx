@@ -1,4 +1,5 @@
 import type { EfficiencyMetric, TargetVsActual } from '../data/dashboardMock'
+import { formatTargetPair } from '../services/dashboardFormatters'
 import { SimulationCard } from '@/shared/components'
 
 interface PerformanceSnapshotProps {
@@ -36,7 +37,7 @@ export function PerformanceSnapshot({ metrics, targetVsActual }: PerformanceSnap
                 <div className="flex items-center justify-between gap-3 text-sm">
                   <p className="font-semibold text-slate-900 dark:text-content-dark">{item.label}</p>
                   <p className="text-slate-600 dark:text-content-dark/70">
-                    {item.actual.toLocaleString('en-US')} / {item.target.toLocaleString('en-US')} {item.unit}
+                    {formatTargetPair(item.actual, item.target, item.unit)}
                   </p>
                 </div>
                 <div className="mt-2 h-2 rounded-full bg-slate-200 dark:bg-white/10">

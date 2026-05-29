@@ -37,11 +37,15 @@ export function NewSimulationPage() {
   })
   const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
     draft,
-    resolvedClimate,
-    setResolvedClimate,
-    setClimatePreview,
-    setLastResult,
-    setLastRunInput,
+    climateState: {
+      resolvedClimate,
+      setResolvedClimate,
+      setClimatePreview,
+    },
+    simulationActions: {
+      setLastResult,
+      setLastRunInput,
+    },
   })
 
   return (
