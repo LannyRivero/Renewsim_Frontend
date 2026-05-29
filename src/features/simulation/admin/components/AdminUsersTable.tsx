@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Check, Loader2, Trash2 } from 'lucide-react'
 import type { AdminUser } from '@/shared/types'
 
@@ -6,13 +7,13 @@ interface AdminUsersTableProps {
   allRoles: string[]
   getDraftRoles: (userId: string, currentRoles: string[]) => string[]
   onToggleRole: (userId: string, currentRoles: string[], role: string, checked: boolean) => void
-  onSaveRoles: (userId: string, roles: string[]) => void
+  onSaveRoles: (userId: string, currentRoles: string[]) => void
   onRequestDelete: (userId: string, username: string) => void
   savingUserId: string | null
   deletingUserId: string | null
 }
 
-export function AdminUsersTable({
+function AdminUsersTableComponent({
   users,
   allRoles,
   getDraftRoles,
@@ -78,7 +79,7 @@ export function AdminUsersTable({
                   <div className="flex flex-wrap items-center gap-1 divide-x divide-slate-200 dark:divide-white/10">
                     <button
                       type="button"
-                      onClick={() => onSaveRoles(user.id, draftRoles)}
+                      onClick={() => onSaveRoles(user.id, user.roles)}
                       disabled={savingUserId === user.id}
                       className="inline-flex items-center gap-1.5 rounded-sm px-2 py-1.5 text-xs font-semibold text-emerald-700 transition-colors hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-60 dark:text-emerald-300 dark:hover:bg-emerald-500/10"
                     >
@@ -104,3 +105,5 @@ export function AdminUsersTable({
     </div>
   )
 }
+
+export const AdminUsersTable = memo(AdminUsersTableComponent)
