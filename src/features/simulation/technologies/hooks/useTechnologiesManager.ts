@@ -16,10 +16,24 @@ export function useTechnologiesManager() {
   const [editingTechnologyId, setEditingTechnologyId] = useState<string | null>(null)
   const [technologyToDelete, setTechnologyToDelete] = useState<{ id: string; name: string } | null>(null)
 
-  const { data: technologies = [] } = useQuery({
+  const {
+    data: technologies = [],
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ['technologies'],
     queryFn: getAllTechnologies,
   })
+
+  function getErrorStatusCode(error: unknown): number | undefined {
+    if (isAxiosError(error)) return error.response?.status
+    if (typeof error === 'object' && error !== null && 'response' in error) {
+      const response = (error as { response?: { status?: unknown } }).response
+      return typeof response?.status === 'number' ? response.status : undefined
+    }
+    return undefined
+  }
 
   const createOrUpdateMutation = useMutation({
     mutationFn: async (payload: {
@@ -58,19 +72,42 @@ export function useTechnologiesManager() {
 
   const deleteMutation = useMutation({
     mutationFn: deleteTechnologyById,
+    onMutate: async (technologyId) => {
+      await queryClient.cancelQueries({ queryKey: ['technologies'] })
+      const previousTechnologies = queryClient.getQueryData<TechnologyItem[]>(['technologies'])
+
+      queryClient.setQueryData<TechnologyItem[]>(['technologies'], (previous = []) =>
+        previous.filter((technology) => technology.id !== technologyId),
+      )
+
+      return { previousTechnologies }
+    },
     onSuccess: () => {
       setTechnologyToDelete(null)
-      queryClient.invalidateQueries({ queryKey: ['technologies'] })
       useToastStore.getState().pushToast({
         title: 'Tecnología Eliminada',
         description: 'La tecnología se eliminó correctamente.',
         variant: 'success',
       })
     },
-    onError: (error) => {
-      const blockedByRelation =
-        isAxiosError(error) &&
-        (error.response?.status === 409 || error.response?.status === 422)
+    onError: (error, technologyId, context) => {
+      const statusCode = getErrorStatusCode(error)
+      const notFound = statusCode === 404
+      const blockedByRelation = statusCode === 409 || statusCode === 422
+
+      if (notFound) {
+        setTechnologyToDelete(null)
+        useToastStore.getState().pushToast({
+          title: 'Tecnología ya eliminada',
+          description: 'La tecnología no existía en el servidor y se sincronizó el listado.',
+          variant: 'success',
+        })
+        return
+      }
+
+      if (context?.previousTechnologies) {
+        queryClient.setQueryData<TechnologyItem[]>(['technologies'], context.previousTechnologies)
+      }
 
       useToastStore.getState().pushToast({
         title: blockedByRelation ? 'Eliminación Bloqueada' : 'Error al Eliminar',
@@ -79,6 +116,9 @@ export function useTechnologiesManager() {
           : 'No se pudo eliminar la tecnología.',
         variant: 'error',
       })
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['technologies'] })
     },
   })
 
@@ -143,6 +183,9 @@ export function useTechnologiesManager() {
     draft,
     setDraftField,
     technologies,
+    isLoading,
+    isError,
+    error,
     formError,
     submitTechnology,
     createOrUpdateMutation,

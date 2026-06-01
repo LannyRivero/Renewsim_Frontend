@@ -49,7 +49,7 @@ describe('useTechnologiesManager', () => {
       result.current.submitTechnology(event)
     })
 
-    expect(result.current.formError).toBe('Technology name must be at least 2 characters')
+    expect(result.current.formError).toBe('El nombre debe tener al menos 2 caracteres.')
     expect(mockCreateTechnology).not.toHaveBeenCalled()
   })
 
@@ -120,7 +120,24 @@ describe('useTechnologiesManager', () => {
     })
 
     await waitFor(() => {
-      expect(useToastStore.getState().toasts[0]?.title).toBe('Delete Blocked')
+      expect(useToastStore.getState().toasts[0]?.title).toBe('Eliminación Bloqueada')
+    })
+  })
+
+  it('treats 404 delete as synchronized success', async () => {
+    mockDeleteTechnologyById.mockRejectedValueOnce({
+      isAxiosError: true,
+      response: { status: 404 },
+    })
+
+    const { result } = renderHook(() => useTechnologiesManager(), { wrapper: createWrapper() })
+
+    act(() => {
+      result.current.deleteMutation.mutate('tech-missing')
+    })
+
+    await waitFor(() => {
+      expect(useToastStore.getState().toasts[0]?.title).toBe('Tecnología ya eliminada')
     })
   })
 })
