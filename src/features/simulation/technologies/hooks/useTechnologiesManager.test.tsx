@@ -33,7 +33,15 @@ describe('useTechnologiesManager', () => {
     mockCreateTechnology.mockReset()
     mockDeleteTechnologyById.mockReset()
     mockUpdateTechnologyById.mockReset()
-    mockGetAllTechnologies.mockResolvedValue([])
+    mockGetAllTechnologies.mockResolvedValue({
+      items: [],
+      totalElements: 0,
+      totalPages: 1,
+      page: 0,
+      size: 20,
+      sortBy: 'name',
+      sortDirection: 'asc',
+    })
     useTechnologyStore.getState().resetDraft()
     useToastStore.setState({ toasts: [] })
   })

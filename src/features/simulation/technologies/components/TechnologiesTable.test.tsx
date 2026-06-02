@@ -6,10 +6,11 @@ describe('TechnologiesTable', () => {
   it('renders rows and triggers delete callback', () => {
     const onDelete = vi.fn()
     const onEdit = vi.fn()
+    const onSortChange = vi.fn()
 
     render(
-      <TechnologiesTable
-        technologies={[
+        <TechnologiesTable
+          technologies={[
           {
             id: 't1',
             name: 'Solar One',
@@ -22,12 +23,22 @@ describe('TechnologiesTable', () => {
             maintenanceCost: 10,
             environmentalImpact: 20,
           },
-        ]}
-        editingTechnologyId={null}
-        deletingTechnologyId={null}
-        onEdit={onEdit}
-        onDelete={onDelete}
-      />,
+          ]}
+          page={0}
+          size={20}
+          totalElements={1}
+          totalPages={1}
+          editingTechnologyId={null}
+          deletingTechnologyId={null}
+          sortBy="name"
+          sortDirection="asc"
+          isUpdating={false}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onSortChange={onSortChange}
+          onPrevPage={vi.fn()}
+          onNextPage={vi.fn()}
+        />,
     )
 
     expect(screen.getByText('Solar One')).toBeInTheDocument()
@@ -37,5 +48,11 @@ describe('TechnologiesTable', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Editar' }))
     expect(onEdit).toHaveBeenCalled()
+
+    fireEvent.click(screen.getByRole('button', { name: /Nombre/i }))
+    expect(onSortChange).toHaveBeenCalledWith('name')
+
+    fireEvent.click(screen.getByRole('button', { name: /Eficiencia/i }))
+    expect(onSortChange).toHaveBeenCalledWith('efficiency')
   })
 })

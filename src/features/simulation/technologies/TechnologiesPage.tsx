@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { Cpu, Plus } from 'lucide-react'
 import { TechnologyForm } from './components/TechnologyForm'
 import { TechnologiesTable } from './components/TechnologiesTable'
@@ -6,6 +5,7 @@ import { useTechnologiesManager } from './hooks/useTechnologiesManager'
 import {
   SimulationActionButton,
   ConfirmDialog,
+  SimulationFiltersToolbar,
   SimulationPageShell,
   SimulationSectionHeader,
   SimulationStateMessage,
@@ -16,7 +16,23 @@ export function TechnologiesPage() {
     draft,
     setDraftField,
     technologies,
+    isFormOpen,
+    openCreateTechnologyForm,
+    page,
+    size,
+    totalElements,
+    totalPages,
+    energyTypeFilter,
+    setTechnologyEnergyTypeFilter,
+    searchTerm,
+    setTechnologySearchTerm,
+    sortBy,
+    sortDirection,
+    setTechnologySort,
+    goToPreviousPage,
+    goToNextPage,
     isLoading,
+    isTableUpdating,
     isError,
     error,
     formError,
@@ -32,27 +48,8 @@ export function TechnologiesPage() {
     cancelEditingTechnology,
   } = useTechnologiesManager()
 
-  const [isFormOpen, setIsFormOpen] = useState(false)
-
-  useEffect(() => {
-    if (createOrUpdateMutation.isSuccess) {
-      setIsFormOpen(false)
-    }
-  }, [createOrUpdateMutation.isSuccess])
-
-  function handleCreateTechnology() {
-    cancelEditingTechnology()
-    setIsFormOpen(true)
-  }
-
   function handleEditTechnology(...args: Parameters<typeof startEditingTechnology>) {
     startEditingTechnology(...args)
-    setIsFormOpen(true)
-  }
-
-  function handleCancelForm() {
-    cancelEditingTechnology()
-    setIsFormOpen(false)
   }
 
   return (
@@ -66,12 +63,34 @@ export function TechnologiesPage() {
           className="md:items-center"
         />
 
-        <div className="flex items-center justify-end">
-          <SimulationActionButton type="button" onClick={handleCreateTechnology}>
+        <div className="flex items-center justify-between gap-3">
+          <div />
+          <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm}>
             <Plus className="h-4 w-4" />
             Nueva tecnología
           </SimulationActionButton>
         </div>
+
+        {!isFormOpen ? (
+          <SimulationFiltersToolbar
+            searchId="technology-filter-search"
+            searchLabel="Buscar tecnología"
+            searchValue={searchTerm}
+            searchPlaceholder="Escribí un nombre para filtrar"
+            onSearchChange={setTechnologySearchTerm}
+            searchHint="La búsqueda se activa con 3 o más letras."
+            filterId="technology-filter-energy-type"
+            filterLabel="Tipo de energía"
+            filterValue={energyTypeFilter}
+            onFilterChange={(value) => setTechnologyEnergyTypeFilter(value as 'ALL' | 'SOLAR' | 'WIND' | 'HYDRO')}
+            filterOptions={[
+              { value: 'ALL', label: 'Todos los tipos' },
+              { value: 'SOLAR', label: 'Solar' },
+              { value: 'WIND', label: 'Eólica' },
+              { value: 'HYDRO', label: 'Hidro' },
+            ]}
+          />
+        ) : null}
 
         {isFormOpen ? (
           <TechnologyForm
@@ -80,18 +99,30 @@ export function TechnologiesPage() {
             isSubmitting={createOrUpdateMutation.isPending}
             isEditing={Boolean(editingTechnologyId)}
             onSubmit={submitTechnology}
-            onCancelEdit={handleCancelForm}
+            onCancelEdit={cancelEditingTechnology}
             onDraftFieldChange={setDraftField}
           />
         ) : null}
 
-        <TechnologiesTable
-          technologies={technologies}
-          editingTechnologyId={editingTechnologyId}
-          deletingTechnologyId={deleteMutation.isPending ? technologyToDelete?.id ?? null : null}
-          onEdit={handleEditTechnology}
-          onDelete={requestDeleteTechnology}
-        />
+        {!isFormOpen ? (
+          <TechnologiesTable
+            technologies={technologies}
+            page={page}
+            size={size}
+            totalElements={totalElements}
+            totalPages={totalPages}
+            editingTechnologyId={editingTechnologyId}
+            deletingTechnologyId={deleteMutation.isPending ? technologyToDelete?.id ?? null : null}
+            sortBy={sortBy}
+            isUpdating={isTableUpdating}
+            onEdit={handleEditTechnology}
+            onDelete={requestDeleteTechnology}
+            sortDirection={sortDirection}
+            onSortChange={setTechnologySort}
+            onPrevPage={goToPreviousPage}
+            onNextPage={goToNextPage}
+          />
+        ) : null}
 
         {isLoading ? <SimulationStateMessage>Cargando tecnologías...</SimulationStateMessage> : null}
 

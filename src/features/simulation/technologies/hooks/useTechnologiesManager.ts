@@ -1,30 +1,68 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isAxiosError } from 'axios'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { technologySchema } from '../schemas/technologySchema'
-import { createTechnology, deleteTechnologyById, getAllTechnologies, updateTechnologyById } from '../services/technologyService'
+import {
+  createTechnology,
+  deleteTechnologyById,
+  getAllTechnologies,
+  type TechnologyEnergyTypeFilter,
+  type TechnologySortBy,
+  type TechnologySortDirection,
+  updateTechnologyById,
+  type TechnologiesPageResult,
+} from '../services/technologyService'
 import type { TechnologyItem } from '@/shared/types'
 import { useTechnologyStore } from '@/stores/technologyStore'
 import { useToastStore } from '@/stores/toastStore'
 
 export function useTechnologiesManager() {
   const queryClient = useQueryClient()
+  const [page, setPage] = useState(0)
+  const [size] = useState(20)
+  const [energyTypeFilter, setEnergyTypeFilter] = useState<TechnologyEnergyTypeFilter>('ALL')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState<TechnologySortBy>('name')
+  const [sortDirection, setSortDirection] = useState<TechnologySortDirection>('asc')
   const draft = useTechnologyStore((state) => state.draft)
   const setDraftField = useTechnologyStore((state) => state.setDraftField)
   const resetDraft = useTechnologyStore((state) => state.resetDraft)
   const [formError, setFormError] = useState<string | null>(null)
   const [editingTechnologyId, setEditingTechnologyId] = useState<string | null>(null)
   const [technologyToDelete, setTechnologyToDelete] = useState<{ id: string; name: string } | null>(null)
+  const [isFormOpen, setIsFormOpen] = useState(false)
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm)
+      setPage(0)
+    }, 300)
+
+    return () => {
+      window.clearTimeout(timer)
+    }
+  }, [searchTerm])
 
   const {
-    data: technologies = [],
+    data: technologiesPage,
     isLoading,
     isError,
     error,
+    isPlaceholderData,
   } = useQuery({
-    queryKey: ['technologies'],
-    queryFn: getAllTechnologies,
+    queryKey: ['technologies', page, size, energyTypeFilter, debouncedSearchTerm, sortBy, sortDirection],
+    queryFn: () => getAllTechnologies(page, size, energyTypeFilter, debouncedSearchTerm, sortBy, sortDirection),
+    placeholderData: keepPreviousData,
   })
+
+  const technologies = technologiesPage?.items ?? []
+  const totalElements = technologiesPage?.totalElements ?? 0
+  const totalPages = technologiesPage?.totalPages ?? 1
+  const visiblePage = technologiesPage?.page ?? page
+  const visibleSize = technologiesPage?.size ?? size
+  const visibleSortBy = technologiesPage?.sortBy ?? sortBy
+  const visibleSortDirection = technologiesPage?.sortDirection ?? sortDirection
 
   function getErrorStatusCode(error: unknown): number | undefined {
     if (isAxiosError(error)) return error.response?.status
@@ -46,23 +84,26 @@ export function useTechnologiesManager() {
 
       return createTechnology(payload.values)
     },
-    onSuccess: () => {
+    onSuccess: (_data, variables) => {
+      const wasEditing = Boolean(variables.technologyId)
       resetDraft()
       setEditingTechnologyId(null)
+      setIsFormOpen(false)
       setFormError(null)
       queryClient.invalidateQueries({ queryKey: ['technologies'] })
       useToastStore.getState().pushToast({
-        title: editingTechnologyId ? 'Tecnología Actualizada' : 'Tecnología Creada',
-        description: editingTechnologyId
+        title: wasEditing ? 'Tecnología Actualizada' : 'Tecnología Creada',
+        description: wasEditing
           ? 'La tecnología se actualizó correctamente.'
           : 'La tecnología se creó correctamente.',
         variant: 'success',
       })
     },
-    onError: () => {
+    onError: (_error, variables) => {
+      const wasEditing = Boolean(variables.technologyId)
       useToastStore.getState().pushToast({
-        title: editingTechnologyId ? 'Error al Actualizar' : 'Error al Crear',
-        description: editingTechnologyId
+        title: wasEditing ? 'Error al Actualizar' : 'Error al Crear',
+        description: wasEditing
           ? 'No se pudo actualizar la tecnología. Por favor, revise los campos.'
           : 'No se pudo crear la tecnología. Por favor, revise los campos.',
         variant: 'error',
@@ -74,15 +115,27 @@ export function useTechnologiesManager() {
     mutationFn: deleteTechnologyById,
     onMutate: async (technologyId) => {
       await queryClient.cancelQueries({ queryKey: ['technologies'] })
-      const previousTechnologies = queryClient.getQueryData<TechnologyItem[]>(['technologies'])
+      const previousPages = queryClient.getQueriesData<TechnologiesPageResult>({ queryKey: ['technologies'] })
 
-      queryClient.setQueryData<TechnologyItem[]>(['technologies'], (previous = []) =>
-        previous.filter((technology) => technology.id !== technologyId),
-      )
+      queryClient.setQueriesData<TechnologiesPageResult>({ queryKey: ['technologies'] }, (previous) => {
+        if (!previous) return previous
+        return {
+          ...previous,
+          items: previous.items.filter((technology) => technology.id !== technologyId),
+          totalElements: Math.max(0, previous.totalElements - 1),
+        }
+      })
 
-      return { previousTechnologies }
+      return {
+        previousPages,
+        shouldMoveToPreviousPage: page > 0 && technologies.length === 1,
+      }
     },
-    onSuccess: () => {
+    onSuccess: (_data, _technologyId, context) => {
+      if (context?.shouldMoveToPreviousPage) {
+        setPage((current) => Math.max(0, current - 1))
+      }
+
       setTechnologyToDelete(null)
       useToastStore.getState().pushToast({
         title: 'Tecnología Eliminada',
@@ -90,7 +143,7 @@ export function useTechnologiesManager() {
         variant: 'success',
       })
     },
-    onError: (error, technologyId, context) => {
+    onError: (error, _technologyId, context) => {
       const statusCode = getErrorStatusCode(error)
       const notFound = statusCode === 404
       const blockedByRelation = statusCode === 409 || statusCode === 422
@@ -105,8 +158,10 @@ export function useTechnologiesManager() {
         return
       }
 
-      if (context?.previousTechnologies) {
-        queryClient.setQueryData<TechnologyItem[]>(['technologies'], context.previousTechnologies)
+      if (context?.previousPages) {
+        for (const [queryKey, queryData] of context.previousPages) {
+          queryClient.setQueryData(queryKey, queryData)
+        }
       }
 
       useToastStore.getState().pushToast({
@@ -121,6 +176,37 @@ export function useTechnologiesManager() {
       queryClient.invalidateQueries({ queryKey: ['technologies'] })
     },
   })
+
+  function goToPreviousPage() {
+    if (isPlaceholderData) return
+    setPage((current) => Math.max(0, current - 1))
+  }
+
+  function goToNextPage() {
+    if (isPlaceholderData) return
+    setPage((current) => Math.min(totalPages - 1, current + 1))
+  }
+
+  function setTechnologyEnergyTypeFilter(filter: TechnologyEnergyTypeFilter) {
+    setEnergyTypeFilter(filter)
+    setPage(0)
+  }
+
+  function setTechnologySearchTerm(search: string) {
+    setSearchTerm(search)
+  }
+
+  function setTechnologySort(sortField: TechnologySortBy) {
+    if (isPlaceholderData) return
+    setPage(0)
+    if (sortBy === sortField) {
+      setSortDirection((currentDirection) => (currentDirection === 'asc' ? 'desc' : 'asc'))
+      return
+    }
+
+    setSortBy(sortField)
+    setSortDirection('asc')
+  }
 
   function requestDeleteTechnology(technologyId: string, technologyName: string) {
     setTechnologyToDelete({ id: technologyId, name: technologyName })
@@ -138,6 +224,7 @@ export function useTechnologiesManager() {
 
   function startEditingTechnology(technology: TechnologyItem) {
     setEditingTechnologyId(technology.id)
+    setIsFormOpen(true)
     setDraftField('name', technology.name)
     setDraftField('energyType', technology.energyType as 'SOLAR' | 'WIND' | 'HYDRO')
     setDraftField('installedPower', technology.installedPower || 1)
@@ -151,9 +238,16 @@ export function useTechnologiesManager() {
   }
 
   function cancelEditingTechnology() {
+    if (createOrUpdateMutation.isPending) return
     setEditingTechnologyId(null)
     setFormError(null)
+    setIsFormOpen(false)
     resetDraft()
+  }
+
+  function openCreateTechnologyForm() {
+    cancelEditingTechnology()
+    setIsFormOpen(true)
   }
 
   function submitTechnology(event: React.FormEvent) {
@@ -183,7 +277,23 @@ export function useTechnologiesManager() {
     draft,
     setDraftField,
     technologies,
+    isFormOpen,
+    openCreateTechnologyForm,
+    page: visiblePage,
+    size: visibleSize,
+    totalElements,
+    totalPages,
+    energyTypeFilter,
+    setTechnologyEnergyTypeFilter,
+    searchTerm,
+    setTechnologySearchTerm,
+    sortBy: visibleSortBy,
+    sortDirection: visibleSortDirection,
+    setTechnologySort,
+    goToPreviousPage,
+    goToNextPage,
     isLoading,
+    isTableUpdating: isPlaceholderData,
     isError,
     error,
     formError,

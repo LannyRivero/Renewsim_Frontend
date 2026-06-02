@@ -148,12 +148,10 @@ export function TechnologyForm({
 
           <div className="md:col-span-2 flex justify-end">
             <div className="flex items-center gap-2">
-              {isEditing ? (
-                <SimulationActionButton type="button" variant="soft" onClick={onCancelEdit}>
+              <SimulationActionButton type="button" variant="soft" onClick={onCancelEdit} disabled={isSubmitting}>
                   Cancel
-                </SimulationActionButton>
-              ) : null}
-              <SimulationActionButton type="submit" disabled={isSubmitting} className="bg-primary-container text-on-primary hover:brightness-95">
+              </SimulationActionButton>
+              <SimulationActionButton type="submit" variant="primary" disabled={isSubmitting}>
                 {isSubmitting ? (isEditing ? 'Saving...' : 'Creating...') : isEditing ? 'Save Changes' : 'Create Technology'}
               </SimulationActionButton>
             </div>

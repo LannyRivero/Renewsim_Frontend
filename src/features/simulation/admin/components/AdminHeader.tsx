@@ -15,7 +15,7 @@ export function AdminHeader({ isFetching, onRefresh }: AdminHeaderProps) {
       description="Manage users and roles."
       className="md:items-center"
       actions={
-        <SimulationActionButton type="button" onClick={onRefresh} disabled={isFetching}>
+        <SimulationActionButton type="button" variant="outline" onClick={onRefresh} disabled={isFetching}>
           <RefreshCcw className={`h-4 w-4 ${isFetching ? 'animate-spin' : ''}`} />
           {isFetching ? 'Refreshing...' : 'Refresh users'}
         </SimulationActionButton>
