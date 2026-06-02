@@ -3,11 +3,11 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { RequireAuth } from './RequireAuth'
 
 function Protected() {
-  return <p>Contenido protegido</p>
+  return <p>Protected content</p>
 }
 
 function LoginPage() {
-  return <p>Página de login</p>
+  return <p>Login page</p>
 }
 
 function renderWithRouter(token: string | null) {
@@ -28,7 +28,7 @@ function renderWithRouter(token: string | null) {
             </RequireAuth>
           }
         />
-        <Route path="/iniciar-sesion" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </MemoryRouter>,
   )
@@ -39,18 +39,18 @@ afterEach(() => localStorage.clear())
 describe('RequireAuth', () => {
   it('renders children when token exists in localStorage', () => {
     renderWithRouter('fake-token')
-    expect(screen.getByText('Contenido protegido')).toBeInTheDocument()
+    expect(screen.getByText('Protected content')).toBeInTheDocument()
   })
 
-  it('redirects to /iniciar-sesion when no token', () => {
+  it('redirects to /login when no token', () => {
     renderWithRouter(null)
-    expect(screen.getByText('Página de login')).toBeInTheDocument()
-    expect(screen.queryByText('Contenido protegido')).not.toBeInTheDocument()
+    expect(screen.getByText('Login page')).toBeInTheDocument()
+    expect(screen.queryByText('Protected content')).not.toBeInTheDocument()
   })
 
   it('preserves the intended location so login can redirect back', () => {
     // After redirect, the login page is shown (location.state.from would be /simulador)
     renderWithRouter(null)
-    expect(screen.getByText('Página de login')).toBeInTheDocument()
+    expect(screen.getByText('Login page')).toBeInTheDocument()
   })
 })

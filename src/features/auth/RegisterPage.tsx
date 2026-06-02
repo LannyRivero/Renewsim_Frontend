@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
 import { RegisterForm } from './components/RegisterForm'
-import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 
 const HERO_IMAGE =
@@ -9,19 +8,13 @@ const HERO_IMAGE =
 export function RegisterPage() {
   const navigate = useNavigate()
 
-  function handleSuccess(token: string) {
-    useAuthStore.setState((state) => ({
-      ...state,
-      accessToken: token,
-      isAuthenticated: true,
-    }))
-    localStorage.setItem('renewsim-token', token)
+  function handleSuccess() {
     useToastStore.getState().pushToast({
-      title: 'Cuenta creada',
-      description: 'Tu registro fue exitoso.',
+      title: 'Account Created',
+      description: 'Your account was created. Sign in to continue.',
       variant: 'success',
     })
-    navigate('/')
+    navigate('/login')
   }
 
   return (
@@ -32,11 +25,11 @@ export function RegisterPage() {
           className="w-full aspect-[3/1.5] rounded-2xl overflow-hidden mb-8 bg-center bg-cover border border-outline-variant dark:border-white/8"
           style={{ backgroundImage: `url("${HERO_IMAGE}")` }}
           role="img"
-          aria-label="Energías renovables"
+          aria-label="Renewable energy"
         />
 
         <h1 className="text-3xl font-extrabold text-center text-on-surface dark:text-content-dark mb-8">
-          Crea tu cuenta
+          Create your account
         </h1>
 
         <RegisterForm onSuccess={handleSuccess} />

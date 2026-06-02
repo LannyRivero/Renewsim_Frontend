@@ -1,19 +1,19 @@
 const RULES = [
   {
     test: (p: string) => p.length >= 8,
-    message: 'Mínimo 8 caracteres',
+    message: 'Minimum 8 characters',
   },
   {
     test: (p: string) => /[A-Z]/.test(p),
-    message: 'Al menos una letra mayúscula',
+    message: 'At least one uppercase letter',
   },
   {
     test: (p: string) => /[0-9]/.test(p),
-    message: 'Al menos un número',
+    message: 'At least one number',
   },
   {
     test: (p: string) => /[!@#$%^&*]/.test(p),
-    message: 'Al menos un carácter especial (!@#$%^&*)',
+    message: 'At least one special character (!@#$%^&*)',
   },
 ]
 

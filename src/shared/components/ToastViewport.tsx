@@ -29,7 +29,7 @@ export function ToastViewport() {
             </div>
             <button
               type="button"
-              aria-label="Cerrar notificacion"
+              aria-label="Close notification"
               onClick={() => removeToast(toast.id)}
               className="rounded-md p-1 text-xs font-semibold hover:bg-black/5 dark:hover:bg-white/10"
             >

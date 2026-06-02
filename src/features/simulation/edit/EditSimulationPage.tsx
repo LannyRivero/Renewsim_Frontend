@@ -1,9 +1,85 @@
 import { Link } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useToastStore } from '@/stores/toastStore'
+import { useSimulationStore } from '@/stores/simulationStore'
+import { editSimulationSchema } from '../schemas/simulationSchema'
+import { getSimulationById, updateSimulationById } from '../services/simulationService'
 
 export function EditSimulationPage() {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const [searchParams] = useSearchParams()
+  const lastResult = useSimulationStore((state) => state.lastResult)
+  const simulationId = searchParams.get('id') ?? lastResult?.id ?? null
+
+  const { data } = useQuery({
+    queryKey: ['simulation-details', simulationId],
+    queryFn: async () => {
+      if (!simulationId) return null
+      return getSimulationById(simulationId)
+    },
+    enabled: Boolean(simulationId),
+  })
+
+  const updateMutation = useMutation({
+    mutationFn: async (values: Parameters<typeof editSimulationSchema.parse>[0]) => {
+      if (!simulationId) {
+        throw new Error('Missing simulation id')
+      }
+      const payload = editSimulationSchema.parse(values)
+      await updateSimulationById(simulationId, payload)
+    },
+    onSuccess: () => {
+      useToastStore.getState().pushToast({
+        title: 'Changes Saved',
+        description: 'Simulation was updated successfully.',
+        variant: 'success',
+      })
+      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
+      if (simulationId) {
+        queryClient.invalidateQueries({ queryKey: ['simulation-details', simulationId] })
+      }
+      navigate('/simulador/historial')
+    },
+    onError: () => {
+      useToastStore.getState().pushToast({
+        title: 'Update Error',
+        description: 'Could not update simulation. Please verify the fields.',
+        variant: 'error',
+      })
+    },
+  })
+
+  const inferredSource =
+    data?.energyType?.toLowerCase() === 'wind'
+      ? 'Wind Turbine'
+      : data?.energyType?.toLowerCase() === 'hydro'
+        ? 'Hydroelectric'
+        : 'Solar Panels'
+
+  const initialName = `${data?.energyType ?? lastResult?.energyType ?? 'Energy'} Simulation`
+  const initialLocation = data?.location ?? lastResult?.location ?? 'San Francisco, CA'
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const formData = new FormData(event.currentTarget)
+    updateMutation.mutate({
+      simulationName: String(formData.get('simulationName') ?? ''),
+      location: String(formData.get('location') ?? ''),
+      energySource: String(formData.get('energySource') ?? ''),
+      systemSizeKw: Number(formData.get('systemSizeKw') ?? 0),
+      annualConsumptionKwh: Number(formData.get('annualConsumptionKwh') ?? 0),
+      incentives: Number(formData.get('incentives') ?? 0),
+      electricityRate: Number(formData.get('electricityRate') ?? 0),
+    })
+  }
+
   return (
-    <section className="min-h-screen bg-surface dark:bg-background-dark">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-background-dark/80">
+    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
+      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="size-7 rounded-full bg-primary-container" />
@@ -17,10 +93,10 @@ export function EditSimulationPage() {
             <Link to="/simulador/historial" className="text-sm font-medium text-primary">
               Simulations
             </Link>
-            <Link to="/como-funciona" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
               Resources
             </Link>
-            <Link to="/acerca-de" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
               Community
             </Link>
           </nav>
@@ -28,7 +104,7 @@ export function EditSimulationPage() {
           <div className="flex items-center gap-4">
             <button
               type="button"
-              aria-label="Notificaciones"
+              aria-label="Notifications"
               className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low dark:text-content-dark/60"
             >
               <span className="material-symbols-outlined">notifications</span>
@@ -38,125 +114,129 @@ export function EditSimulationPage() {
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-on-surface dark:text-content-dark">Simulation Details</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-on-surface dark:text-content-dark">
+            Edit Simulation
+          </h1>
           <p className="mt-2 text-on-surface-variant dark:text-content-dark/60">
-            Review the comprehensive results of your energy simulation, including financial summaries,
-            environmental impact, and educational insights.
+            Update the parameters for your existing simulation below.
           </p>
         </div>
 
-        <div className="space-y-10">
-          <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
-            <h2 className="mb-4 text-xl font-bold">Simulation Overview</h2>
-            <div className="grid grid-cols-1 gap-6 text-sm md:grid-cols-3">
-              <div>
-                <p className="text-on-surface-variant dark:text-content-dark/60">Simulation Name</p>
-                <p className="mt-1 font-medium">Energy Transition Plan</p>
-              </div>
-              <div>
-                <p className="text-on-surface-variant dark:text-content-dark/60">Date</p>
-                <p className="mt-1 font-medium">July 15, 2024</p>
-              </div>
-              <div>
-                <p className="text-on-surface-variant dark:text-content-dark/60">Location</p>
-                <p className="mt-1 font-medium">San Francisco, CA</p>
-              </div>
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="simulation-name" className="mb-2 block text-sm font-medium">
+              Simulation Name
+            </label>
+              <input
+                id="simulation-name"
+                name="simulationName"
+                defaultValue={initialName}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
             </div>
-          </section>
 
-          <section className="overflow-hidden rounded-lg border border-outline-variant bg-surface dark:border-white/10 dark:bg-surface-dark">
-            <div className="p-6">
-              <h2 className="text-xl font-bold">Energy Source Comparison</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-sm">
-                <thead className="bg-surface-container-low dark:bg-background-dark/60">
-                  <tr>
-                    <th className="px-6 py-3 font-medium" scope="col">
-                      Energy Source
-                    </th>
-                    <th className="px-6 py-3 font-medium" scope="col">
-                      Initial Investment
-                    </th>
-                    <th className="px-6 py-3 font-medium" scope="col">
-                      Annual Savings
-                    </th>
-                    <th className="px-6 py-3 font-medium" scope="col">
-                      ROI
-                    </th>
-                    <th className="px-6 py-3 font-medium" scope="col">
-                      CO2 Reduction
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-outline-variant dark:divide-white/10">
-                  <tr>
-                    <td className="px-6 py-4 font-medium">Solar Panels</td>
-                    <td className="px-6 py-4">$25,000</td>
-                    <td className="px-6 py-4">$3,000</td>
-                    <td className="px-6 py-4">12%</td>
-                    <td className="px-6 py-4">5 tons</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-medium">Wind Turbine</td>
-                    <td className="px-6 py-4">$40,000</td>
-                    <td className="px-6 py-4">$5,000</td>
-                    <td className="px-6 py-4">10%</td>
-                    <td className="px-6 py-4">8 tons</td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 font-medium">Geothermal</td>
-                    <td className="px-6 py-4">$60,000</td>
-                    <td className="px-6 py-4">$7,000</td>
-                    <td className="px-6 py-4">11.7%</td>
-                    <td className="px-6 py-4">10 tons</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
-              <h3 className="font-semibold">Financial Summary</h3>
-              <dl className="mt-4 divide-y divide-outline-variant dark:divide-white/10">
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-sm text-on-surface-variant dark:text-content-dark/60">Total Investment</dt>
-                  <dd className="col-span-2 text-sm font-medium">$125,000</dd>
-                </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-sm text-on-surface-variant dark:text-content-dark/60">Total Savings</dt>
-                  <dd className="col-span-2 text-sm font-medium">$15,000/year</dd>
-                </div>
-              </dl>
-            </section>
-
-            <section className="rounded-lg border border-outline-variant bg-surface-container-low p-6 dark:border-white/10 dark:bg-background-dark/50">
-              <h3 className="font-semibold">Environmental Impact</h3>
-              <dl className="mt-4 divide-y divide-outline-variant dark:divide-white/10">
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-sm text-on-surface-variant dark:text-content-dark/60">Total CO2 Reduction</dt>
-                  <dd className="col-span-2 text-sm font-medium">23 tons/year</dd>
-                </div>
-                <div className="grid grid-cols-3 gap-4 py-3">
-                  <dt className="text-sm text-on-surface-variant dark:text-content-dark/60">Equivalent Trees Planted</dt>
-                  <dd className="col-span-2 text-sm font-medium">380</dd>
-                </div>
-              </dl>
-            </section>
+          <div>
+            <label htmlFor="location" className="mb-2 block text-sm font-medium">
+              Location
+            </label>
+            <select
+              id="location"
+              name="location"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              defaultValue={initialLocation}
+            >
+              <option>{initialLocation}</option>
+              <option>San Francisco, CA</option>
+              <option>Austin, TX</option>
+              <option>Miami, FL</option>
+              <option>Denver, CO</option>
+            </select>
           </div>
 
-          <section className="rounded-r-lg border-l-4 border-primary bg-green-50 p-6 dark:bg-green-900/20">
-            <h3 className="mb-2 text-xl font-bold">Educational Insights</h3>
-            <p className="text-sm text-on-surface dark:text-content-dark/80">
-              This simulation demonstrates the significant financial and environmental benefits of transitioning to
-              renewable energy sources. Combining multiple technologies can optimize both ROI and emissions
-              reduction.
-            </p>
-          </section>
-        </div>
+          <div>
+            <label htmlFor="energy-source" className="mb-2 block text-sm font-medium">
+              Energy Source
+            </label>
+            <select
+              id="energy-source"
+              name="energySource"
+              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              defaultValue={inferredSource}
+            >
+              <option>Solar Panels</option>
+              <option>Wind Turbine</option>
+              <option>Hydroelectric</option>
+            </select>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="system-size" className="mb-2 block text-sm font-medium">
+                System Size (kW)
+              </label>
+              <input
+                id="system-size"
+                name="systemSizeKw"
+                type="number"
+                step="0.1"
+                defaultValue={7.5}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
+            </div>
+            <div>
+              <label htmlFor="energy-consumption" className="mb-2 block text-sm font-medium">
+                Annual Energy Consumption (kWh)
+              </label>
+              <input
+                id="energy-consumption"
+                name="annualConsumptionKwh"
+                type="number"
+                defaultValue={10000}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="incentives" className="mb-2 block text-sm font-medium">
+                Incentives/Rebates ($)
+              </label>
+              <input
+                id="incentives"
+                name="incentives"
+                type="number"
+                defaultValue={1500}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
+            </div>
+            <div>
+              <label htmlFor="electricity-rate" className="mb-2 block text-sm font-medium">
+                Electricity Rate ($/kWh)
+              </label>
+              <input
+                id="electricity-rate"
+                name="electricityRate"
+                type="number"
+                step="0.01"
+                defaultValue={0.18}
+                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
+            <button
+              type="submit"
+              disabled={updateMutation.isPending}
+              className="rounded-lg bg-primary px-6 py-3 text-sm font-bold text-black transition hover:opacity-90"
+            >
+              {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+        </form>
       </main>
     </section>
   )

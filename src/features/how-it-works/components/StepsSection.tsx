@@ -9,23 +9,23 @@ const STEPS: Step[] = [
   {
     number: '01',
     icon: 'database',
-    title: 'Ingresa tus datos',
+    title: 'Enter your data',
     description:
-      'Proporciona tu ubicación, consumo actual y preferencias energéticas para una simulación precisa.',
+      'Provide your location, current consumption, and energy preferences for an accurate simulation.',
   },
   {
     number: '02',
     icon: 'calculate',
-    title: 'Simulación avanzada',
+    title: 'Advanced simulation',
     description:
-      'Nuestros algoritmos procesan tus datos para modelar el rendimiento y costos de cada fuente de energía.',
+      'Our algorithms process your data to model the performance and costs of each energy source.',
   },
   {
     number: '03',
     icon: 'insights',
-    title: 'Obtén resultados',
+    title: 'Get results',
     description:
-      'Recibe un informe detallado con visualizaciones interactivas y recomendaciones personalizadas.',
+      'Receive a detailed report with interactive visualizations and personalized recommendations.',
   },
 ]
 

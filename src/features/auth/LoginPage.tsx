@@ -1,24 +1,48 @@
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { LoginForm } from './components/LoginForm'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
+import { readUserFromToken } from '@/shared/utils/authToken'
 
 export function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const fromState =
+    typeof location.state === 'object' && location.state !== null && 'from' in location.state
+      ? (location.state as { from?: unknown }).from
+      : undefined
+
+  const redirectPath =
+    typeof fromState === 'string'
+      ? fromState
+      : typeof fromState === 'object' &&
+          fromState !== null &&
+          'pathname' in fromState &&
+          typeof (fromState as { pathname?: unknown }).pathname === 'string'
+        ? (fromState as { pathname: string }).pathname
+        : '/simulador'
 
   function handleSuccess(token: string) {
+    const userFromToken = readUserFromToken(token)
     useAuthStore.setState((state) => ({
       ...state,
       accessToken: token,
+      user: userFromToken
+        ? {
+            id: 0,
+            username: userFromToken.username,
+            roles: userFromToken.roles,
+          }
+        : state.user,
       isAuthenticated: true,
     }))
     localStorage.setItem('renewsim-token', token)
     useToastStore.getState().pushToast({
-      title: 'Sesion iniciada',
-      description: 'Bienvenido a RenewSim.',
+      title: 'Signed In',
+      description: 'Welcome to RenewSim.',
       variant: 'success',
     })
-    navigate('/')
+    navigate(redirectPath)
   }
 
   return (
@@ -28,10 +52,10 @@ export function LoginPage() {
         <div className="text-center mb-10">
           <div className="h-1 w-10 rounded-full accent-bar mx-auto mb-6" />
           <h1 className="text-3xl font-extrabold text-on-surface dark:text-content-dark">
-            Iniciar sesión
+            Sign in
           </h1>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-content-dark/50">
-            Accede a tu cuenta de RenewSim
+            Access your RenewSim account
           </p>
         </div>
 

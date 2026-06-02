@@ -9,23 +9,23 @@ beforeEach(() => {
 describe('ChatWidget', () => {
   it('renders floating chat button', () => {
     render(<ChatWidget />)
-    expect(screen.getByRole('button', { name: 'Abrir chat' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open chat' })).toBeInTheDocument()
   })
 
   it('opens chat panel when floating button is clicked', () => {
     render(<ChatWidget />)
-    fireEvent.click(screen.getByRole('button', { name: 'Abrir chat' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open chat' }))
 
-    expect(screen.getByRole('dialog', { name: 'Panel de chat' })).toBeInTheDocument()
+    expect(screen.getByRole('dialog', { name: 'Chat panel' })).toBeInTheDocument()
     expect(useUiStore.getState().isChatOpen).toBe(true)
   })
 
   it('closes chat panel when close button is clicked', () => {
     render(<ChatWidget />)
-    fireEvent.click(screen.getByRole('button', { name: 'Abrir chat' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Cerrar chat' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Open chat' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Close chat' }))
 
-    expect(screen.queryByRole('dialog', { name: 'Panel de chat' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('dialog', { name: 'Chat panel' })).not.toBeInTheDocument()
     expect(useUiStore.getState().isChatOpen).toBe(false)
   })
 })

@@ -6,22 +6,22 @@ interface StatsGridProps {
 
 export function StatsGrid({ stats }: StatsGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
       {stats.map(({ label, value, icon }) => (
         <article
           key={label}
-          className="card rounded-xl p-6 flex items-start gap-4"
+          className="rounded-md border border-black/10 bg-slate-50/80 p-3 dark:border-white/10 dark:bg-[#15241e]"
         >
-          <div className="p-2.5 rounded-lg bg-primary-container/12 dark:bg-primary-container/15 shrink-0">
-            <span className="material-symbols-outlined text-primary dark:text-primary-inverse text-xl">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-content-dark/70">{label}</p>
+              <p className="mt-1 text-xl font-extrabold text-slate-900 dark:text-content-dark lg:text-2xl">{value}</p>
+            </div>
+            <div className="rounded-md border border-primary/20 bg-primary/10 p-2 dark:border-primary/30 dark:bg-primary/15">
+              <span className="material-symbols-outlined text-lg text-primary dark:text-primary-inverse">
               {icon}
-            </span>
-          </div>
-          <div>
-            <p className="text-sm text-on-surface-variant dark:text-content-dark/50">{label}</p>
-            <p className="text-2xl font-extrabold text-on-surface dark:text-content-dark mt-0.5">
-              {value}
-            </p>
+              </span>
+            </div>
           </div>
         </article>
       ))}
