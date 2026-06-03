@@ -10,16 +10,25 @@ export { ConfirmDialog } from './simulation/dialogs/ConfirmDialog'
 export { ChatWidget } from './ChatWidget'
 export { ToastViewport } from './ToastViewport'
 export { RouteSkeleton } from './RouteSkeleton'
+export { FormTooltip } from './FormTooltip'
 export {
   SimulationPageShell,
   SimulationCard,
   SimulationSectionHeader,
   SimulationStatusBadge,
   SimulationActionButton,
+  SimulationFiltersToolbar,
   SimulationToolbar,
   SimulationStateMessage,
   SimulationModalActions,
   SimulationTextInput,
   SimulationSelect,
   SimulationReadonlyInput,
+  SimulationTableContainer,
+  SimulationTable,
+  SimulationTableHeaderRow,
+  SimulationTableHeadCell,
+  SimulationTableBodyRow,
+  SimulationTableCell,
+  SimulationPagination,
 } from './SimulationPrimitives'

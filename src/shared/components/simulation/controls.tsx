@@ -2,7 +2,7 @@ import type { ComponentPropsWithoutRef } from 'react'
 import { cn } from '@/lib/utils'
 
 interface SimulationActionButtonProps extends ComponentPropsWithoutRef<'button'> {
-  variant?: 'outline' | 'soft'
+  variant?: 'primary' | 'outline' | 'soft'
 }
 
 export function SimulationActionButton({ className, variant = 'outline', ...props }: SimulationActionButtonProps) {
@@ -10,7 +10,9 @@ export function SimulationActionButton({ className, variant = 'outline', ...prop
     <button
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition disabled:opacity-60',
-        variant === 'outline'
+        variant === 'primary'
+          ? 'border border-transparent bg-primary-container text-on-primary hover:brightness-95 dark:bg-emerald-500/80 dark:text-slate-950 dark:hover:bg-emerald-400/80'
+          : variant === 'outline'
           ? 'border border-slate-300 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50 dark:border-white/15 dark:bg-white/10 dark:text-content-dark dark:hover:bg-white/20'
           : 'border border-black/10 bg-slate-50 text-slate-700 hover:bg-slate-100 dark:border-white/15 dark:bg-white/10 dark:text-content-dark dark:hover:bg-white/20',
         className,

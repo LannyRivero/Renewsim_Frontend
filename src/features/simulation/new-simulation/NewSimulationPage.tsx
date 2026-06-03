@@ -99,8 +99,9 @@ export function NewSimulationPage() {
           <div className="flex justify-end">
             <SimulationActionButton
               type="submit"
+              variant="primary"
               disabled={isSubmitting}
-              className="w-full bg-primary-container px-8 py-3 text-base font-semibold text-on-primary hover:brightness-95 md:w-auto"
+              className="w-full px-8 py-3 text-base md:w-auto"
             >
               {submitLabel}
             </SimulationActionButton>

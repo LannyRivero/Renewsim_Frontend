@@ -15,3 +15,13 @@ export {
   SimulationSelect,
   SimulationReadonlyInput,
 } from './simulation/controls'
+export { SimulationFiltersToolbar } from './simulation/filters-toolbar'
+export {
+  SimulationTableContainer,
+  SimulationTable,
+  SimulationTableHeaderRow,
+  SimulationTableHeadCell,
+  SimulationTableBodyRow,
+  SimulationTableCell,
+} from './simulation/table'
+export { SimulationPagination } from './simulation/pagination'

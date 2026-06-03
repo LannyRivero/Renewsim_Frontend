@@ -30,13 +30,12 @@ export function SimulationStatusBadge({
   )
 }
 
-interface SimulationStateMessageProps {
+interface SimulationStateMessageProps extends ComponentPropsWithoutRef<'p'> {
   tone?: 'muted' | 'error'
   children: ReactNode
-  className?: string
 }
 
-export function SimulationStateMessage({ tone = 'muted', children, className }: SimulationStateMessageProps) {
+export function SimulationStateMessage({ tone = 'muted', children, className, ...props }: SimulationStateMessageProps) {
   return (
     <p
       className={cn(
@@ -44,6 +43,7 @@ export function SimulationStateMessage({ tone = 'muted', children, className }: 
         tone === 'error' ? 'text-red-600 dark:text-red-400' : 'text-on-surface-variant dark:text-content-dark/70',
         className,
       )}
+      {...props}
     >
       {children}
     </p>

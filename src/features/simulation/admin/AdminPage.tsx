@@ -1,13 +1,13 @@
 import { useAdminUsersData } from './hooks/useAdminUsersData'
 import { useAdminUsersTableState } from './hooks/useAdminUsersTableState'
 import { AdminDeleteDialog } from './components/AdminDeleteDialog'
-import { AdminFiltersToolbar } from './components/AdminFiltersToolbar'
 import { AdminHeader } from './components/AdminHeader'
 import { AdminPagination } from './components/AdminPagination'
 import { AdminStatsCards } from './components/AdminStatsCards'
 import { AdminUsersTable } from './components/AdminUsersTable'
 import {
   SimulationCard,
+  SimulationFiltersToolbar,
   SimulationPageShell,
   SimulationStateMessage,
 } from '@/shared/components'
@@ -67,12 +67,20 @@ export function AdminPage() {
 
         {isError ? <SimulationStateMessage tone="error">{error instanceof Error ? error.message : 'Could not load users.'}</SimulationStateMessage> : null}
 
-        <AdminFiltersToolbar
-          search={search}
-          roleFilter={roleFilter}
-          allRoles={allRoles}
+        <SimulationFiltersToolbar
+          searchId="admin-search"
+          searchLabel="Search user"
+          searchValue={search}
+          searchPlaceholder="Search by username"
           onSearchChange={handleSearchChange}
-          onRoleFilterChange={handleRoleFilterChange}
+          filterId="admin-role-filter"
+          filterLabel="Filter by role"
+          filterValue={roleFilter}
+          onFilterChange={handleRoleFilterChange}
+          filterOptions={[
+            { value: 'ALL', label: 'ALL' },
+            ...allRoles.map((role) => ({ value: role, label: role })),
+          ]}
         />
 
         <SimulationCard density="compact">
