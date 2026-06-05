@@ -37,12 +37,12 @@ export function SimulationFiltersToolbar({
   const searchHintId = searchHint ? `${searchId}-hint` : undefined
 
   return (
-    <SimulationCard density="compact" tone="soft" className="border-black/5 dark:border-white/10">
-      <SimulationToolbar className="gap-4">
+    <SimulationCard density="compact" tone="soft" className="py-1.5">
+      <SimulationToolbar className="gap-2">
         <div>
           <label
             htmlFor={searchId}
-            className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60"
+            className="mb-0 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#738679] dark:text-content-dark/60"
           >
             <Search className="h-3.5 w-3.5" />
             {searchLabel}
@@ -55,16 +55,16 @@ export function SimulationFiltersToolbar({
               value={searchValue}
               onChange={(event) => onSearchChange(event.target.value)}
               placeholder={searchPlaceholder}
-              className="h-11 rounded-lg border-slate-200/80 bg-white pl-10 pr-3 shadow-sm shadow-slate-200/40 dark:border-white/10 dark:bg-[#111d18] dark:shadow-none"
+              className="h-11 rounded-full pl-10 pr-3"
             />
           </div>
-          {searchHint ? <p id={searchHintId} className="mt-2 text-xs text-slate-500 dark:text-content-dark/55">{searchHint}</p> : null}
+          {searchHint ? <p id={searchHintId} className="mt-0 text-xs text-[#6d8174] dark:text-content-dark/55">{searchHint}</p> : null}
         </div>
 
         <div>
           <label
             htmlFor={filterId}
-            className="mb-2 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60"
+            className="mb-0 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#738679] dark:text-content-dark/60"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
             {filterLabel}
@@ -73,7 +73,7 @@ export function SimulationFiltersToolbar({
             id={filterId}
             value={filterValue}
             onChange={(event) => onFilterChange(event.target.value)}
-            className="h-11 rounded-lg border-slate-200/80 bg-white shadow-sm shadow-slate-200/40 dark:border-white/10 dark:bg-[#111d18] dark:shadow-none"
+            className="h-11 rounded-full"
           >
             {filterOptions.map((option) => (
               <option key={option.value} value={option.value}>

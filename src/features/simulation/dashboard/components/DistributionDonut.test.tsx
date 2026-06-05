@@ -17,14 +17,14 @@ describe('DistributionDonut', () => {
 
   it('renders the section title', () => {
     render(<DistributionDonut data={DISTRIBUTION} />)
-    expect(screen.getByText('Distribution')).toBeInTheDocument()
+    expect(screen.getByText('Distribución de Energía')).toBeInTheDocument()
   })
 
   it('shows the count of energy sources in the center', () => {
     render(<DistributionDonut data={DISTRIBUTION} />)
     // 4 sources
     expect(screen.getByText('4')).toBeInTheDocument()
-    expect(screen.getByText('sources')).toBeInTheDocument()
+    expect(screen.getByText('fuente(s)')).toBeInTheDocument()
   })
 
   it('renders a legend entry for each source', () => {

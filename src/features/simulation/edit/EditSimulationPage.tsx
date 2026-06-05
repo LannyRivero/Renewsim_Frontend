@@ -1,10 +1,16 @@
-import { Link } from 'react-router-dom'
+import { FilePenLine } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useToastStore } from '@/stores/toastStore'
 import { useSimulationStore } from '@/stores/simulationStore'
 import { editSimulationSchema } from '../schemas/simulationSchema'
 import { getSimulationById, updateSimulationById } from '../services/simulationService'
+import {
+  SimulationActionButton,
+  SimulationCard,
+  SimulationPageShell,
+  SimulationSectionHeader,
+} from '@/shared/components'
 
 export function EditSimulationPage() {
   const navigate = useNavigate()
@@ -78,64 +84,28 @@ export function EditSimulationPage() {
   }
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
-        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <div className="size-7 rounded-full bg-primary-container" />
-            <h2 className="text-xl font-bold">RenewSim</h2>
-          </div>
+    <SimulationPageShell>
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+        <SimulationSectionHeader
+          eyebrow="Scenario Editor"
+          eyebrowIcon={<FilePenLine className="h-3.5 w-3.5" />}
+          title="Edit Simulation"
+          description="Refine the current scenario with a tighter, production-grade form that keeps the important economic inputs in one surface."
+        />
 
-          <nav className="hidden items-center gap-6 md:flex">
-            <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
-              Dashboard
-            </Link>
-            <Link to="/simulador/historial" className="text-sm font-medium text-primary">
-              Simulations
-            </Link>
-            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
-              Resources
-            </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-              Community
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-container-low dark:text-content-dark/60"
-            >
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <div className="size-10 rounded-full bg-surface-container" />
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight text-on-surface dark:text-content-dark">
-            Edit Simulation
-          </h1>
-          <p className="mt-2 text-on-surface-variant dark:text-content-dark/60">
-            Update the parameters for your existing simulation below.
-          </p>
-        </div>
-
+        <SimulationCard className="p-6 sm:p-7">
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="simulation-name" className="mb-2 block text-sm font-medium">
               Simulation Name
             </label>
-              <input
-                id="simulation-name"
-                name="simulationName"
-                defaultValue={initialName}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
-              />
-            </div>
+            <input
+              id="simulation-name"
+              name="simulationName"
+              defaultValue={initialName}
+              className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
+            />
+          </div>
 
           <div>
             <label htmlFor="location" className="mb-2 block text-sm font-medium">
@@ -144,7 +114,7 @@ export function EditSimulationPage() {
             <select
               id="location"
               name="location"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               defaultValue={initialLocation}
             >
               <option>{initialLocation}</option>
@@ -162,7 +132,7 @@ export function EditSimulationPage() {
             <select
               id="energy-source"
               name="energySource"
-              className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+              className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               defaultValue={inferredSource}
             >
               <option>Solar Panels</option>
@@ -182,7 +152,7 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.1"
                 defaultValue={7.5}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+                className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               />
             </div>
             <div>
@@ -194,7 +164,7 @@ export function EditSimulationPage() {
                 name="annualConsumptionKwh"
                 type="number"
                 defaultValue={10000}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+                className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               />
             </div>
           </div>
@@ -209,7 +179,7 @@ export function EditSimulationPage() {
                 name="incentives"
                 type="number"
                 defaultValue={1500}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+                className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               />
             </div>
             <div>
@@ -222,22 +192,23 @@ export function EditSimulationPage() {
                 type="number"
                 step="0.01"
                 defaultValue={0.18}
-                className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:border-white/10 dark:bg-[#111d18]"
+                className="w-full rounded-xl border border-slate-200/90 bg-white/96 px-3.5 py-2.5 text-sm text-slate-700 shadow-[0_8px_22px_-20px_rgba(15,23,42,0.4)] outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-200/70 dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10"
               />
             </div>
           </div>
 
           <div className="flex justify-end pt-2">
-            <button
+            <SimulationActionButton
               type="submit"
+              variant="primary"
               disabled={updateMutation.isPending}
-              className="rounded-lg bg-primary px-6 py-3 text-sm font-bold text-black transition hover:opacity-90"
             >
               {updateMutation.isPending ? 'Saving...' : 'Save Changes'}
-            </button>
+            </SimulationActionButton>
           </div>
         </form>
-      </main>
-    </section>
+        </SimulationCard>
+      </div>
+    </SimulationPageShell>
   )
 }

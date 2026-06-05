@@ -7,7 +7,6 @@ import {
   ConfirmDialog,
   SimulationFiltersToolbar,
   SimulationPageShell,
-  SimulationSectionHeader,
   SimulationStateMessage,
 } from '@/shared/components'
 
@@ -53,78 +52,83 @@ export function TechnologiesPage() {
   }
 
   return (
-    <SimulationPageShell className="lg:h-auto lg:py-2" contentClassName="lg:overflow-visible">
-      <div className="flex flex-col gap-6">
-        <SimulationSectionHeader
-          eyebrow="Catálogo de Tecnologías"
-          eyebrowIcon={<Cpu className="h-3.5 w-3.5" fill="currentColor" />}
-          title="Tecnologías"
-          description="Crea y gestiona tecnologías renovables."
-          className="md:items-center"
-        />
+    <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 sm:px-2.5 sm:pt-4 sm:pb-0 lg:h-full lg:px-2.5 lg:pt-4 lg:pb-0">
+      <div className="flex flex-col  lg:h-full">
+        <div className="flex items-center justify-between gap-4">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#d2dbd1] bg-[#eef3ed] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 shadow-sm dark:border-white/12 dark:bg-white/8 dark:text-content-dark/72">
+            <Cpu className="h-3.5 w-3.5" fill="currentColor" />
+            Technology Catalog
+          </div>
 
-        <div className="flex items-center justify-between gap-3">
-          <div />
-          <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm}>
-            <Plus className="h-4 w-4" />
-            Nueva tecnología
-          </SimulationActionButton>
+
+        </div>
+        <div className="mt-7 w-full flex justify-end"> 
+        <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm} className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
+          <Plus className="h-4 w-4" />
+          Nueva tecnología
+        </SimulationActionButton>
         </div>
 
-        {!isFormOpen ? (
-          <SimulationFiltersToolbar
-            searchId="technology-filter-search"
-            searchLabel="Buscar tecnología"
-            searchValue={searchTerm}
-            searchPlaceholder="Escribí un nombre para filtrar"
-            onSearchChange={setTechnologySearchTerm}
-            searchHint="La búsqueda se activa con 3 o más letras."
-            filterId="technology-filter-energy-type"
-            filterLabel="Tipo de energía"
-            filterValue={energyTypeFilter}
-            onFilterChange={(value) => setTechnologyEnergyTypeFilter(value as 'ALL' | 'SOLAR' | 'WIND' | 'HYDRO')}
-            filterOptions={[
-              { value: 'ALL', label: 'Todos los tipos' },
-              { value: 'SOLAR', label: 'Solar' },
-              { value: 'WIND', label: 'Eólica' },
-              { value: 'HYDRO', label: 'Hidro' },
-            ]}
-          />
-        ) : null}
+        < div className=' mt-5 space-y-5 '>
 
-        {isFormOpen ? (
-          <TechnologyForm
-            draft={draft}
-            formError={formError}
-            isSubmitting={createOrUpdateMutation.isPending}
-            isEditing={Boolean(editingTechnologyId)}
-            onSubmit={submitTechnology}
-            onCancelEdit={cancelEditingTechnology}
-            onDraftFieldChange={setDraftField}
-          />
-        ) : null}
+          {!isFormOpen ? (
+            <div >
+              <SimulationFiltersToolbar
+                searchId="technology-filter-search"
+                searchLabel="Buscar tecnología"
+                searchValue={searchTerm}
+                searchPlaceholder="Escribí un nombre para filtrar"
+                onSearchChange={setTechnologySearchTerm}
+                searchHint="La búsqueda se activa con 3 o más letras."
+                filterId="technology-filter-energy-type"
+                filterLabel="Tipo de energía"
+                filterValue={energyTypeFilter}
+                onFilterChange={(value) => setTechnologyEnergyTypeFilter(value as 'ALL' | 'SOLAR' | 'WIND' | 'HYDRO')}
+                filterOptions={[
+                  { value: 'ALL', label: 'Todos los tipos' },
+                  { value: 'SOLAR', label: 'Solar' },
+                  { value: 'WIND', label: 'Eólica' },
+                  { value: 'HYDRO', label: 'Hidro' },
+                ]}
+              />
+            </div>
+          ) : null}
 
-        {!isFormOpen ? (
-          <TechnologiesTable
-            technologies={technologies}
-            page={page}
-            size={size}
-            totalElements={totalElements}
-            totalPages={totalPages}
-            editingTechnologyId={editingTechnologyId}
-            deletingTechnologyId={deleteMutation.isPending ? technologyToDelete?.id ?? null : null}
-            sortBy={sortBy}
-            isUpdating={isTableUpdating}
-            onEdit={handleEditTechnology}
-            onDelete={requestDeleteTechnology}
-            sortDirection={sortDirection}
-            onSortChange={setTechnologySort}
-            onPrevPage={goToPreviousPage}
-            onNextPage={goToNextPage}
-          />
-        ) : null}
+          {isFormOpen ? (
+            <TechnologyForm
+              draft={draft}
+              formError={formError}
+              isSubmitting={createOrUpdateMutation.isPending}
+              isEditing={Boolean(editingTechnologyId)}
+              onSubmit={submitTechnology}
+              onCancelEdit={cancelEditingTechnology}
+              onDraftFieldChange={setDraftField}
+            />
+          ) : null}
 
-        {isLoading ? <SimulationStateMessage>Cargando tecnologías...</SimulationStateMessage> : null}
+          {!isFormOpen ? (
+            <div>
+              <TechnologiesTable
+                technologies={technologies}
+                page={page}
+                size={size}
+                totalElements={totalElements}
+                totalPages={totalPages}
+                editingTechnologyId={editingTechnologyId}
+                deletingTechnologyId={deleteMutation.isPending ? technologyToDelete?.id ?? null : null}
+                sortBy={sortBy}
+                isUpdating={isTableUpdating}
+                onEdit={handleEditTechnology}
+                onDelete={requestDeleteTechnology}
+                sortDirection={sortDirection}
+                onSortChange={setTechnologySort}
+                onPrevPage={goToPreviousPage}
+                onNextPage={goToNextPage}
+              />
+            </div>
+          ) : null}
+        </div>
+        {isLoading ? <SimulationStateMessage className="text-[#5e7063]">Cargando tecnologías...</SimulationStateMessage> : null}
 
         {isError ? (
           <SimulationStateMessage tone="error">

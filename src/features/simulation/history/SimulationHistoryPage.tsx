@@ -1,7 +1,15 @@
+import { Clock3, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { deleteSimulationById, getSimulationHistory } from '../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
+import {
+  SimulationActionButton,
+  SimulationCard,
+  SimulationPageShell,
+  SimulationSectionHeader,
+  SimulationStateMessage,
+} from '@/shared/components'
 
 export function SimulationHistoryPage() {
   const queryClient = useQueryClient()
@@ -48,55 +56,27 @@ export function SimulationHistoryPage() {
   const rows = data ?? []
 
   return (
-    <section className="min-h-screen bg-surface dark:bg-[#0f1a16]">
-      <header className="sticky top-0 z-10 border-b border-outline-variant bg-surface/80 backdrop-blur-sm dark:border-white/10 dark:bg-[#0f1a16]/90">
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">         
-
-          <nav className="hidden items-center gap-8 md:flex">
-            <Link to="/simulador" className="text-sm font-medium hover:text-primary transition-colors">
-              Simulator
+    <SimulationPageShell>
+      <div className="flex flex-col gap-6 lg:h-full">
+        <SimulationSectionHeader
+          eyebrow="Simulation Archive"
+          eyebrowIcon={<Clock3 className="h-3.5 w-3.5" />}
+          title="Simulation History"
+          description="Track previous runs, reopen key scenarios, and manage historical analysis without leaving the workspace."
+          actions={
+            <Link to="/simulador/nueva">
+              <SimulationActionButton type="button" variant="primary">
+                <Plus className="h-4 w-4" />
+                New Simulation
+              </SimulationActionButton>
             </Link>
-            <Link to="/how-it-works" className="text-sm font-medium hover:text-primary transition-colors">
-              Resources
-            </Link>
-            <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-              Community
-            </Link>
-          </nav>
+          }
+        />
 
-          <div className="flex items-center gap-4">
-            <button
-              type="button"
-              aria-label="Notifications"
-              className="rounded-full p-2 transition-colors hover:bg-primary/10 dark:hover:bg-primary/20"
-            >
-              <span className="material-symbols-outlined text-on-surface-variant dark:text-content-dark/60">
-                notifications
-              </span>
-            </button>
-            <div className="size-10 rounded-full bg-surface-container" />
-          </div>
-        </div>
-      </header>
-
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-3xl font-bold tracking-tight text-on-surface dark:text-content-dark">
-            Simulation History
-          </h1>
-          <Link
-            to="/simulador/nueva"
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold text-white transition hover:opacity-90"
-          >
-            <span aria-hidden="true" className="material-symbols-outlined text-lg">add</span>
-            New Simulation
-          </Link>
-        </div>
-
-        <div className="overflow-hidden rounded-xl border border-outline-variant bg-surface shadow-sm dark:border-white/10 dark:bg-[#111d18]">
+        <SimulationCard className="overflow-hidden p-0">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-surface-container-low dark:bg-[#15241e]">
+              <thead className="bg-slate-50/85 dark:bg-white/8">
                 <tr>
                   <th scope="col" className="px-6 py-4 text-sm font-medium">
                     Date
@@ -115,16 +95,16 @@ export function SimulationHistoryPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-outline-variant dark:divide-white/10">
+              <tbody className="divide-y divide-slate-200/80 dark:divide-white/10">
                 {rows.map((row) => (
                   <tr
                     key={row.id}
-                      className="transition-colors hover:bg-surface-container-low dark:hover:bg-[#15241e]"
+                    className="transition-colors hover:bg-slate-50/70 dark:hover:bg-white/[0.03]"
                   >
                     <td className="whitespace-nowrap px-6 py-4 text-sm text-on-surface-variant dark:text-content-dark/60">
                       {row.date}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm">{row.energyType}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-slate-900 dark:text-content-dark">{row.energyType}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm">{row.efficiency}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-sm font-semibold text-primary">{row.roi}</td>
                     <td className="whitespace-nowrap px-6 py-4 text-right text-sm">
@@ -157,36 +137,30 @@ export function SimulationHistoryPage() {
                 ))}
                 {!isLoading && !isError && rows.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-12 text-center text-sm text-on-surface-variant dark:text-content-dark/60"
-                    >
-                      No simulations yet. Create your first simulation to see results here.
+                    <td colSpan={5} className="px-6 py-12 text-center">
+                      <SimulationStateMessage>No simulations yet. Create your first simulation to see results here.</SimulationStateMessage>
                     </td>
                   </tr>
                 ) : null}
                 {isLoading ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-12 text-center text-sm text-on-surface-variant dark:text-content-dark/60"
-                    >
-                      Loading simulation history...
+                    <td colSpan={5} className="px-6 py-12 text-center">
+                      <SimulationStateMessage>Loading simulation history...</SimulationStateMessage>
                     </td>
                   </tr>
                 ) : null}
                 {isError ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-sm text-red-500">
-                      Could not load simulation history. Please try again.
+                    <td colSpan={5} className="px-6 py-12 text-center">
+                      <SimulationStateMessage tone="error">Could not load simulation history. Please try again.</SimulationStateMessage>
                     </td>
                   </tr>
                 ) : null}
               </tbody>
             </table>
           </div>
-        </div>
+        </SimulationCard>
       </div>
-    </section>
+    </SimulationPageShell>
   )
 }

@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
+import { Activity, Info } from 'lucide-react'
 import { StatsGrid } from './components/StatsGrid'
 import { EnergyBarChart } from './components/EnergyBarChart'
 import { DistributionDonut } from './components/DistributionDonut'
 import { PerformanceSnapshot } from './components/PerformanceSnapshot'
-import { SimulationPageShell, SimulationSectionHeader, SimulationStateMessage } from '@/shared/components'
+import { SimulationPageShell, SimulationSectionHeader, SimulationStatusBadge } from '@/shared/components'
 import {
   DASHBOARD_STATS,
   EFFICIENCY_METRICS,
@@ -14,7 +15,7 @@ import {
 import { getDashboardData } from './services/dashboardService'
 
 export function DashboardPage() {
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isError, error } = useQuery({
     queryKey: ['dashboard-data'],
     queryFn: getDashboardData,
     staleTime: 60_000,
@@ -27,22 +28,25 @@ export function DashboardPage() {
   const distribution = data?.distribution ?? DISTRIBUTION
 
   return (
-    <SimulationPageShell>
-      <div className="flex flex-col gap-2.5 lg:h-full">
+    <SimulationPageShell contentClassName="p-4 sm:p-4 lg:h-full lg:p-4">
+      <div className="flex flex-col gap-1.5 lg:h-full">
         <SimulationSectionHeader
-          eyebrow="Operations Overview"
-          title="Energy Dashboard"
-          description="Monitor generation, distribution, and source performance at a glance."
-          className="md:items-end"
+          eyebrow="Comando de Operaciones"
+          eyebrowIcon={<Activity className="h-3.5 w-3.5" />}
+          title="Panel de Energía"
+          description="Salud de la generación, mezcla de fuentes y rendimiento objetivo en una vista operativa."
+          className="gap-2 md:items-end"
         />
 
         <StatsGrid stats={stats} />
 
-        {isLoading ? <SimulationStateMessage>Loading dashboard data...</SimulationStateMessage> : null}
-        {isError ? (
-          <SimulationStateMessage tone="error">
-            {error instanceof Error ? error.message : 'Could not load dashboard data.'}
-          </SimulationStateMessage>
+        {isError && !data ? (
+          <div>
+            <SimulationStatusBadge tone="neutral" className="gap-2 rounded-full px-3 py-1.5 text-[11px] font-medium">
+              <Info className="h-3.5 w-3.5" />
+              {error instanceof Error ? 'Se muestran los datos de vista previa mientras el servicio del panel en vivo no está disponible.' : 'Se muestran los datos de vista previa mientras el servicio del panel en vivo no está disponible.'}
+            </SimulationStatusBadge>
+          </div>
         ) : null}
 
         <PerformanceSnapshot
@@ -50,18 +54,18 @@ export function DashboardPage() {
           targetVsActual={targetVsActual}
         />
 
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="mb-2">
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-on-surface-variant dark:text-content-dark/70">
-              Energy Summary
+        <div className="flex min-h-0 flex-[1.15] flex-col">
+          <div className="mb-0.5">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/70">
+              Resumen de Energía
             </h2>
-            <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/65 lg:hidden">
-              Consolidated view by generation source and distribution weight.
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-content-dark/65 lg:hidden">
+              Vista consolidada por fuente de generación y peso de distribución.
             </p>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-3">
-            <div className="min-h-0 lg:col-span-2">
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.75fr)_minmax(320px,1fr)]">
+            <div className="min-h-0">
               <EnergyBarChart data={energyBySource} />
             </div>
             <div className="min-h-0">

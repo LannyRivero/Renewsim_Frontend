@@ -9,43 +9,45 @@ interface PerformanceSnapshotProps {
 
 export function PerformanceSnapshot({ metrics, targetVsActual }: PerformanceSnapshotProps) {
   return (
-    <section className="grid grid-cols-1 gap-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
+    <section className="grid grid-cols-1 gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <SimulationCard density="compact">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-content-dark/70">
-          Efficiency KPIs
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-content-dark/55">
+          KPIs de Eficiencia
         </p>
-        <div className="mt-2 grid gap-2 sm:grid-cols-3">
+        <div className="mt-2.5 grid gap-2 sm:grid-cols-3">
           {metrics.map((metric) => (
-            <div key={metric.label} className="rounded-md bg-slate-50/60 p-2 dark:bg-white/5">
-              <p className="text-xs uppercase tracking-wide text-slate-500 dark:text-content-dark/70">{metric.label}</p>
-              <p className="mt-1 text-xl font-extrabold text-slate-900 dark:text-content-dark">{metric.value}</p>
-              <p className="mt-1 text-xs text-slate-600 dark:text-content-dark/65 xl:hidden">{metric.hint}</p>
+            <div key={metric.label} className="rounded-xl bg-[#eef3ed] p-2 dark:bg-white/[0.045]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 dark:text-content-dark/55">{metric.label}</p>
+              <p className="mt-1 text-[1.7rem] font-black tracking-[-0.03em] text-[#193126] dark:text-content-dark">{metric.value}</p>
+              <p className="mt-1 text-[11px] leading-4 text-slate-600 dark:text-content-dark/65 lg:hidden">{metric.hint}</p>
             </div>
           ))}
         </div>
       </SimulationCard>
 
       <SimulationCard density="compact">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-content-dark/70">
-          Target vs Actual
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-content-dark/55">
+          Objetivo vs Actual
         </p>
-        <div className="mt-2 space-y-1.5">
+        <div className="mt-2.5 space-y-1.5">
           {targetVsActual.map((item) => {
             const ratio = item.target > 0 ? Math.min((item.actual / item.target) * 100, 100) : 0
             return (
-              <div key={item.label} className="rounded-md bg-slate-50/60 p-2 dark:bg-white/5">
+              <div key={item.label} className="rounded-xl bg-[#eef3ed] p-2 dark:bg-white/[0.045]">
                 <div className="flex items-center justify-between gap-3 text-sm">
-                  <p className="font-semibold text-slate-900 dark:text-content-dark">{item.label}</p>
+                  <p className="font-semibold text-[#274034] dark:text-content-dark">{item.label}</p>
                   <p className="text-slate-600 dark:text-content-dark/70">
                     {formatTargetPair(item.actual, item.target, item.unit)}
                   </p>
                 </div>
-                <div className="mt-2 h-2 rounded-full bg-slate-200 dark:bg-white/10">
-                  <div
-                    className="h-full rounded-full bg-primary/70 transition-all dark:bg-primary/60"
-                    style={{ width: `${ratio}%` }}
-                    aria-label={`${item.label} progress`}
-                  />
+                <div className="mt-2 px-1">
+                  <div className="h-2 rounded-full bg-slate-200/90 dark:bg-white/10">
+                    <div
+                      className="h-full rounded-full bg-[#0f6f45] transition-all dark:bg-emerald-400"
+                      style={{ width: `${ratio}%` }}
+                      aria-label={`${item.label} progress`}
+                    />
+                  </div>
                 </div>
               </div>
             )
