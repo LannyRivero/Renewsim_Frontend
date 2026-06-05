@@ -40,7 +40,7 @@ describe('EditSimulationPage', () => {
     expect(screen.getByRole('heading', { name: 'Edit Simulation' })).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Update the parameters for your existing simulation below.',
+        'Refine the current scenario with a tighter, production-grade form that keeps the important economic inputs in one surface.',
       ),
     ).toBeInTheDocument()
   })

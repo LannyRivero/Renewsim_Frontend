@@ -48,7 +48,7 @@ describe('SimulationDetailsPage', () => {
   it('renders page title and description', () => {
     renderPage()
     expect(screen.getByRole('heading', { name: 'Simulation Details' })).toBeInTheDocument()
-    expect(screen.getByText(/Review the comprehensive results of your energy simulation/i)).toBeInTheDocument()
+    expect(screen.getByText(/Review the active scenario through one consistent analysis surface/i)).toBeInTheDocument()
   })
 
   it('renders overview and comparison sections', () => {

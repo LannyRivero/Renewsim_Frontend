@@ -19,7 +19,7 @@ import { useToastStore } from '@/stores/toastStore'
 export function useTechnologiesManager() {
   const queryClient = useQueryClient()
   const [page, setPage] = useState(0)
-  const [size] = useState(20)
+  const [size] = useState(10)
   const [energyTypeFilter, setEnergyTypeFilter] = useState<TechnologyEnergyTypeFilter>('ALL')
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
