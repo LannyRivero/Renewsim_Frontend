@@ -17,10 +17,10 @@ export function SimulationStatusBadge({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold',
+        'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-semibold',
         tone === 'success'
-          ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300'
-          : 'border-slate-300 bg-slate-50 text-slate-700 dark:border-white/15 dark:bg-white/10 dark:text-content-dark/80',
+          ? 'border-[#b7dfc1] bg-[#e8f6eb] text-[#2f7850] dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300'
+          : 'border-[#d0d8cf] bg-[#e8eee7] text-[#5a6f63] dark:border-white/15 dark:bg-white/10 dark:text-content-dark/80',
         className,
       )}
     >
@@ -40,7 +40,7 @@ export function SimulationStateMessage({ tone = 'muted', children, className, ..
     <p
       className={cn(
         'text-sm',
-        tone === 'error' ? 'text-red-600 dark:text-red-400' : 'text-on-surface-variant dark:text-content-dark/70',
+        tone === 'error' ? 'text-[#a95147] dark:text-red-400' : 'text-[#5e7063] dark:text-content-dark/70',
         className,
       )}
       {...props}

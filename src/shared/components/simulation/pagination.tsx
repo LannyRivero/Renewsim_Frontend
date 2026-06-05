@@ -20,7 +20,7 @@ export function SimulationPagination({
   isNextDisabled,
 }: SimulationPaginationProps) {
   return (
-    <div className="mt-4 flex flex-col gap-2 rounded-md border border-black/10 bg-slate-50 px-4 py-3 text-sm text-slate-600 dark:border-white/10 dark:bg-[#15241e] dark:text-content-dark/75 md:flex-row md:items-center md:justify-between">
+    <div className="mt-3 flex flex-col gap-2 rounded-xl border border-[#d1dad0] bg-[#e8eee8] px-4 py-2.5 text-sm text-[#5b6e61] dark:border-white/10 dark:bg-[#15241e] dark:text-content-dark/75 md:flex-row md:items-center md:justify-between">
       <span>{summaryLabel}</span>
       <span>{pageLabel}</span>
       <div className="flex items-center gap-2">
@@ -28,7 +28,7 @@ export function SimulationPagination({
           type="button"
           onClick={onPrev}
           disabled={isPrevDisabled}
-          className="rounded-sm border border-outline-variant px-3 py-1 disabled:opacity-50 dark:border-white/10"
+          className="rounded-lg border border-[#c8d3c8] bg-[#f8fbf7] px-3 py-1 text-[#435749] disabled:opacity-50 dark:border-white/10"
         >
           {prevLabel}
         </button>
@@ -36,7 +36,7 @@ export function SimulationPagination({
           type="button"
           onClick={onNext}
           disabled={isNextDisabled}
-          className="rounded-sm border border-outline-variant px-3 py-1 disabled:opacity-50 dark:border-white/10"
+          className="rounded-lg border border-[#c8d3c8] bg-[#f8fbf7] px-3 py-1 text-[#435749] disabled:opacity-50 dark:border-white/10"
         >
           {nextLabel}
         </button>
