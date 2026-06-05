@@ -1,25 +1,43 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { vi } from 'vitest'
 import { SimulationResultsPage } from './SimulationResultsPage'
+import { getSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
 
+vi.mock('../services/simulationService', () => ({
+  getSimulationById: vi.fn(),
+}))
+
+const mockedGetSimulationById = vi.mocked(getSimulationById)
+
 beforeEach(() => {
+  mockedGetSimulationById.mockReset()
   useSimulationStore.setState({
     draft: {
       location: '',
       energyType: 'solar',
       projectSize: 500,
       budget: 1_000_000,
+      energyConsumption: 1_000,
     },
     lastResult: null,
+    lastRunInput: null,
   })
 })
 
 function renderPage() {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  })
+
   return render(
-    <MemoryRouter>
-      <SimulationResultsPage />
-    </MemoryRouter>,
+    <QueryClientProvider client={queryClient}>
+      <MemoryRouter>
+        <SimulationResultsPage />
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
 }
 

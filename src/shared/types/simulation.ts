@@ -11,6 +11,7 @@ export interface CreateSimulationPayload {
   energyType: 'solar' | 'wind' | 'hydro'
   projectSize: number
   budget: number
+  energyConsumption: number
   climate: {
     irradiance: number
     windSpeed: number

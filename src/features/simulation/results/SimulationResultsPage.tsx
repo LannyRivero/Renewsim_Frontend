@@ -1,4 +1,7 @@
 import { Link } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
+import { useSearchParams } from 'react-router-dom'
+import { getSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
 import { buildSimulationInsights } from '../utils/simulationInsights'
 
@@ -29,11 +32,33 @@ function MetricCard({
 }
 
 export function SimulationResultsPage() {
+  const [searchParams] = useSearchParams()
   const lastResult = useSimulationStore((state) => state.lastResult)
   const lastRunInput = useSimulationStore((state) => state.lastRunInput)
-  const resultLocation = lastResult?.location ?? 'N/A'
-  const resultEnergyType = lastResult?.energyType ?? 'solar'
-  const insights = buildSimulationInsights(lastRunInput, lastResult)
+  const simulationId = searchParams.get('id') ?? lastResult?.id ?? null
+
+  const { data } = useQuery({
+    queryKey: ['simulation-details', simulationId],
+    queryFn: async () => {
+      if (!simulationId) return null
+      return getSimulationById(simulationId)
+    },
+    enabled: Boolean(simulationId),
+  })
+
+  const effectiveResult = data
+    ? {
+        id: data.id,
+        location: data.location,
+        energyType: data.energyType,
+        roi: data.roi,
+        efficiency: data.efficiency,
+      }
+    : lastResult
+
+  const resultLocation = effectiveResult?.location ?? 'N/A'
+  const resultEnergyType = effectiveResult?.energyType ?? 'solar'
+  const insights = buildSimulationInsights(lastRunInput, effectiveResult)
   const roiValue = `${insights.roiPercent}%`
   const efficiencyValue = `${insights.efficiencyPercent}%`
   const energyValue = `${insights.energyGeneratedKwh.toLocaleString('en-US')} kWh`
@@ -106,9 +131,9 @@ export function SimulationResultsPage() {
               <p className="text-sm text-on-surface dark:text-content-dark">
                 The simulation indicates that solar energy offers the best balance between returns and sustainability.
               </p>
-              {lastResult ? (
+              {effectiveResult ? (
                 <p className="text-xs text-on-surface-variant dark:text-content-dark/70">
-                  Simulation ID: {lastResult.id}
+                  Simulation ID: {effectiveResult.id}
                 </p>
               ) : null}
               <button

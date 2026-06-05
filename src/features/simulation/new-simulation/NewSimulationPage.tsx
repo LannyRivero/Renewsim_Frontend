@@ -49,16 +49,26 @@ export function NewSimulationPage() {
   })
 
   return (
-    <SimulationPageShell>
-      <div className="flex flex-col gap-6 lg:h-full">
+    <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 lg:h-full">
+      <section className="flex flex-col lg:h-full">
         <SimulationSectionHeader
-          eyebrow="Simulation Setup"
-          title="New custom simulation"
-          description="Configure your simulation with project-specific parameters."
+          eyebrow="Simulación Setup"
+          description="Configura tu simulación con parámetros específicos del proyecto."
           className="md:items-center"
         />
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className=" space-y-6" onSubmit={handleSubmit}>
+          <div className="flex justify-end">
+            <SimulationActionButton
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+              className="w-full px-8 py-3 text-base md:w-auto"
+            >
+              {submitLabel}
+            </SimulationActionButton>
+          </div>
+
           <SimulationCard className="grid grid-cols-1 gap-6" density="comfortable">
             <LocationField
               location={draft.location}
@@ -77,9 +87,11 @@ export function NewSimulationPage() {
               energyType={draft.energyType}
               projectSize={draft.projectSize}
               budget={draft.budget}
+              energyConsumption={draft.energyConsumption}
               onEnergyTypeChange={(value) => setDraftField('energyType', value)}
               onProjectSizeChange={(value) => setDraftField('projectSize', value)}
               onBudgetChange={(value) => setDraftField('budget', value)}
+              onEnergyConsumptionChange={(value) => setDraftField('energyConsumption', value)}
             />
           </SimulationCard>
 
@@ -95,19 +107,8 @@ export function NewSimulationPage() {
             isRefreshingClimate={isRefreshingClimate}
             preview={displayedClimatePreview}
           />
-
-          <div className="flex justify-end">
-            <SimulationActionButton
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-              className="w-full px-8 py-3 text-base md:w-auto"
-            >
-              {submitLabel}
-            </SimulationActionButton>
-          </div>
         </form>
-      </div>
+      </section>
     </SimulationPageShell>
   )
 }

@@ -4,15 +4,57 @@ import { useSearchParams } from 'react-router-dom'
 import { getSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
 import { buildSimulationInsights } from '../utils/simulationInsights'
-import { SimulationCard, SimulationPageShell, SimulationSectionHeader } from '@/shared/components'
+import {
+  SimulationCard,
+  SimulationPageShell,
+  SimulationSectionHeader,
+  SimulationStateMessage,
+} from '@/shared/components'
+
+type EnergyProfile = {
+  label: string
+  roiBonus: number
+  savingsMultiplier: number
+  co2Multiplier: number
+  investmentMultiplier: number
+}
+
+const ENERGY_PROFILES: EnergyProfile[] = [
+  {
+    label: 'Solar Panels',
+    roiBonus: 0,
+    savingsMultiplier: 1,
+    co2Multiplier: 1,
+    investmentMultiplier: 1,
+  },
+  {
+    label: 'Wind Turbine',
+    roiBonus: -1.2,
+    savingsMultiplier: 1.2,
+    co2Multiplier: 1.35,
+    investmentMultiplier: 1.55,
+  },
+  {
+    label: 'Hydroelectric',
+    roiBonus: -0.4,
+    savingsMultiplier: 1.4,
+    co2Multiplier: 1.7,
+    investmentMultiplier: 2.1,
+  },
+]
+
+function formatCurrency(value: number) {
+  return `$${Math.round(value).toLocaleString('en-US')}`
+}
 
 export function SimulationDetailsPage() {
   const [searchParams] = useSearchParams()
   const resultFromStore = useSimulationStore((state) => state.lastResult)
   const lastRunInput = useSimulationStore((state) => state.lastRunInput)
-  const simulationId = searchParams.get('id') ?? resultFromStore?.id ?? null
+  const requestedSimulationId = searchParams.get('id')
+  const simulationId = requestedSimulationId ?? resultFromStore?.id ?? null
 
-  const { data } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['simulation-details', simulationId],
     queryFn: async () => {
       if (!simulationId) return null
@@ -21,23 +63,53 @@ export function SimulationDetailsPage() {
     enabled: Boolean(simulationId),
   })
 
-  const location = data?.location ?? resultFromStore?.location ?? 'N/A'
-  const energyType = data?.energyType ?? resultFromStore?.energyType ?? 'Unknown'
+  const effectiveResult = data
+    ? {
+        id: data.id,
+        location: data.location,
+        energyType: data.energyType,
+        roi: data.roi,
+        efficiency: data.efficiency,
+      }
+    : requestedSimulationId
+      ? null
+      : resultFromStore
+
+  const location = effectiveResult?.location ?? 'N/A'
+  const energyType = effectiveResult?.energyType ?? 'Unknown'
   const simulationName = `${energyType} Simulation`
   const date = data?.createdAt
     ? new Date(data.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : 'N/A'
-  const roi = typeof data?.roi === 'number'
-    ? `${data.roi}%`
-    : typeof resultFromStore?.roi === 'number'
-      ? `${resultFromStore.roi}%`
-      : 'N/A'
-  const efficiency = typeof data?.efficiency === 'number'
-    ? `${data.efficiency}%`
-    : typeof resultFromStore?.efficiency === 'number'
-      ? `${resultFromStore.efficiency}%`
-      : 'N/A'
-  const insights = buildSimulationInsights(lastRunInput, resultFromStore)
+  const insights = buildSimulationInsights(lastRunInput, effectiveResult)
+  const roi = typeof effectiveResult?.roi === 'number' ? `${effectiveResult.roi}%` : `${insights.roiPercent}%`
+  const efficiency =
+    typeof effectiveResult?.efficiency === 'number'
+      ? `${effectiveResult.efficiency}%`
+      : `${insights.efficiencyPercent}%`
+
+  const comparisonRows = ENERGY_PROFILES.map((profile) => {
+    const annualSavings = insights.energyGeneratedKwh * 0.11 * profile.savingsMultiplier
+    const initialInvestment = (lastRunInput?.budget ?? 1_000_000) * 0.1 * profile.investmentMultiplier
+    const simulatedRoi = Math.max(2, insights.roiPercent + profile.roiBonus)
+
+    return {
+      energySource: profile.label,
+      initialInvestment: formatCurrency(initialInvestment),
+      annualSavings: `${formatCurrency(annualSavings)}/year`,
+      roi: `${simulatedRoi.toFixed(1)}%`,
+      co2Reduction: `${(insights.co2AvoidedTons * profile.co2Multiplier).toFixed(1)} tons`,
+    }
+  })
+
+  const totalInvestment = comparisonRows.reduce((sum, row) => {
+    const raw = Number(row.initialInvestment.replace(/[$,]/g, ''))
+    return sum + raw
+  }, 0)
+  const totalSavings = comparisonRows.reduce((sum, row) => {
+    const raw = Number(row.annualSavings.replace('/year', '').replace(/[$,]/g, ''))
+    return sum + raw
+  }, 0)
 
   return (
     <SimulationPageShell>
@@ -48,6 +120,15 @@ export function SimulationDetailsPage() {
           title="Simulation Details"
           description="Review the active scenario through one consistent analysis surface: context, economics, environmental impact, and climate assumptions."
         />
+
+        {requestedSimulationId && isLoading ? (
+          <SimulationStateMessage>Loading simulation details...</SimulationStateMessage>
+        ) : null}
+        {requestedSimulationId && isError ? (
+          <SimulationStateMessage tone="error">
+            Could not load simulation details. Please try again.
+          </SimulationStateMessage>
+        ) : null}
 
         <div className="space-y-6">
           <SimulationCard tone="soft" className="p-6">
@@ -84,9 +165,15 @@ export function SimulationDetailsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-outline-variant dark:divide-white/10">
-                  <tr><td className="px-6 py-4 font-medium">Solar Panels</td><td className="px-6 py-4">$25,000</td><td className="px-6 py-4">$3,000</td><td className="px-6 py-4">12%</td><td className="px-6 py-4">5 tons</td></tr>
-                  <tr><td className="px-6 py-4 font-medium">Wind Turbine</td><td className="px-6 py-4">$40,000</td><td className="px-6 py-4">$5,000</td><td className="px-6 py-4">10%</td><td className="px-6 py-4">8 tons</td></tr>
-                  <tr><td className="px-6 py-4 font-medium">Geothermal</td><td className="px-6 py-4">$60,000</td><td className="px-6 py-4">$7,000</td><td className="px-6 py-4">11.7%</td><td className="px-6 py-4">10 tons</td></tr>
+                  {comparisonRows.map((row) => (
+                    <tr key={row.energySource}>
+                      <td className="px-6 py-4 font-medium">{row.energySource}</td>
+                      <td className="px-6 py-4">{row.initialInvestment}</td>
+                      <td className="px-6 py-4">{row.annualSavings}</td>
+                      <td className="px-6 py-4">{row.roi}</td>
+                      <td className="px-6 py-4">{row.co2Reduction}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -95,9 +182,9 @@ export function SimulationDetailsPage() {
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             <SimulationCard tone="soft" className="p-6">
               <h3 className="font-semibold">Financial Summary</h3>
-              <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total Investment: $125,000</p>
+              <p className="mt-3 text-sm text-on-surface-variant dark:text-content-dark/70">Total Investment: {formatCurrency(totalInvestment)}</p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">
-                Total Savings: ${(insights.energyGeneratedKwh * 0.12).toLocaleString('en-US')}/year
+                Total Savings: {formatCurrency(totalSavings)}/year
               </p>
               <p className="text-sm text-on-surface-variant dark:text-content-dark/70">Overall ROI: {roi}</p>
             </SimulationCard>

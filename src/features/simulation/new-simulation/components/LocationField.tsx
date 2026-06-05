@@ -22,18 +22,18 @@ export function LocationField({
   return (
     <div className="relative">
       <label htmlFor="location" className="mb-1 block text-sm font-medium">
-        Location
+        Ubicación
       </label>
       <SimulationTextInput
         id="location"
         type="text"
         value={location}
         onChange={(event) => onLocationChange(event.target.value)}
-        placeholder="Enter location or use geolocation"
+        placeholder="Introduce la ubicación o usa la geolocalización"
         className="h-12"
       />
       {hasLocationQuery && isSearchingLocation ? (
-        <SimulationStateMessage className="mt-2 text-xs">Searching locations...</SimulationStateMessage>
+        <SimulationStateMessage className="mt-2 text-xs">Buscando ubicaciones...</SimulationStateMessage>
       ) : null}
       {searchMessage ? (
         <SimulationStateMessage tone="error" className="mt-2 text-xs">

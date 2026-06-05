@@ -5,6 +5,7 @@ export const simulationSchema = z.object({
   energyType: z.enum(['solar', 'wind', 'hydro']),
   projectSize: z.coerce.number().positive('Project size must be greater than 0'),
   budget: z.coerce.number().positive('Budget must be greater than 0'),
+  energyConsumption: z.coerce.number().positive('Energy consumption must be greater than 0'),
 })
 
 export type SimulationFormValues = z.infer<typeof simulationSchema>

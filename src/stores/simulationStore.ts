@@ -17,6 +17,7 @@ const DEFAULT_DRAFT: SimulationFormValues = {
   energyType: 'solar',
   projectSize: 500,
   budget: 1_000_000,
+  energyConsumption: 1_000,
 }
 
 export const useSimulationStore = create<SimulationState>()((set) => ({

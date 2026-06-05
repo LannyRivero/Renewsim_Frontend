@@ -1,4 +1,4 @@
-import { Cpu, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { TechnologyForm } from './components/TechnologyForm'
 import { TechnologiesTable } from './components/TechnologiesTable'
 import { useTechnologiesManager } from './hooks/useTechnologiesManager'
@@ -8,6 +8,7 @@ import {
   SimulationFiltersToolbar,
   SimulationPageShell,
   SimulationStateMessage,
+  SimulationSectionHeader,
 } from '@/shared/components'
 
 export function TechnologiesPage() {
@@ -54,22 +55,21 @@ export function TechnologiesPage() {
   return (
     <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 sm:px-2.5 sm:pt-4 sm:pb-0 lg:h-full lg:px-2.5 lg:pt-4 lg:pb-0">
       <div className="flex flex-col  lg:h-full">
-        <div className="flex items-center justify-between gap-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#d2dbd1] bg-[#eef3ed] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 shadow-sm dark:border-white/12 dark:bg-white/8 dark:text-content-dark/72">
-            <Cpu className="h-3.5 w-3.5" fill="currentColor" />
-            Technology Catalog
-          </div>
 
+        <SimulationSectionHeader
+          eyebrow="Technology Catalog"
+          description="Manage your technology catalog and configure project-specific parameters."
+          className="md:items-center"
+        />
 
+        <div className="mt-7 w-full flex justify-end">
+          <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm} className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
+            <Plus className="h-4 w-4" />
+            Nueva tecnología
+          </SimulationActionButton>
         </div>
-        <div className="mt-7 w-full flex justify-end"> 
-        <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm} className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
-          <Plus className="h-4 w-4" />
-          Nueva tecnología
-        </SimulationActionButton>
-        </div>
 
-        < div className=' mt-5 space-y-5 '>
+        < div className=' mt-5 space-y-3'>
 
           {!isFormOpen ? (
             <div >
@@ -79,7 +79,6 @@ export function TechnologiesPage() {
                 searchValue={searchTerm}
                 searchPlaceholder="Escribí un nombre para filtrar"
                 onSearchChange={setTechnologySearchTerm}
-                searchHint="La búsqueda se activa con 3 o más letras."
                 filterId="technology-filter-energy-type"
                 filterLabel="Tipo de energía"
                 filterValue={energyTypeFilter}

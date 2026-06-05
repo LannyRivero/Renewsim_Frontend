@@ -12,14 +12,38 @@ type ApiResponse<T> = {
 
 type RawSimulation = Record<string, unknown>
 
-function isSimulationResult(value: unknown): value is SimulationResult {
-  if (!value || typeof value !== 'object') return false
+function readOptionalNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+function normalizeEnergyType(value: string): string {
+  const normalized = value.trim().toLowerCase()
+  if (normalized === 'solar' || normalized === 'wind' || normalized === 'hydro') {
+    return normalized
+  }
+
+  return value
+}
+
+function toSimulationResult(value: unknown): SimulationResult | null {
+  if (!value || typeof value !== 'object') return null
+
   const candidate = value as Record<string, unknown>
-  return (
-    typeof candidate.id === 'string' &&
-    typeof candidate.location === 'string' &&
-    typeof candidate.energyType === 'string'
-  )
+  const rawId = candidate.id
+  const rawLocation = candidate.location
+  const rawEnergyType = candidate.energyType
+
+  if ((typeof rawId !== 'string' && typeof rawId !== 'number') || typeof rawLocation !== 'string' || typeof rawEnergyType !== 'string') {
+    return null
+  }
+
+  return {
+    id: String(rawId),
+    location: rawLocation,
+    energyType: normalizeEnergyType(rawEnergyType),
+    roi: readOptionalNumber(candidate.roi),
+    efficiency: readOptionalNumber(candidate.efficiency),
+  }
 }
 
 function readString(value: unknown, fallback: string): string {
@@ -66,17 +90,27 @@ export async function getSimulationHistory(): Promise<SimulationHistoryItem[]> {
 }
 
 export async function createSimulation(payload: CreateSimulationPayload): Promise<SimulationResult> {
-  const response = await httpClient.post<ApiResponse<SimulationResult> | SimulationResult>('/simulations', payload)
+  const body = {
+    ...payload,
+    climate: {
+      irradiance: payload.climate.irradiance,
+      wind: payload.climate.windSpeed,
+      hydrology: payload.climate.hydrology,
+    },
+  }
+  const response = await httpClient.post<ApiResponse<SimulationResult> | SimulationResult>('/simulations', body)
   const rawData: unknown =
     response.data && typeof response.data === 'object' && 'data' in response.data
       ? (response.data as ApiResponse<SimulationResult>).data
       : response.data
 
-  if (!isSimulationResult(rawData)) {
+  const normalizedResult = toSimulationResult(rawData)
+
+  if (!normalizedResult) {
     throw new Error('Invalid simulation response from server')
   }
 
-  return rawData
+  return normalizedResult
 }
 
 export async function getSimulationById(simulationId: string): Promise<SimulationDetails> {

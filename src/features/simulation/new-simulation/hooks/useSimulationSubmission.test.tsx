@@ -47,7 +47,7 @@ describe('useSimulationSubmission', () => {
     const { result } = renderHook(
       () =>
         useSimulationSubmission({
-          draft: { location: '', energyType: 'solar', projectSize: 500, budget: 1000 },
+          draft: { location: '', energyType: 'solar', projectSize: 500, budget: 1000, energyConsumption: 1000 },
           climateState: {
             resolvedClimate: null,
             setResolvedClimate,
@@ -83,7 +83,7 @@ describe('useSimulationSubmission', () => {
     const { result } = renderHook(
       () =>
         useSimulationSubmission({
-          draft: { location: 'Madrid', energyType: 'solar', projectSize: 500, budget: 1000 },
+          draft: { location: 'Madrid', energyType: 'solar', projectSize: 500, budget: 1000, energyConsumption: 1000 },
           climateState: {
             resolvedClimate: {
               location: 'Madrid',
@@ -112,6 +112,6 @@ describe('useSimulationSubmission', () => {
     expect(mockGetClimateData).not.toHaveBeenCalled()
     expect(mockCreateSimulation).toHaveBeenCalledTimes(1)
     expect(setLastResult).toHaveBeenCalledWith(simulationResult)
-    expect(mockNavigate).toHaveBeenCalledWith('/simulador/resultados')
+    expect(mockNavigate).toHaveBeenCalledWith('/simulador/resultados?id=sim-1')
   })
 })

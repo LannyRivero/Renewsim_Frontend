@@ -16,39 +16,38 @@ function renderPage() {
 }
 
 describe('NewSimulationPage', () => {
-  it('renders heading and description', () => {
+  it('renders description', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'New custom simulation' })).toBeInTheDocument()
     expect(
-      screen.getByText('Configure your simulation with project-specific parameters.'),
+      screen.getByText('Configura tu simulación con parámetros específicos del proyecto.'),
     ).toBeInTheDocument()
   })
 
   it('renders simulation setup section header', () => {
     renderPage()
 
-    expect(screen.getByText('Simulation Setup')).toBeInTheDocument()
+    expect(screen.getByText('Simulación Setup')).toBeInTheDocument()
   })
 
   it('renders editable form fields', () => {
     renderPage()
 
-    expect(screen.getByLabelText('Location')).toBeInTheDocument()
-    expect(screen.getByLabelText('Energy type')).toBeInTheDocument()
-    expect(screen.getByLabelText('Project size (kW/MW)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Budget (EUR)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Ubicación')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tipo de Energía')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tamaño del proyecto (kW/MW)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Presupuesto (EUR)')).toBeInTheDocument()
   })
 
   it('renders read-only climate data fields', () => {
     renderPage()
 
-    expect(screen.getByLabelText('Irradiance (kWh/m2/day)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Wind speed (m/s)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Hydrology (m3/s)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Irradiance (kWh/m2/day)')).toHaveValue('-')
-    expect(screen.getByLabelText('Wind speed (m/s)')).toHaveValue('-')
-    expect(screen.getByLabelText('Hydrology (m3/s)')).toHaveValue('3.0')
+    expect(screen.getByLabelText('Irradiancia (kWh/m2/día)')).toHaveAttribute('readonly')
+    expect(screen.getByLabelText('Velocidad del viento (m/s)')).toHaveAttribute('readonly')
+    expect(screen.getByLabelText('Hidrología (m3/s)')).toHaveAttribute('readonly')
+    expect(screen.getByLabelText('Irradiancia (kWh/m2/día)')).toHaveValue('-')
+    expect(screen.getByLabelText('Velocidad del viento (m/s)')).toHaveValue('-')
+    expect(screen.getByLabelText('Hidrología (m3/s)')).toHaveValue('3.0')
   })
 
   it('renders submit action', () => {
