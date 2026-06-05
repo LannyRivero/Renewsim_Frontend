@@ -11,8 +11,8 @@ describe('PerformanceSnapshot', () => {
       />,
     )
 
-    expect(screen.getByText('Efficiency KPIs')).toBeInTheDocument()
-    expect(screen.getByText('Target vs Actual')).toBeInTheDocument()
+    expect(screen.getByText('KPIs de Eficiencia')).toBeInTheDocument()
+    expect(screen.getByText('Objetivo vs Actual')).toBeInTheDocument()
     expect(screen.getByText('Capacity factor')).toBeInTheDocument()
     expect(screen.getByText('Energy output')).toBeInTheDocument()
   })
