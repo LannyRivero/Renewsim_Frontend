@@ -12,7 +12,7 @@ export function PerformanceSnapshot({ metrics, targetVsActual }: PerformanceSnap
     <section className="grid grid-cols-1 gap-2.5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
       <SimulationCard density="compact">
         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-content-dark/55">
-          Efficiency KPIs
+          KPIs de Eficiencia
         </p>
         <div className="mt-2.5 grid gap-2 sm:grid-cols-3">
           {metrics.map((metric) => (
