@@ -12,6 +12,8 @@ export interface CreateSimulationPayload {
   projectSize: number
   budget: number
   energyConsumption: number
+  locationLatitude?: number
+  locationLongitude?: number
   climate: {
     irradiance: number
     windSpeed: number
