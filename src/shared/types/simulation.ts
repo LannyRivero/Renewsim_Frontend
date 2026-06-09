@@ -7,24 +7,22 @@ export interface SimulationHistoryItem {
 }
 
 export interface CreateSimulationPayload {
-  location: string
-  energyType: 'solar' | 'wind' | 'hydro'
-  projectSize: number
-  budget: number
-  energyConsumption: number
-  locationLatitude?: number
-  locationLongitude?: number
-  climate: {
-    irradiance: number
-    windSpeed: number
-    hydrology: number
+  name: string
+  technology: 'solar' | 'wind' | 'hydro'
+  installedCapacity: number
+  location: {
+    lat: number
+    lon: number
   }
 }
 
 export interface SimulationResult {
   id: string
-  location: string
-  energyType: string
+  name?: string
+  status?: string
+  createdAt?: string
+  location?: string
+  energyType?: string
   roi?: number
   efficiency?: number
 }

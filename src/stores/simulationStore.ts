@@ -1,14 +1,14 @@
 import { create } from 'zustand'
-import type { SimulationFormValues } from '@/features/simulation/schemas/simulationSchema'
-import type { CreateSimulationPayload, SimulationResult } from '@/shared/types'
+import type { SimulationCreateFormValues, SimulationFormValues } from '@/features/simulation/schemas/simulationSchema'
+import type { SimulationResult } from '@/shared/types'
 
 interface SimulationState {
   draft: SimulationFormValues
   lastResult: SimulationResult | null
-  lastRunInput: CreateSimulationPayload | null
+  lastRunInput: SimulationCreateFormValues | null
   setDraftField: <K extends keyof SimulationFormValues>(field: K, value: SimulationFormValues[K]) => void
   setLastResult: (result: SimulationResult) => void
-  setLastRunInput: (payload: CreateSimulationPayload) => void
+  setLastRunInput: (payload: SimulationCreateFormValues) => void
   resetDraft: () => void
 }
 

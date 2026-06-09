@@ -1,4 +1,5 @@
-import type { CreateSimulationPayload, SimulationResult } from '@/shared/types'
+import type { SimulationCreateFormValues, SimulationDetails } from '../schemas/simulationSchema'
+import type { SimulationResult } from '@/shared/types'
 
 type InsightMetrics = {
   energyGeneratedKwh: number
@@ -16,11 +17,15 @@ const ENERGY_FACTOR = {
 } as const
 
 export function buildSimulationInsights(
-  input: CreateSimulationPayload | null,
-  result: SimulationResult | null,
+  input: SimulationCreateFormValues | null,
+  result: (SimulationResult & Partial<SimulationDetails>) | null,
 ): InsightMetrics {
-  const projectSize = input?.projectSize ?? 500
-  const climate = input?.climate ?? { irradiance: 4.5, windSpeed: 6, hydrology: 2.5 }
+  const projectSize = input?.projectSize ?? result?.projectSize ?? 500
+  const climate = {
+    irradiance: result?.irradiance ?? 4.5,
+    windSpeed: result?.windSpeed ?? 6,
+    hydrology: result?.hydrology ?? 2.5,
+  }
   const energyType = (input?.energyType ?? result?.energyType ?? 'solar') as 'solar' | 'wind' | 'hydro'
 
   const climateMultiplier =
