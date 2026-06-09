@@ -5,14 +5,21 @@ import { EnergyBarChart } from './components/EnergyBarChart'
 import { DistributionDonut } from './components/DistributionDonut'
 import { PerformanceSnapshot } from './components/PerformanceSnapshot'
 import { SimulationPageShell, SimulationSectionHeader, SimulationStatusBadge } from '@/shared/components'
-import {
-  DASHBOARD_STATS,
-  EFFICIENCY_METRICS,
-  ENERGY_BY_SOURCE,
-  DISTRIBUTION,
-  TARGET_VS_ACTUAL,
-} from './data/dashboardMock'
 import { getDashboardData } from './services/dashboardService'
+import type { DashboardData } from './services/dashboardTypes'
+
+const EMPTY_DASHBOARD_DATA: DashboardData = {
+  stats: [
+    { label: 'Simulaciones totales', value: '0', icon: 'insights' },
+    { label: 'CO2 evitado', value: 'N/D', icon: 'eco' },
+    { label: 'ROI promedio', value: 'N/D', icon: 'trending_up' },
+    { label: 'Energía generada', value: 'N/D', icon: 'bolt' },
+  ],
+  energyBySource: [],
+  distribution: [],
+  efficiencyMetrics: [],
+  targetVsActual: [],
+}
 
 export function DashboardPage() {
   const { data, isError, error } = useQuery({
@@ -21,11 +28,11 @@ export function DashboardPage() {
     staleTime: 60_000,
   })
 
-  const stats = data?.stats ?? DASHBOARD_STATS
-  const efficiencyMetrics = data?.efficiencyMetrics ?? EFFICIENCY_METRICS
-  const targetVsActual = data?.targetVsActual ?? TARGET_VS_ACTUAL
-  const energyBySource = data?.energyBySource ?? ENERGY_BY_SOURCE
-  const distribution = data?.distribution ?? DISTRIBUTION
+  const stats = data?.stats ?? EMPTY_DASHBOARD_DATA.stats
+  const efficiencyMetrics = data?.efficiencyMetrics ?? EMPTY_DASHBOARD_DATA.efficiencyMetrics
+  const targetVsActual = data?.targetVsActual ?? EMPTY_DASHBOARD_DATA.targetVsActual
+  const energyBySource = data?.energyBySource ?? EMPTY_DASHBOARD_DATA.energyBySource
+  const distribution = data?.distribution ?? EMPTY_DASHBOARD_DATA.distribution
 
   return (
     <SimulationPageShell contentClassName="p-4 sm:p-4 lg:h-full lg:p-4">
@@ -33,7 +40,6 @@ export function DashboardPage() {
         <SimulationSectionHeader
           eyebrow="Comando de Operaciones"
           eyebrowIcon={<Activity className="h-3.5 w-3.5" />}
-          title="Panel de Energía"
           description="Salud de la generación, mezcla de fuentes y rendimiento objetivo en una vista operativa."
           className="gap-2 md:items-end"
         />
@@ -44,7 +50,7 @@ export function DashboardPage() {
           <div>
             <SimulationStatusBadge tone="neutral" className="gap-2 rounded-full px-3 py-1.5 text-[11px] font-medium">
               <Info className="h-3.5 w-3.5" />
-              {error instanceof Error ? 'Se muestran los datos de vista previa mientras el servicio del panel en vivo no está disponible.' : 'Se muestran los datos de vista previa mientras el servicio del panel en vivo no está disponible.'}
+              {error instanceof Error ? 'No se pudo cargar el panel desde backend.' : 'No se pudo cargar el panel desde backend.'}
             </SimulationStatusBadge>
           </div>
         ) : null}
