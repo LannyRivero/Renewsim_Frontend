@@ -1,129 +1,90 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { simulationSchema, type SimulationFormValues } from '../../schemas/simulationSchema'
-import { createSimulation } from '../../services/simulationService'
-import { getClimateData } from '../../services/weatherService'
+import { simulationCreateSchema, type SimulationCreateFormValues } from '../../schemas/simulationSchema'
 import {
-  canReuseResolvedClimate,
-  toClimatePreview,
-  type ResolvedClimate,
-} from '../helpers/climate'
+  createSimulation,
+  getSimulationById,
+  getSimulationHistory,
+} from '../../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
 
 interface UseSimulationSubmissionParams {
-  draft: SimulationFormValues
-  climateState: {
-    resolvedClimate: ResolvedClimate | null
-    setResolvedClimate: (value: ResolvedClimate) => void
-    setClimatePreview: (value: ReturnType<typeof toClimatePreview>) => void
-  }
   simulationActions: {
     setLastResult: (result: Awaited<ReturnType<typeof createSimulation>>) => void
-    setLastRunInput: (payload: Parameters<typeof createSimulation>[0]) => void
+    setLastRunInput: (payload: SimulationCreateFormValues) => void
   }
 }
 
 export function useSimulationSubmission({
-  draft,
-  climateState,
   simulationActions,
 }: UseSimulationSubmissionParams) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [formError, setFormError] = useState<string | null>(null)
-  const [isLoadingClimate, setIsLoadingClimate] = useState(false)
 
   const mutation = useMutation({
     mutationFn: createSimulation,
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
+      await queryClient.fetchQuery({
+        queryKey: ['simulation-details', result.id],
+        queryFn: () => getSimulationById(result.id),
+      })
+
+      await queryClient.fetchQuery({
+        queryKey: ['simulation-history'],
+        queryFn: getSimulationHistory,
+      })
+
       simulationActions.setLastResult(result)
       useToastStore.getState().pushToast({
-        title: 'Simulation Completed',
-        description: 'Your simulation was created successfully.',
+        title: 'Simulación completada',
+        description: 'La simulación se creó correctamente.',
         variant: 'success',
       })
-      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
       navigate(`/simulador/resultados?id=${encodeURIComponent(result.id)}`)
     },
     onError: () => {
       useToastStore.getState().pushToast({
-        title: 'Simulation Error',
-        description: 'Could not run simulation. Please try again.',
+        title: 'Error de simulación',
+        description: 'No se pudo ejecutar la simulación. Intentá nuevamente.',
         variant: 'error',
       })
     },
   })
 
-  const submitLabel = isLoadingClimate
-    ? 'Fetching climate data...'
-    : mutation.isPending
-      ? 'Running simulation...'
-      : 'Run simulation'
+  const submitLabel = mutation.isPending ? 'Ejecutando simulación...' : 'Ejecutar simulación'
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  function handleSubmit(draft: SimulationCreateFormValues, event?: Pick<React.FormEvent<HTMLFormElement>, 'preventDefault'>) {
+    event?.preventDefault()
     setFormError(null)
 
-    const parsed = simulationSchema.safeParse(draft)
+    const parsed = simulationCreateSchema.safeParse(draft)
     if (!parsed.success) {
       const firstError = parsed.error.issues[0]?.message ?? 'Invalid form values.'
       setFormError(firstError)
       return
     }
 
-    setIsLoadingClimate(true)
-
     const normalizedLocation = parsed.data.location.trim()
-    const canReuseClimate = canReuseResolvedClimate(
-      climateState.resolvedClimate,
-      normalizedLocation,
-      parsed.data.energyType,
-    )
+    const payload = {
+      name: `${parsed.data.energyType.toUpperCase()} - ${normalizedLocation}`,
+      technology: parsed.data.energyType,
+      installedCapacity: parsed.data.projectSize,
+      location: {
+        lat: parsed.data.locationLatitude,
+        lon: parsed.data.locationLongitude,
+      },
+    } as const
 
-    const climatePromise = canReuseClimate
-      ? Promise.resolve(climateState.resolvedClimate!.data)
-      : getClimateData(normalizedLocation, parsed.data.energyType)
-
-    climatePromise
-      .then((climate) => {
-        climateState.setClimatePreview(toClimatePreview(climate))
-        climateState.setResolvedClimate({
-          location: normalizedLocation,
-          energyType: parsed.data.energyType,
-          data: climate,
-        })
-
-        mutation.mutate({
-          ...parsed.data,
-          climate,
-        })
-
-        simulationActions.setLastRunInput({
-          ...parsed.data,
-          climate,
-        })
-      })
-      .catch((error) => {
-        const description =
-          error instanceof Error ? error.message : 'Could not fetch climate data. Please try again.'
-
-        setFormError(description)
-        useToastStore.getState().pushToast({
-          title: 'Climate Data Error',
-          description,
-          variant: 'error',
-        })
-      })
-      .finally(() => {
-        setIsLoadingClimate(false)
-      })
+    simulationActions.setLastRunInput(parsed.data)
+    mutation.mutate(payload)
   }
 
   return {
     formError,
-    isSubmitting: mutation.isPending || isLoadingClimate,
+    isSubmitting: mutation.isPending,
     submitLabel,
     handleSubmit,
   }
