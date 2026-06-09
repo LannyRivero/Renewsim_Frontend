@@ -108,7 +108,6 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
     form.setValue('location', `${suggestion.name}, ${suggestion.country}`, { shouldValidate: true, shouldDirty: true })
     form.setValue('locationLatitude', suggestion.lat, { shouldValidate: true, shouldDirty: true })
     form.setValue('locationLongitude', suggestion.lon, { shouldValidate: true, shouldDirty: true })
-    setLocationAssistMessage(`Ubicación seleccionada: ${suggestion.name}, ${suggestion.country}.`)
   }
 
   return {

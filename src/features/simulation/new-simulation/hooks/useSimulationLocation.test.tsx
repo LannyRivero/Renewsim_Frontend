@@ -89,7 +89,6 @@ describe('useSimulationLocation', () => {
     expect(result.current.form.getValues('location')).toBe('Mendoza, AR')
     expect(result.current.form.getValues('locationLatitude')).toBe(-32.8895)
     expect(result.current.form.getValues('locationLongitude')).toBe(-68.8458)
-    expect(result.current.location.locationAssistMessage).toBe('Ubicación seleccionada: Mendoza, AR.')
   })
 
   it('resolves browser geolocation into city and country', async () => {
