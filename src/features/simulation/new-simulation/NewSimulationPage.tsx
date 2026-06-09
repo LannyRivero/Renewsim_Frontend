@@ -58,11 +58,10 @@ export function NewSimulationPage() {
       setLastRunInput,
     },
   })
-
   return (
     <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 sm:px-2.5 sm:pt-4 sm:pb-0 lg:h-full lg:px-2.5 lg:pt-4 lg:pb-0">
       
-      <section className="flex flex-col  lg:h-full">
+      <section className="flex flex-col lg:h-full">
         <SimulationSectionHeader
           eyebrow="Configuración de simulación"
           description="Define los datos del proyecto y valida la ubicación de instalación antes de pasar a resultados."
