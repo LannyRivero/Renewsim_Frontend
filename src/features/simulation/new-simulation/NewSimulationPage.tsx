@@ -1,47 +1,56 @@
-import { ClimatePreviewCard } from './components/ClimatePreviewCard'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import { LocationField } from './components/LocationField'
-import { SimulationInputFields } from './components/SimulationInputFields'
-import { useClimatePreview } from './hooks/useClimatePreview'
-import { useLocationSuggestions } from './hooks/useLocationSuggestions'
+import { useSimulationLocation } from './hooks/useSimulationLocation'
 import { useSimulationSubmission } from './hooks/useSimulationSubmission'
+import {
+  simulationCreateSchema,
+  type SimulationCreateFormInput,
+  type SimulationCreateFormValues,
+} from '../schemas/simulationSchema'
 import {
   SimulationActionButton,
   SimulationCard,
   SimulationPageShell,
   SimulationSectionHeader,
+  SimulationSelect,
   SimulationStateMessage,
+  SimulationTextInput,
 } from '@/shared/components'
 import { useSimulationStore } from '@/stores/simulationStore'
 
 export function NewSimulationPage() {
-  const draft = useSimulationStore((state) => state.draft)
-  const setDraftField = useSimulationStore((state) => state.setDraftField)
   const setLastResult = useSimulationStore((state) => state.setLastResult)
   const setLastRunInput = useSimulationStore((state) => state.setLastRunInput)
-  const {
-    hasLocationQuery,
-    isSearchingLocation,
-    locationSearchMessage,
-    locationSuggestions,
-    clearLocationSuggestions,
-  } = useLocationSuggestions(draft.location)
-  const {
-    isRefreshingClimate,
-    displayedClimatePreview,
-    resolvedClimate,
-    setResolvedClimate,
-    setClimatePreview,
-  } = useClimatePreview({
-    location: draft.location,
-    energyType: draft.energyType,
-  })
-  const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
-    draft,
-    climateState: {
-      resolvedClimate,
-      setResolvedClimate,
-      setClimatePreview,
+
+  const form = useForm<SimulationCreateFormInput, undefined, SimulationCreateFormValues>({
+    resolver: zodResolver(simulationCreateSchema),
+    defaultValues: {
+      location: '',
+      energyType: 'solar',
+      projectSize: '',
+      budget: '',
+      energyConsumption: '',
+      locationLatitude: '',
+      locationLongitude: '',
     },
+    mode: 'onBlur',
+  })
+
+  const {
+    isResolvingBrowserLocation,
+    isSearchingLocation,
+    locationAssistMessage,
+    locationSuggestions,
+    normalizedLocation,
+    hasResolvedLocation,
+    latitudePreview,
+    longitudePreview,
+    useBrowserLocation,
+    applyLocationSuggestion,
+  } = useSimulationLocation({ form })
+
+  const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
     simulationActions: {
       setLastResult,
       setLastRunInput,
@@ -49,64 +58,126 @@ export function NewSimulationPage() {
   })
 
   return (
-    <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 lg:h-full">
-      <section className="flex flex-col lg:h-full">
+    <SimulationPageShell contentClassName="px-2.5 pt-4 pb-0 sm:px-2.5 sm:pt-4 sm:pb-0 lg:h-full lg:px-2.5 lg:pt-4 lg:pb-0">
+      
+      <section className="flex flex-col  lg:h-full">
         <SimulationSectionHeader
-          eyebrow="Simulación Setup"
-          description="Configura tu simulación con parámetros específicos del proyecto."
+          eyebrow="Configuración de simulación"
+          description="Define los datos del proyecto y valida la ubicación de instalación antes de pasar a resultados."
           className="md:items-center"
+          actions={
+            <div className="mt-15 w-full flex justify-end">
+              <SimulationActionButton
+                type="submit"
+                form="new-simulation-form"
+                variant="primary"
+                disabled={isSubmitting}
+                className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
+
+                {submitLabel}
+              </SimulationActionButton>
+            </div>
+          }
         />
 
-        <form className=" space-y-6" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
-            <SimulationActionButton
-              type="submit"
-              variant="primary"
-              disabled={isSubmitting}
-              className="w-full px-8 py-3 text-base md:w-auto"
-            >
-              {submitLabel}
-            </SimulationActionButton>
-          </div>
+        < div className=' mt-2 space-y-3'></div>
 
-          <SimulationCard className="grid grid-cols-1 gap-6" density="comfortable">
+        <form
+          id="new-simulation-form"
+          className="space-y-6"
+          onSubmit={form.handleSubmit((values, event) => {
+            handleSubmit(values, event)
+          })}
+        >
+          <SimulationCard className="space-y-5" density="comfortable">
             <LocationField
-              location={draft.location}
-              onLocationChange={(value) => setDraftField('location', value)}
+              form={form}
+              normalizedLocation={normalizedLocation}
+              hasResolvedLocation={hasResolvedLocation}
+              isResolvingBrowserLocation={isResolvingBrowserLocation}
               isSearchingLocation={isSearchingLocation}
-              searchMessage={locationSearchMessage}
-              suggestions={locationSuggestions}
-              onSuggestionSelect={(suggestion) => {
-                setDraftField('location', suggestion)
-                clearLocationSuggestions()
-              }}
-              hasLocationQuery={hasLocationQuery}
+              locationAssistMessage={locationAssistMessage}
+              locationSuggestions={locationSuggestions}
+              onUseBrowserLocation={useBrowserLocation}
+              onSuggestionSelect={applyLocationSuggestion}
             />
 
-            <SimulationInputFields
-              energyType={draft.energyType}
-              projectSize={draft.projectSize}
-              budget={draft.budget}
-              energyConsumption={draft.energyConsumption}
-              onEnergyTypeChange={(value) => setDraftField('energyType', value)}
-              onProjectSizeChange={(value) => setDraftField('projectSize', value)}
-              onBudgetChange={(value) => setDraftField('budget', value)}
-              onEnergyConsumptionChange={(value) => setDraftField('energyConsumption', value)}
-            />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="energyType" className="mb-1 block text-sm font-medium">
+                  Tipo de energía
+                </label>
+                <SimulationSelect id="energyType" className="h-12" {...form.register('energyType')}>
+                  <option value="solar">Solar</option>
+                  <option value="wind">Eólica</option>
+                  <option value="hydro">Hidráulica</option>
+                </SimulationSelect>
+              </div>
+
+              <div>
+                <label htmlFor="projectSize" className="mb-1 block text-sm font-medium">
+                  Tamaño del proyecto
+                </label>
+                <SimulationTextInput id="projectSize" type="number" min={1} placeholder="500" className="h-12" {...form.register('projectSize')} />
+              </div>
+
+              <div>
+                <label htmlFor="budget" className="mb-1 block text-sm font-medium">
+                  Presupuesto
+                </label>
+                <SimulationTextInput id="budget" type="number" min={1} placeholder="1000000" className="h-12" {...form.register('budget')} />
+              </div>
+
+              <div>
+                <label htmlFor="energyConsumption" className="mb-1 block text-sm font-medium">
+                  Consumo energético
+                </label>
+                <SimulationTextInput
+                  id="energyConsumption"
+                  type="number"
+                  min={1}
+                  placeholder="Ej.: 1000"
+                  className="h-12"
+                  {...form.register('energyConsumption')}
+                />
+              </div>
+            </div>
+
+            <div className="rounded-[1rem] border border-[#d8e0d6] bg-[#f7faf5] p-4 dark:border-white/10 dark:bg-white/[0.03]">
+              <div className="flex flex-col gap-2">
+                <div>
+                  <h3 className="text-sm font-semibold text-on-surface dark:text-content-dark">Cómo se usará esta ubicación</h3>
+                  <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/65">
+                    El backend toma estas coordenadas para consultar clima, calcular energía y devolver los financieros listos para resultados.
+                  </p>
+                </div>
+                <div className="grid gap-3 md:grid-cols-2">
+                  <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/70 px-3 py-2 dark:border-white/10 dark:bg-white/[0.04]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/60">
+                      Ubicación activa
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-content-dark">
+                      {hasResolvedLocation ? normalizedLocation : 'Pendiente'}
+                    </p>
+                  </div>
+                  <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/70 px-3 py-2 dark:border-white/10 dark:bg-white/[0.04]">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/60">
+                      Coordenadas
+                    </p>
+                    <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-content-dark">
+                      {`${latitudePreview}, ${longitudePreview}`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {formError ? (
+              <SimulationStateMessage tone="error" className="text-sm">
+                {formError}
+              </SimulationStateMessage>
+            ) : null}
           </SimulationCard>
-
-          {formError ? (
-            <SimulationStateMessage tone="error" className="text-sm">
-              {formError}
-            </SimulationStateMessage>
-          ) : null}
-
-          <ClimatePreviewCard
-            energyType={draft.energyType}
-            hasLocationQuery={hasLocationQuery}
-            isRefreshingClimate={isRefreshingClimate}
-            preview={displayedClimatePreview}
-          />
         </form>
       </section>
     </SimulationPageShell>

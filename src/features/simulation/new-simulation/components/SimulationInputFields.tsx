@@ -49,7 +49,7 @@ export function SimulationInputFields({
           min={1}
           value={projectSize}
           onChange={(event) => onProjectSizeChange(Number(event.target.value))}
-          placeholder="Ejemplo: 500 kW"
+          placeholder="500 kW"
           className="h-12"
         />
       </div>
@@ -64,7 +64,7 @@ export function SimulationInputFields({
           min={1}
           value={budget}
           onChange={(event) => onBudgetChange(Number(event.target.value))}
-          placeholder="Ejemplo: 1000000"
+          placeholder="1000000"
           className="h-12"
         />
       </div>
@@ -79,7 +79,7 @@ export function SimulationInputFields({
           min={1}
           value={energyConsumption}
           onChange={(event) => onEnergyConsumptionChange(Number(event.target.value))}
-          placeholder="Ejemplo: 1000"
+          placeholder="1000"
           className="h-12"
         />
       </div>
