@@ -49,6 +49,8 @@ export function NewSimulationPage() {
     useBrowserLocation,
     applyLocationSuggestion,
   } = useSimulationLocation({ form })
+  const locationSummary = hasResolvedLocation ? normalizedLocation : 'Todavía no seleccionaste una ubicación'
+  const coordinatesSummary = hasResolvedLocation ? `${latitudePreview}, ${longitudePreview}` : 'Todavía no seleccionaste coordenadas'
 
   const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
     simulationActions: {
@@ -136,7 +138,7 @@ export function NewSimulationPage() {
                   id="energyConsumption"
                   type="number"
                   min={1}
-                  placeholder="Ej.: 1000"
+                  placeholder="1000"
                   className="h-12"
                   {...form.register('energyConsumption')}
                 />
@@ -148,7 +150,7 @@ export function NewSimulationPage() {
                 <div>
                   <h3 className="text-sm font-semibold text-on-surface dark:text-content-dark">Cómo se usará esta ubicación</h3>
                   <p className="mt-1 text-xs text-on-surface-variant dark:text-content-dark/65">
-                    El backend toma estas coordenadas para consultar clima, calcular energía y devolver los financieros listos para resultados.
+                    Estas coordenadas se utilizarán para consultar clima, calcular energía y devolver los resultados financieros.
                   </p>
                 </div>
                 <div className="grid gap-3 md:grid-cols-2">
@@ -157,7 +159,7 @@ export function NewSimulationPage() {
                       Ubicación activa
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-content-dark">
-                      {hasResolvedLocation ? normalizedLocation : 'Pendiente'}
+                      {locationSummary}
                     </p>
                   </div>
                   <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/70 px-3 py-2 dark:border-white/10 dark:bg-white/[0.04]">
@@ -165,7 +167,7 @@ export function NewSimulationPage() {
                       Coordenadas
                     </p>
                     <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-content-dark">
-                      {`${latitudePreview}, ${longitudePreview}`}
+                      {coordinatesSummary}
                     </p>
                   </div>
                 </div>
