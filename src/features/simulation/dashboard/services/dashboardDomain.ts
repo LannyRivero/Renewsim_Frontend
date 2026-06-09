@@ -37,8 +37,8 @@ export function aggregateDashboardDomainModel(rawItems: Record<string, unknown>[
   for (const item of rawItems) {
     const sourceLabel = normalizeSourceLabel(item.energyType ?? item.sourceType ?? item.technologyName)
     const efficiency = toNumber(item.efficiency ?? item.efficiencyPercent)
-    const roi = toNumber(item.roi ?? item.roiPercent)
-    const explicitKwh = toNumber(item.energyGeneratedKwh ?? item.generatedKwh ?? item.energyKwh)
+    const roi = toNumber(item.roi ?? item.roiPercent ?? item.returnOnInvestment)
+    const explicitKwh = toNumber(item.energyGenerated ?? item.energyGeneratedKwh ?? item.generatedKwh ?? item.energyKwh)
     const estimatedKwh = explicitKwh ?? Math.max(MIN_ESTIMATED_KWH, Math.round((efficiency ?? DEFAULT_EFFICIENCY_FOR_ESTIMATION) * EFFICIENCY_TO_KWH_FACTOR))
 
     bySource.set(sourceLabel, (bySource.get(sourceLabel) ?? 0) + estimatedKwh)

@@ -1,64 +1,154 @@
 import { httpClient } from '@/services/httpClient'
-import { aggregateDashboardDomainModel } from './dashboardDomain'
+import { formatKg, formatKwh, formatPercent } from './dashboardFormatters'
 import type { DashboardData } from './dashboardTypes'
-import { toDashboardViewModel, toZeroDashboardViewModel } from './dashboardViewModel'
-import {
-  DASHBOARD_STATS,
-  DISTRIBUTION,
-  EFFICIENCY_METRICS,
-  ENERGY_BY_SOURCE,
-  TARGET_VS_ACTUAL,
-} from '../data/dashboardMock'
 
 type ApiResponse<T> = {
   data?: T
 }
 
-type ArrayExtractionResult = {
-  items: Record<string, unknown>[]
-  isRecognizedShape: boolean
+type DashboardSummaryApi = {
+  stats?: {
+    totalSimulations?: unknown
+    totalEnergyGeneratedKwh?: unknown
+    totalCo2SavedKg?: unknown
+    averageRoiPercent?: unknown
+  }
+  energyBySource?: unknown
+  efficiencyMetrics?: unknown
+  targetVsActual?: unknown
 }
 
+function createEmptyDashboardData(): DashboardData {
+  return {
+    stats: [
+      { label: 'Simulaciones totales', value: '0', icon: 'insights' },
+      { label: 'CO2 evitado', value: 'N/D', icon: 'eco' },
+      { label: 'ROI promedio', value: 'N/D', icon: 'trending_up' },
+      { label: 'Energía generada', value: 'N/D', icon: 'bolt' },
+    ],
+    energyBySource: [],
+    distribution: [],
+    efficiencyMetrics: [],
+    targetVsActual: [],
+  }
+}
 
-function extractArrayPayload(payload: unknown): ArrayExtractionResult {
-  if (Array.isArray(payload)) {
-    return {
-      items: payload.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object')),
-      isRecognizedShape: true,
+function toFiniteNumber(value: unknown): number | null {
+  if (typeof value === 'number' && Number.isFinite(value)) return value
+  if (typeof value === 'string') {
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : null
+  }
+  return null
+}
+
+function isDashboardSummaryApi(value: unknown): value is DashboardSummaryApi {
+  if (!value || typeof value !== 'object') return false
+  const candidate = value as Record<string, unknown>
+  return 'stats' in candidate && 'energyBySource' in candidate
+}
+
+function isHttpNotFound(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false
+  if (!('response' in error)) return false
+
+  const response = (error as { response?: { status?: unknown } }).response
+  return response?.status === 404
+}
+
+function extractSummaryPayload(payload: unknown): DashboardSummaryApi | null {
+  if (isDashboardSummaryApi(payload)) {
+    return payload
+  }
+
+  if (payload && typeof payload === 'object' && 'data' in (payload as Record<string, unknown>)) {
+    const nested = (payload as ApiResponse<unknown>).data
+    if (isDashboardSummaryApi(nested)) {
+      return nested
     }
   }
 
-  if (payload && typeof payload === 'object') {
-    const record = payload as Record<string, unknown>
-    if (Array.isArray(record.data)) {
-      return {
-        items: record.data.filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object')),
-        isRecognizedShape: true,
-      }
-    }
-  }
+  return null
+}
 
-  return { items: [], isRecognizedShape: false }
+function mapEnergyBySource(value: unknown): DashboardData['energyBySource'] {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+    .map((item) => {
+      const label = typeof item.label === 'string' && item.label.trim().length > 0 ? item.label.trim() : 'Other'
+      const kwh = toFiniteNumber(item.kwh) ?? 0
+      return { label, kwh }
+    })
+}
+
+function mapEfficiencyMetrics(value: unknown): DashboardData['efficiencyMetrics'] {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+    .map((item) => {
+      const label = typeof item.label === 'string' ? item.label : ''
+      const metricValue = typeof item.value === 'string' ? item.value : ''
+      const hint = typeof item.hint === 'string' ? item.hint : ''
+      return { label, value: metricValue, hint }
+    })
+}
+
+function mapTargetVsActual(value: unknown): DashboardData['targetVsActual'] {
+  if (!Array.isArray(value)) return []
+
+  return value
+    .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+    .map((item) => {
+      const label = typeof item.label === 'string' ? item.label : ''
+      const actual = toFiniteNumber(item.actual) ?? 0
+      const target = toFiniteNumber(item.target) ?? 0
+      const unit = typeof item.unit === 'string' ? item.unit : ''
+      return { label, actual, target, unit }
+    })
+}
+
+function toStatsCards(stats: DashboardSummaryApi['stats']): DashboardData['stats'] {
+  const totalSimulations = toFiniteNumber(stats?.totalSimulations) ?? 0
+  const totalEnergyGeneratedKwh = toFiniteNumber(stats?.totalEnergyGeneratedKwh)
+  const totalCo2SavedKg = toFiniteNumber(stats?.totalCo2SavedKg)
+  const averageRoiPercent = toFiniteNumber(stats?.averageRoiPercent)
+
+  return [
+    { label: 'Simulaciones totales', value: String(Math.trunc(totalSimulations)), icon: 'insights' },
+    { label: 'CO2 evitado', value: totalCo2SavedKg === null ? 'N/D' : formatKg(totalCo2SavedKg), icon: 'eco' },
+    { label: 'ROI promedio', value: averageRoiPercent === null ? 'N/D' : formatPercent(averageRoiPercent), icon: 'trending_up' },
+    { label: 'Energía generada', value: totalEnergyGeneratedKwh === null ? 'N/D' : formatKwh(totalEnergyGeneratedKwh), icon: 'bolt' },
+  ]
 }
 
 export async function getDashboardData(): Promise<DashboardData> {
-  const response = await httpClient.get<ApiResponse<unknown> | unknown>('/simulations/history')
-  const { items: rawItems, isRecognizedShape } = extractArrayPayload(response.data)
+  let response: { data: ApiResponse<unknown> | unknown }
 
-  if (!isRecognizedShape) {
-    return {
-      stats: DASHBOARD_STATS,
-      energyBySource: ENERGY_BY_SOURCE,
-      distribution: DISTRIBUTION,
-      efficiencyMetrics: EFFICIENCY_METRICS,
-      targetVsActual: TARGET_VS_ACTUAL,
+  try {
+    response = await httpClient.get<ApiResponse<unknown> | unknown>('/simulations/dashboard')
+  } catch (error) {
+    if (!isHttpNotFound(error)) {
+      throw error
     }
+
+    return createEmptyDashboardData()
   }
 
-  if (rawItems.length === 0) {
-    return toZeroDashboardViewModel()
+  const summary = extractSummaryPayload(response.data)
+  if (!summary) {
+    return createEmptyDashboardData()
   }
 
-  const domainModel = aggregateDashboardDomainModel(rawItems)
-  return toDashboardViewModel(domainModel)
+  const energyBySource = mapEnergyBySource(summary.energyBySource)
+
+  return {
+    stats: toStatsCards(summary.stats),
+    energyBySource,
+    distribution: energyBySource,
+    efficiencyMetrics: mapEfficiencyMetrics(summary.efficiencyMetrics),
+    targetVsActual: mapTargetVsActual(summary.targetVsActual),
+  }
 }
