@@ -34,12 +34,3 @@ export type DashboardData = {
   efficiencyMetrics: EfficiencyMetric[]
   targetVsActual: TargetVsActual[]
 }
-
-export type DashboardDomainModel = {
-  totalSimulations: number
-  totalKwh: number
-  co2SavedKg: number
-  avgRoi: number
-  avgEfficiency: number
-  energyBySource: EnergySource[]
-}
