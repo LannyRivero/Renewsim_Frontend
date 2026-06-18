@@ -41,20 +41,21 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
   })
 
   useEffect(() => {
+    const nextQuery = normalizedLocation.length >= 2 ? normalizedLocation : ''
+    const delayMs = nextQuery.length >= 2 ? 350 : 0
+
     if (skipNextLocationSearchRef.current) {
       skipNextLocationSearchRef.current = false
-      setDebouncedLocationQuery('')
-      return
-    }
+      const timeoutId = window.setTimeout(() => {
+        setDebouncedLocationQuery('')
+      }, 0)
 
-    if (normalizedLocation.length < 2) {
-      setDebouncedLocationQuery('')
-      return
+      return () => window.clearTimeout(timeoutId)
     }
 
     const timeoutId = window.setTimeout(() => {
-      setDebouncedLocationQuery(normalizedLocation)
-    }, 350)
+      setDebouncedLocationQuery(nextQuery)
+    }, delayMs)
 
     return () => window.clearTimeout(timeoutId)
   }, [normalizedLocation])
