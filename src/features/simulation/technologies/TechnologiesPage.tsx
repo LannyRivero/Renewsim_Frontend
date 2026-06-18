@@ -60,16 +60,23 @@ export function TechnologiesPage() {
           eyebrow="Technology Catalog"
           description="Manage your technology catalog and configure project-specific parameters."
           className="md:items-center"
+          actions={
+            <div className="mt-15 w-full flex justify-end">
+            <SimulationActionButton
+              type="button"
+              form="new-simulation-form"
+              variant="primary"
+              onClick={openCreateTechnologyForm}
+              className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
+              <Plus className="h-4 w-4" />
+              Nueva tecnología
+
+            </SimulationActionButton>
+            </div>
+          }
         />
 
-        <div className="mt-7 w-full flex justify-end">
-          <SimulationActionButton type="button" variant="primary" onClick={openCreateTechnologyForm} className="rounded-full px-2.5 py-2 shadow-[0_14px_26px_-20px_rgba(13,90,55,0.28)]">
-            <Plus className="h-4 w-4" />
-            Nueva tecnología
-          </SimulationActionButton>
-        </div>
-
-        < div className=' mt-5 space-y-3'>
+        < div className=' mt-2 space-y-3'>
 
           {!isFormOpen ? (
             <div >

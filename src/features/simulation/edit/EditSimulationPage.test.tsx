@@ -22,6 +22,7 @@ beforeEach(() => {
       energyType: 'solar',
       projectSize: 500,
       budget: 1_000_000,
+      energyConsumption: 1_000,
     },
     lastResult: {
       id: 'sim-edit-1',
@@ -37,10 +38,10 @@ describe('EditSimulationPage', () => {
   it('renders page title and description', () => {
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Edit Simulation' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Editar simulación' })).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Refine the current scenario with a tighter, production-grade form that keeps the important economic inputs in one surface.',
+        'Ajustá el escenario actual con un formulario más preciso que concentre los datos económicos importantes en una sola vista.',
       ),
     ).toBeInTheDocument()
   })
@@ -48,18 +49,18 @@ describe('EditSimulationPage', () => {
   it('renders editable simulation form fields', () => {
     renderPage()
 
-    expect(screen.getByLabelText('Simulation Name')).toBeInTheDocument()
-    expect(screen.getByLabelText('Location')).toBeInTheDocument()
-    expect(screen.getByLabelText('Energy Source')).toBeInTheDocument()
-    expect(screen.getByLabelText('System Size (kW)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Annual Energy Consumption (kWh)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Nombre de la simulación')).toBeInTheDocument()
+    expect(screen.getByLabelText('Ubicación')).toBeInTheDocument()
+    expect(screen.getByLabelText('Fuente de energía')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tamaño del sistema (kW)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Consumo energético anual (kWh)')).toBeInTheDocument()
   })
 
   it('renders financial input fields and save action', () => {
     renderPage()
 
-    expect(screen.getByLabelText('Incentives/Rebates ($)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Electricity Rate ($/kWh)')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Incentivos/bonificaciones ($)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tarifa eléctrica ($/kWh)')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Guardar cambios' })).toBeInTheDocument()
   })
 })

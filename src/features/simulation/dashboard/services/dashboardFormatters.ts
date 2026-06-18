@@ -16,10 +16,6 @@ export function formatPercent(value: number, digits = 1): string {
   return `${value.toFixed(digits)}%`
 }
 
-export function formatCurrency(value: number, digits = 3): string {
-  return `$${value.toFixed(digits)}`
-}
-
 export function formatKwhAxisTick(value: number): string {
   return `${value / 1000}k`
 }

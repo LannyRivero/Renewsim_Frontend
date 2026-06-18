@@ -1,8 +1,21 @@
-import { render, screen } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { NewSimulationPage } from './NewSimulationPage'
+import { resolveLocation, searchLocations } from '../services/simulationService'
+
+vi.mock('../services/simulationService', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../services/simulationService')>()
+  return {
+    ...actual,
+    resolveLocation: vi.fn(),
+    searchLocations: vi.fn(),
+  }
+})
+
+const mockedResolveLocation = vi.mocked(resolveLocation)
+const mockedSearchLocations = vi.mocked(searchLocations)
 
 function renderPage() {
   const queryClient = new QueryClient()
@@ -15,43 +28,112 @@ function renderPage() {
   )
 }
 
-describe('NewSimulationPage', () => {
-  it('renders description', () => {
-    renderPage()
+afterEach(() => {
+  vi.restoreAllMocks()
+  mockedResolveLocation.mockReset()
+  mockedSearchLocations.mockReset()
+})
 
-    expect(
-      screen.getByText('Configura tu simulación con parámetros específicos del proyecto.'),
-    ).toBeInTheDocument()
-  })
+describe('NewSimulationPage', () => {
+
 
   it('renders simulation setup section header', () => {
     renderPage()
 
-    expect(screen.getByText('Simulación Setup')).toBeInTheDocument()
+    expect(screen.getByText('Configuración de simulación')).toBeInTheDocument()
   })
 
   it('renders editable form fields', () => {
     renderPage()
 
     expect(screen.getByLabelText('Ubicación')).toBeInTheDocument()
-    expect(screen.getByLabelText('Tipo de Energía')).toBeInTheDocument()
-    expect(screen.getByLabelText('Tamaño del proyecto (kW/MW)')).toBeInTheDocument()
-    expect(screen.getByLabelText('Presupuesto (EUR)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tipo de energía')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tamaño del proyecto')).toBeInTheDocument()
+    expect(screen.getByLabelText('Presupuesto')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tamaño del proyecto')).toHaveValue(null)
+    expect(screen.getByLabelText('Presupuesto')).toHaveValue(null)
   })
 
-  it('renders read-only climate data fields', () => {
+  it('renders merged location section', () => {
     renderPage()
 
-    expect(screen.getByLabelText('Irradiancia (kWh/m2/día)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Velocidad del viento (m/s)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Hidrología (m3/s)')).toHaveAttribute('readonly')
-    expect(screen.getByLabelText('Irradiancia (kWh/m2/día)')).toHaveValue('-')
-    expect(screen.getByLabelText('Velocidad del viento (m/s)')).toHaveValue('-')
-    expect(screen.getByLabelText('Hidrología (m3/s)')).toHaveValue('3.0')
+    expect(screen.getByRole('button', { name: 'Usar mi ubicación' })).toBeInTheDocument()
+    expect(screen.getByText(/Ingresá una referencia legible para la ubicación/)).toBeInTheDocument()
+  })
+
+  it('does not render climate preview on this page', () => {
+    renderPage()
+
+    expect(screen.queryByText('Datos climáticos (solo lectura)')).not.toBeInTheDocument()
   })
 
   it('renders submit action', () => {
     renderPage()
-    expect(screen.getByRole('button', { name: 'Run simulation' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Ejecutar simulación' })).toBeInTheDocument()
+  })
+
+  it('fills location and coordinates when browser geolocation succeeds', async () => {
+    mockedResolveLocation.mockResolvedValueOnce({
+      name: 'Mendoza',
+      country: 'AR',
+      lat: -32.8895,
+      lon: -68.8458,
+    })
+
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      geolocation: {
+        getCurrentPosition: (success: PositionCallback) => {
+          success({
+            coords: {
+              latitude: -32.8895,
+              longitude: -68.8458,
+              accuracy: 1,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+              toJSON: () => ({}),
+            },
+            timestamp: Date.now(),
+            toJSON: () => ({}),
+          } as GeolocationPosition)
+        },
+      },
+    })
+
+    renderPage()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Usar mi ubicación' }))
+
+    await waitFor(() => {
+      expect(screen.getByLabelText('Ubicación')).toHaveValue('Mendoza, AR')
+    })
+
+    expect(mockedResolveLocation).toHaveBeenCalledWith(-32.8895, -68.8458)
+  })
+
+  it('shows backend suggestions while typing and applies the selected location', async () => {
+    mockedSearchLocations.mockResolvedValueOnce([
+      {
+        name: 'Mendoza',
+        country: 'AR',
+        lat: -32.8895,
+        lon: -68.8458,
+      },
+    ])
+
+    renderPage()
+
+    fireEvent.change(screen.getByLabelText('Ubicación'), { target: { value: 'Mend' } })
+
+    await waitFor(() => {
+      expect(mockedSearchLocations).toHaveBeenCalledWith('Mend')
+      expect(screen.getByRole('button', { name: 'Mendoza, AR' })).toBeInTheDocument()
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mendoza, AR' }))
+
+    expect(screen.getByLabelText('Ubicación')).toHaveValue('Mendoza, AR')
   })
 })

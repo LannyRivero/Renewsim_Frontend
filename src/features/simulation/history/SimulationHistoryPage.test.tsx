@@ -28,26 +28,26 @@ describe('SimulationHistoryPage', () => {
     mockedGetSimulationHistory.mockResolvedValueOnce([])
     renderPage()
 
-    expect(await screen.findByText('No simulations yet. Create your first simulation to see results here.')).toBeInTheDocument()
+    expect(await screen.findByText('Todavía no hay simulaciones. Creá tu primera simulación para ver resultados aquí.')).toBeInTheDocument()
   })
 
   it('renders heading and new simulation action', () => {
     mockedGetSimulationHistory.mockResolvedValueOnce([])
     renderPage()
 
-    expect(screen.getByRole('heading', { name: 'Simulation History' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: 'New Simulation' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Historial de simulaciones' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Nueva simulación' })).toBeInTheDocument()
   })
 
   it('renders history table columns', () => {
     mockedGetSimulationHistory.mockResolvedValueOnce([])
     renderPage()
 
-    expect(screen.getByRole('columnheader', { name: 'Date' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Energy Type' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Efficiency' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Fecha' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Tipo de energía' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Eficiencia' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'ROI' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Actions' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Acciones' })).toBeInTheDocument()
   })
 
   it('renders simulation rows and action buttons', async () => {
@@ -58,8 +58,8 @@ describe('SimulationHistoryPage', () => {
 
     expect(await screen.findByText('May 15, 2024')).toBeInTheDocument()
     expect(screen.getByText('Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('View simulation Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('Edit simulation Solar')).toBeInTheDocument()
-    expect(screen.getByLabelText('Delete simulation Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Ver simulación Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Editar simulación Solar')).toBeInTheDocument()
+    expect(screen.getByLabelText('Eliminar simulación Solar')).toBeInTheDocument()
   })
 })

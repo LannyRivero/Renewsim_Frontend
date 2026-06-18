@@ -7,7 +7,8 @@ import { useToastStore } from '@/stores/toastStore'
 
 const mockNavigate = vi.fn()
 const mockCreateSimulation = vi.fn()
-const mockGetClimateData = vi.fn()
+const mockGetSimulationById = vi.fn()
+const mockGetSimulationHistory = vi.fn()
 
 vi.mock('react-router-dom', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react-router-dom')>()
@@ -16,10 +17,8 @@ vi.mock('react-router-dom', async (importOriginal) => {
 
 vi.mock('../../services/simulationService', () => ({
   createSimulation: (...args: unknown[]) => mockCreateSimulation(...args),
-}))
-
-vi.mock('../../services/weatherService', () => ({
-  getClimateData: (...args: unknown[]) => mockGetClimateData(...args),
+  getSimulationById: (...args: unknown[]) => mockGetSimulationById(...args),
+  getSimulationHistory: (...args: unknown[]) => mockGetSimulationHistory(...args),
 }))
 
 function createWrapper() {
@@ -34,25 +33,18 @@ describe('useSimulationSubmission', () => {
   beforeEach(() => {
     mockNavigate.mockReset()
     mockCreateSimulation.mockReset()
-    mockGetClimateData.mockReset()
+    mockGetSimulationById.mockReset()
+    mockGetSimulationHistory.mockReset()
     useToastStore.setState({ toasts: [] })
   })
 
   it('returns validation message on invalid draft', () => {
-    const setResolvedClimate = vi.fn()
-    const setClimatePreview = vi.fn()
     const setLastResult = vi.fn()
     const setLastRunInput = vi.fn()
 
     const { result } = renderHook(
       () =>
         useSimulationSubmission({
-          draft: { location: '', energyType: 'solar', projectSize: 500, budget: 1000, energyConsumption: 1000 },
-          climateState: {
-            resolvedClimate: null,
-            setResolvedClimate,
-            setClimatePreview,
-          },
           simulationActions: {
             setLastResult,
             setLastRunInput,
@@ -64,35 +56,36 @@ describe('useSimulationSubmission', () => {
     const event = { preventDefault: vi.fn() } as unknown as FormEvent<HTMLFormElement>
 
     act(() => {
-      result.current.handleSubmit(event)
+      result.current.handleSubmit(
+        {
+          location: '',
+          energyType: 'solar',
+          projectSize: 500,
+          budget: 1000,
+          energyConsumption: 1000,
+          locationLatitude: 40.4168,
+          locationLongitude: -3.7038,
+        },
+        event,
+      )
     })
 
-    expect(result.current.formError).toBe('Location must be at least 2 characters')
+    expect(result.current.formError).toBe('La ubicación debe tener al menos 2 caracteres')
     expect(mockCreateSimulation).not.toHaveBeenCalled()
   })
 
-  it('submits using resolved climate without refetching', async () => {
-    const setResolvedClimate = vi.fn()
-    const setClimatePreview = vi.fn()
+  it('submits the backend payload and stores the form input', async () => {
     const setLastResult = vi.fn()
     const setLastRunInput = vi.fn()
-    const simulationResult = { id: 'sim-1', location: 'Madrid', energyType: 'solar' }
+    const simulationResult = { id: 'sim-1', name: 'SOLAR - Madrid', status: 'completed' }
 
     mockCreateSimulation.mockResolvedValueOnce(simulationResult)
+    mockGetSimulationById.mockResolvedValueOnce({ id: 'sim-1', location: 'Madrid', energyType: 'solar' })
+    mockGetSimulationHistory.mockResolvedValueOnce([])
 
     const { result } = renderHook(
       () =>
         useSimulationSubmission({
-          draft: { location: 'Madrid', energyType: 'solar', projectSize: 500, budget: 1000, energyConsumption: 1000 },
-          climateState: {
-            resolvedClimate: {
-              location: 'Madrid',
-              energyType: 'solar',
-              data: { irradiance: 5, windSpeed: 4, hydrology: 3 },
-            },
-            setResolvedClimate,
-            setClimatePreview,
-          },
           simulationActions: {
             setLastResult,
             setLastRunInput,
@@ -104,14 +97,44 @@ describe('useSimulationSubmission', () => {
     const event = { preventDefault: vi.fn() } as unknown as FormEvent<HTMLFormElement>
 
     await act(async () => {
-      result.current.handleSubmit(event)
+      result.current.handleSubmit(
+        {
+          location: 'Madrid',
+          energyType: 'solar',
+          projectSize: 500,
+          budget: 1000,
+          energyConsumption: 1000,
+          locationLatitude: 40.4168,
+          locationLongitude: -3.7038,
+        },
+        event,
+      )
       await Promise.resolve()
       await Promise.resolve()
     })
 
-    expect(mockGetClimateData).not.toHaveBeenCalled()
     expect(mockCreateSimulation).toHaveBeenCalledTimes(1)
+    expect(mockCreateSimulation.mock.calls[0]?.[0]).toEqual({
+      name: 'SOLAR - Madrid',
+      technology: 'solar',
+      installedCapacity: 500,
+      location: {
+        lat: 40.4168,
+        lon: -3.7038,
+      },
+    })
+    expect(mockGetSimulationById).toHaveBeenCalledWith('sim-1')
+    expect(mockGetSimulationHistory).toHaveBeenCalledTimes(1)
     expect(setLastResult).toHaveBeenCalledWith(simulationResult)
+    expect(setLastRunInput).toHaveBeenCalledWith({
+      location: 'Madrid',
+      energyType: 'solar',
+      projectSize: 500,
+      budget: 1000,
+      energyConsumption: 1000,
+      locationLatitude: 40.4168,
+      locationLongitude: -3.7038,
+    })
     expect(mockNavigate).toHaveBeenCalledWith('/simulador/resultados?id=sim-1')
   })
 })
