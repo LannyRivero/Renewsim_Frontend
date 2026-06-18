@@ -18,6 +18,10 @@ type DashboardSummaryApi = {
   targetVsActual?: unknown
 }
 
+type DashboardTargetUnit = DashboardData['targetVsActual'][number]['unit']
+
+const VALID_TARGET_UNITS: DashboardTargetUnit[] = ['kWh', 'kg', '%']
+
 function createEmptyDashboardData(): DashboardData {
   return {
     stats: [
@@ -40,6 +44,13 @@ function toFiniteNumber(value: unknown): number | null {
     return Number.isFinite(parsed) ? parsed : null
   }
   return null
+}
+
+function toNonEmptyString(value: unknown): string | null {
+  if (typeof value !== 'string') return null
+
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : null
 }
 
 function isDashboardSummaryApi(value: unknown): value is DashboardSummaryApi {
@@ -77,10 +88,16 @@ function mapEnergyBySource(value: unknown): DashboardData['energyBySource'] {
   return value
     .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
     .map((item) => {
-      const label = typeof item.label === 'string' && item.label.trim().length > 0 ? item.label.trim() : 'Other'
-      const kwh = toFiniteNumber(item.kwh) ?? 0
+      const label = toNonEmptyString(item.label)
+      const kwh = toFiniteNumber(item.kwh)
+
+      if (label === null || kwh === null) {
+        return null
+      }
+
       return { label, kwh }
     })
+    .filter((item): item is DashboardData['energyBySource'][number] => item !== null)
 }
 
 function mapEfficiencyMetrics(value: unknown): DashboardData['efficiencyMetrics'] {
@@ -89,11 +106,17 @@ function mapEfficiencyMetrics(value: unknown): DashboardData['efficiencyMetrics'
   return value
     .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
     .map((item) => {
-      const label = typeof item.label === 'string' ? item.label : ''
-      const metricValue = typeof item.value === 'string' ? item.value : ''
-      const hint = typeof item.hint === 'string' ? item.hint : ''
+      const label = toNonEmptyString(item.label)
+      const metricValue = toNonEmptyString(item.value)
+      const hint = toNonEmptyString(item.hint)
+
+      if (label === null || metricValue === null || hint === null) {
+        return null
+      }
+
       return { label, value: metricValue, hint }
     })
+    .filter((item): item is DashboardData['efficiencyMetrics'][number] => item !== null)
 }
 
 function mapTargetVsActual(value: unknown): DashboardData['targetVsActual'] {
@@ -102,12 +125,24 @@ function mapTargetVsActual(value: unknown): DashboardData['targetVsActual'] {
   return value
     .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
     .map((item) => {
-      const label = typeof item.label === 'string' ? item.label : ''
-      const actual = toFiniteNumber(item.actual) ?? 0
-      const target = toFiniteNumber(item.target) ?? 0
-      const unit = typeof item.unit === 'string' ? item.unit : ''
+      const label = toNonEmptyString(item.label)
+      const actual = toFiniteNumber(item.actual)
+      const target = toFiniteNumber(item.target)
+      const unit = toNonEmptyString(item.unit)
+
+      if (
+        label === null
+        || actual === null
+        || target === null
+        || unit === null
+        || !VALID_TARGET_UNITS.includes(unit as DashboardTargetUnit)
+      ) {
+        return null
+      }
+
       return { label, actual, target, unit }
     })
+    .filter((item): item is DashboardData['targetVsActual'][number] => item !== null)
 }
 
 function toStatsCards(stats: DashboardSummaryApi['stats']): DashboardData['stats'] {
