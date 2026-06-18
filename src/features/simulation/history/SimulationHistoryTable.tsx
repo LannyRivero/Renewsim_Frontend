@@ -55,7 +55,7 @@ export function SimulationHistoryTable({
                     </Link>
                     <SimulationActionButton
                       type="button"
-                      variant="ghost"
+                      variant="soft"
                       aria-label={`Eliminar simulación ${row.energyType}`}
                       onClick={() => onDelete(row.id)}
                       disabled={isDeleting}
