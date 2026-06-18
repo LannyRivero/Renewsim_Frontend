@@ -20,7 +20,7 @@ const mockedGetAllTechnologies = vi.mocked(getAllTechnologies)
 
 beforeEach(() => {
   mockedGetSimulationById.mockReset()
-  mockedGetSimulationById.mockResolvedValue(null)
+  mockedGetSimulationById.mockResolvedValue(null as never)
   mockedGetAllTechnologies.mockReset()
   mockedGetAllTechnologies.mockResolvedValue({
     items: [

@@ -22,6 +22,7 @@ beforeEach(() => {
       energyType: 'solar',
       projectSize: 500,
       budget: 1_000_000,
+      energyConsumption: 1_000,
     },
     lastResult: {
       id: 'sim-edit-1',
