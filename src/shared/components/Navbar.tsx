@@ -1,5 +1,5 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useState, type ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 import { Logo } from './Logo'
 
 export interface NavLink {
@@ -10,7 +10,7 @@ export interface NavLink {
 
 interface NavbarProps {
   links?: NavLink[]
-  renderActions?: (isMobile: boolean) => ReactNode
+  renderActions?: (isMobile: boolean, onNavigate?: () => void) => ReactNode
 }
 
 const DEFAULT_LINKS: NavLink[] = [
@@ -20,17 +20,19 @@ const DEFAULT_LINKS: NavLink[] = [
   { label: 'Simulador', href: '#' },
 ]
 
-function DefaultActions(isMobile: boolean) {
+function DefaultActions(isMobile: boolean, onNavigate?: () => void) {
   return (
     <div className={`flex ${isMobile ? 'flex-col' : 'items-center'} gap-2`}>
       <Link
         to="/iniciar-sesion"
+        onClick={onNavigate}
         className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'text-center' : ''}`}
       >
         Iniciar sesión
       </Link>
       <Link
         to="/registro"
+        onClick={onNavigate}
         className={`rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95 ${isMobile ? 'text-center' : ''}`}
       >
         Crear cuenta
@@ -41,11 +43,6 @@ function DefaultActions(isMobile: boolean) {
 
 export function Navbar({ links = DEFAULT_LINKS, renderActions = DefaultActions }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { pathname } = useLocation()
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false)
-  }, [pathname])
 
   function renderLink(link: NavLink, onNavigate?: () => void) {
     const className = link.active
@@ -104,7 +101,7 @@ export function Navbar({ links = DEFAULT_LINKS, renderActions = DefaultActions }
                 {links.map((link) => renderLink(link, () => setIsMobileMenuOpen(false)))}
               </div>
               <div className="border-t border-outline-variant pt-4 dark:border-white/10">
-                {renderActions(true)}
+                {renderActions(true, () => setIsMobileMenuOpen(false))}
               </div>
             </div>
           </div>

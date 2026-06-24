@@ -56,10 +56,11 @@ const DEFAULT_LINKS: NavLink[] = [
 interface NavActionsProps {
   isDark: boolean
   isMobile: boolean
+  onNavigate?: () => void
   onToggle: () => void
 }
 
-function NavActions({ isDark, isMobile, onToggle }: NavActionsProps) {
+function NavActions({ isDark, isMobile, onNavigate, onToggle }: NavActionsProps) {
   const navigate = useNavigate()
   const accessToken = useAuthStore((state) => state.accessToken) ?? localStorage.getItem('renewsim-token')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -80,6 +81,7 @@ function NavActions({ isDark, isMobile, onToggle }: NavActionsProps) {
         <>
           <Link
             to="/simulador/configuracion"
+            onClick={onNavigate}
             className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'justify-center text-center' : ''}`}
           >
             {displayName ? `Hola, ${displayName}` : 'Perfil'}
@@ -96,12 +98,14 @@ function NavActions({ isDark, isMobile, onToggle }: NavActionsProps) {
         <>
           <Link
             to="/iniciar-sesion"
+            onClick={onNavigate}
             className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'text-center' : ''}`}
           >
             Iniciar sesión
           </Link>
           <Link
             to="/registro"
+            onClick={onNavigate}
             className={`rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95 ${isMobile ? 'text-center' : ''}`}
           >
             Crear cuenta
@@ -119,7 +123,7 @@ export function RootLayout() {
 
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-background-dark font-display text-on-surface dark:text-content-dark">
-      <Navbar links={links} renderActions={(isMobile) => <NavActions isDark={isDark} isMobile={isMobile} onToggle={toggle} />} />
+      <Navbar links={links} renderActions={(isMobile, onNavigate) => <NavActions isDark={isDark} isMobile={isMobile} onNavigate={onNavigate} onToggle={toggle} />} />
       <main className="flex-grow">
         <Outlet />
       </main>
