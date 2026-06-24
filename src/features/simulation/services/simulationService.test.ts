@@ -71,6 +71,36 @@ describe('simulationService.createSimulation', () => {
     expect(result[0]?.id).toBe('6')
   })
 
+  it('reads paginated history from backend content field', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: {
+        content: [
+          {
+            id: 72,
+            technology: 'solar',
+            roi: 19.83,
+            createdAt: '2026-06-24T11:51:52.565794',
+          },
+        ],
+        page: 0,
+        size: 20,
+        totalElements: 1,
+        totalPages: 1,
+        last: true,
+      },
+    })
+
+    const result = await getSimulationHistory()
+
+    expect(mockedGet).toHaveBeenCalledWith('/simulations/user')
+    expect(result).toHaveLength(1)
+    expect(result[0]).toMatchObject({
+      id: '72',
+      energyType: 'solar',
+      roi: '20%',
+    })
+  })
+
   it('falls back to /simulations/history when /simulations/user is missing', async () => {
     mockedGet
       .mockRejectedValueOnce({ response: { status: 404 } })

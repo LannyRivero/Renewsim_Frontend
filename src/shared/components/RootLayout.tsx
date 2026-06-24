@@ -9,36 +9,48 @@ import { readDisplayName } from '@/shared/utils/authToken'
 
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
-    { label: 'Home', href: '/', active: true },
-    { label: 'How It Works', href: '/how-it-works' },
-    { label: 'About', href: '/about' },
-    { label: 'Simulator', href: '/simulador' },
+    { label: 'Inicio', href: '/', active: true },
+    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Acerca de', href: '/acerca-de' },
+    { label: 'Simulador', href: '/simulador' },
   ],
   '/how-it-works': [
-    { label: 'Home', href: '/' },
-    { label: 'How It Works', href: '/how-it-works', active: true },
-    { label: 'About', href: '/about' },
-    { label: 'Simulator', href: '/simulador' },
+    { label: 'Inicio', href: '/' },
+    { label: 'Como funciona', href: '/como-funciona', active: true },
+    { label: 'Acerca de', href: '/acerca-de' },
+    { label: 'Simulador', href: '/simulador' },
+  ],
+  '/como-funciona': [
+    { label: 'Inicio', href: '/' },
+    { label: 'Como funciona', href: '/como-funciona', active: true },
+    { label: 'Acerca de', href: '/acerca-de' },
+    { label: 'Simulador', href: '/simulador' },
   ],
   '/about': [
-    { label: 'Home', href: '/' },
-    { label: 'How It Works', href: '/how-it-works' },
-    { label: 'About', href: '/about', active: true },
-    { label: 'Simulator', href: '/simulador' },
+    { label: 'Inicio', href: '/' },
+    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Acerca de', href: '/acerca-de', active: true },
+    { label: 'Simulador', href: '/simulador' },
+  ],
+  '/acerca-de': [
+    { label: 'Inicio', href: '/' },
+    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Acerca de', href: '/acerca-de', active: true },
+    { label: 'Simulador', href: '/simulador' },
   ],
   '/simulador': [
-    { label: 'Home', href: '/' },
-    { label: 'How It Works', href: '/how-it-works' },
-    { label: 'About', href: '/about' },
-    { label: 'Simulator', href: '/simulador', active: true },
+    { label: 'Inicio', href: '/' },
+    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Acerca de', href: '/acerca-de' },
+    { label: 'Simulador', href: '/simulador', active: true },
   ],
 }
 
 const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'How It Works', href: '/how-it-works' },
-  { label: 'About', href: '/about' },
-  { label: 'Simulator', href: '/simulador' },
+  { label: 'Inicio', href: '/' },
+  { label: 'Como funciona', href: '/como-funciona' },
+  { label: 'Acerca de', href: '/acerca-de' },
+  { label: 'Simulador', href: '/simulador' },
 ]
 
 interface NavActionsProps {
@@ -67,31 +79,31 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
         <>
           <Link
             to="/simulador/configuracion"
-            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+            className="hidden rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 sm:inline-flex"
           >
-            {displayName ? `Hi, ${displayName}` : 'Profile'}
+            {displayName ? `Hola, ${displayName}` : 'Perfil'}
           </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+            className="rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95"
           >
-            Logout
+            Cerrar sesion
           </button>
         </>
       ) : (
         <>
           <Link
             to="/login"
-            className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
+            className="hidden rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 sm:inline-flex"
           >
-            Sign In
+            Iniciar sesion
           </Link>
           <Link
             to="/register"
-            className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all"
+            className="rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95"
           >
-            Sign Up
+            Crear cuenta
           </Link>
         </>
       )}
