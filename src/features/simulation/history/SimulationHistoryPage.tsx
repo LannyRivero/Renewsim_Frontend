@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getSimulationHistory } from '../services/simulationService'
 import {
   SimulationActionButton,
+  SimulationPageContent,
   SimulationPageShell,
   SimulationSectionHeader,
 } from '@/shared/components'
@@ -22,7 +23,7 @@ export function SimulationHistoryPage() {
 
   return (
     <SimulationPageShell>
-      <div className="flex flex-col gap-6 lg:h-full">
+      <SimulationPageContent>
         <SimulationSectionHeader
           eyebrow="Archivo de simulaciones"
           eyebrowIcon={<Clock3 className="h-3.5 w-3.5" />}
@@ -45,7 +46,7 @@ export function SimulationHistoryPage() {
           isDeleting={deleteMutation.isPending}
           onDelete={(simulationId) => deleteMutation.mutate(simulationId)}
         />
-      </div>
+      </SimulationPageContent>
     </SimulationPageShell>
   )
 }

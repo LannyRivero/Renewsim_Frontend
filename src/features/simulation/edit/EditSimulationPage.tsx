@@ -6,7 +6,7 @@ import { useSimulationStore } from '@/stores/simulationStore'
 import { editSimulationSchema } from '../schemas/simulationSchema'
 import type { EditSimulationValues } from '../schemas/simulationSchema'
 import { getSimulationById, updateSimulationById } from '../services/simulationService'
-import { SimulationPageShell, SimulationSectionHeader } from '@/shared/components'
+import { SimulationPageContent, SimulationPageShell, SimulationSectionHeader } from '@/shared/components'
 import { EditSimulationForm } from './EditSimulationForm'
 import {
   buildEditSimulationFormDefaults,
@@ -96,7 +96,7 @@ export function EditSimulationPage() {
 
   return (
     <SimulationPageShell>
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
+      <SimulationPageContent className="mx-auto w-full max-w-3xl">
         <SimulationSectionHeader
           eyebrow="Editor de escenarios"
           eyebrowIcon={<FilePenLine className="h-3.5 w-3.5" />}
@@ -108,7 +108,7 @@ export function EditSimulationPage() {
           isSubmitting={updateMutation.isPending}
           onSubmit={handleSubmit}
         />
-      </div>
+      </SimulationPageContent>
     </SimulationPageShell>
   )
 }

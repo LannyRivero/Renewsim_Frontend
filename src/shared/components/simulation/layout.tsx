@@ -7,6 +7,10 @@ interface SimulationPageShellProps {
   contentClassName?: string
 }
 
+interface SimulationPageContentProps extends ComponentPropsWithoutRef<'div'> {
+  spacing?: 'compact' | 'comfortable'
+}
+
 export function SimulationPageShell({ children, className, contentClassName }: SimulationPageShellProps) {
   return (
     <div className={cn('w-full py-2 sm:py-3 lg:h-[calc(100vh-4.5rem)] lg:py-0', className)}>
@@ -22,6 +26,23 @@ export function SimulationPageShell({ children, className, contentClassName }: S
         <div className="relative h-full">{children}</div>
       </section>
     </div>
+  )
+}
+
+export function SimulationPageContent({
+  className,
+  spacing = 'comfortable',
+  ...props
+}: SimulationPageContentProps) {
+  return (
+    <div
+      className={cn(
+        'flex min-h-0 flex-col lg:h-full',
+        spacing === 'compact' ? 'gap-4' : 'gap-6',
+        className,
+      )}
+      {...props}
+    />
   )
 }
 
@@ -72,13 +93,13 @@ export function SimulationSectionHeader({
     <div className={cn('flex flex-col gap-3 md:flex-row md:items-end md:justify-between', className)}>
       <div>
         {eyebrow ? (
-          <p className="inline-flex items-center gap-2 rounded-full border border-[#d2dbd1] bg-[#eef3ed] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 shadow-sm dark:border-white/12 dark:bg-white/8 dark:text-content-dark/72">
+          <p className="inline-flex min-h-7 items-center gap-2 rounded-full border border-[#d2dbd1] bg-[#eef3ed] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-500 shadow-sm dark:border-white/12 dark:bg-white/8 dark:text-content-dark/72">
             {eyebrowIcon}
             {eyebrow}
           </p>
         ) : null}
-        {title ? <h1 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark lg:text-[2rem]">{title}</h1> : null}
-        {description ? <p className="mt-1.5 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">{description}</p> : null}
+        {title ? <h1 className="mt-3 text-2xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark lg:text-[2rem]">{title}</h1> : null}
+        {description ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">{description}</p> : null}
       </div>
       {actions ? <div>{actions}</div> : null}
     </div>

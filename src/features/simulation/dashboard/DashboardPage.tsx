@@ -4,7 +4,7 @@ import { StatsGrid } from './components/StatsGrid'
 import { EnergyBarChart } from './components/EnergyBarChart'
 import { DistributionDonut } from './components/DistributionDonut'
 import { PerformanceSnapshot } from './components/PerformanceSnapshot'
-import { SimulationPageShell, SimulationSectionHeader, SimulationStatusBadge } from '@/shared/components'
+import { SimulationPageContent, SimulationPageShell, SimulationSectionHeader, SimulationStatusBadge } from '@/shared/components'
 import { getDashboardData } from './services/dashboardService'
 import type { DashboardData } from './services/dashboardTypes'
 
@@ -35,11 +35,12 @@ export function DashboardPage() {
   const distribution = data?.distribution ?? EMPTY_DASHBOARD_DATA.distribution
 
   return (
-    <SimulationPageShell contentClassName="p-4 sm:p-4 lg:h-full lg:p-4">
-      <div className="flex flex-col gap-1.5 lg:h-full">
+    <SimulationPageShell contentClassName="px-4 py-4 sm:px-5 sm:py-5 lg:h-full lg:px-5 lg:py-5">
+      <SimulationPageContent spacing="compact">
         <SimulationSectionHeader
           eyebrow="Comando de Operaciones"
           eyebrowIcon={<Activity className="h-3.5 w-3.5" />}
+          title="Panel operativo"
           description="Salud de la generación, mezcla de fuentes y rendimiento objetivo en una vista operativa."
           className="gap-2 md:items-end"
         />
@@ -55,12 +56,12 @@ export function DashboardPage() {
           </div>
         ) : null}
 
-        <div className="flex min-h-0 flex-col">
-          <div className="mb-0.5">
+        <div className="flex min-h-0 flex-col gap-3">
+          <div>
             <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/70">
               Resumen de Energía
             </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-content-dark/65 lg:hidden">
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">
               Vista consolidada por fuente de generación y peso de distribución.
             </p>
           </div>
@@ -79,7 +80,7 @@ export function DashboardPage() {
           metrics={efficiencyMetrics}
           targetVsActual={targetVsActual}
         />
-      </div>
+      </SimulationPageContent>
     </SimulationPageShell>
   )
 }

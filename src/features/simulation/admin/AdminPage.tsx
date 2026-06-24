@@ -8,6 +8,7 @@ import { AdminUsersTable } from './components/AdminUsersTable'
 import {
   SimulationCard,
   SimulationFiltersToolbar,
+  SimulationPageContent,
   SimulationPageShell,
   SimulationStateMessage,
 } from '@/shared/components'
@@ -53,7 +54,7 @@ export function AdminPage() {
 
   return (
     <SimulationPageShell>
-        <div className="flex flex-col gap-6">
+        <SimulationPageContent>
         <AdminHeader isFetching={isFetching} onRefresh={() => refetch()} />
 
         <AdminStatsCards
@@ -105,7 +106,7 @@ export function AdminPage() {
           onPrev={handlePrevPage}
           onNext={handleNextPage}
         />
-      </div>
+      </SimulationPageContent>
 
       <AdminDeleteDialog
         userToDelete={userToDelete}

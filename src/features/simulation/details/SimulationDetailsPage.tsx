@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom'
 import { getSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
 import {
+  SimulationPageContent,
   SimulationPageShell,
   SimulationSectionHeader,
   SimulationStateMessage,
@@ -42,7 +43,7 @@ export function SimulationDetailsPage() {
 
   return (
     <SimulationPageShell>
-      <div className="flex flex-col gap-6">
+      <SimulationPageContent>
         <SimulationSectionHeader
           eyebrow="Inteligencia de simulación"
           eyebrowIcon={<BarChart3 className="h-3.5 w-3.5" />}
@@ -83,7 +84,7 @@ export function SimulationDetailsPage() {
           />
           <EducationalConclusionsCard />
         </div>
-      </div>
+      </SimulationPageContent>
     </SimulationPageShell>
   )
 }

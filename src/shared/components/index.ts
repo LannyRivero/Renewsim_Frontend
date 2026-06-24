@@ -13,6 +13,7 @@ export { RouteSkeleton } from './RouteSkeleton'
 export { FormTooltip } from './FormTooltip'
 export {
   SimulationPageShell,
+  SimulationPageContent,
   SimulationCard,
   SimulationSectionHeader,
   SimulationStatusBadge,

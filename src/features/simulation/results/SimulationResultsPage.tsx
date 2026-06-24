@@ -5,6 +5,7 @@ import { getAllTechnologies } from '../technologies/services/technologyService'
 import { useSimulationStore } from '@/stores/simulationStore'
 import {
   SimulationActionButton,
+  SimulationPageContent,
   SimulationPageShell,
   SimulationSectionHeader,
 } from '@/shared/components'
@@ -48,7 +49,7 @@ export function SimulationResultsPage() {
 
   return (
     <SimulationPageShell className="lg:h-auto" contentClassName="px-3 pt-4 pb-4 sm:px-4 lg:h-auto lg:p-5">
-      <div className="flex flex-col gap-5">
+      <SimulationPageContent spacing="compact" className="lg:h-auto">
         <SimulationSectionHeader
           eyebrow="Resultados de simulación"
           title="Resultado operativo"
@@ -96,7 +97,7 @@ export function SimulationResultsPage() {
             conclusion={viewModel.conclusion}
           />
         </div>
-      </div>
+      </SimulationPageContent>
     </SimulationPageShell>
   )
 }

@@ -1,5 +1,6 @@
 export {
   SimulationPageShell,
+  SimulationPageContent,
   SimulationCard,
   SimulationSectionHeader,
   SimulationToolbar,
