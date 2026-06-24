@@ -55,10 +55,11 @@ const DEFAULT_LINKS: NavLink[] = [
 
 interface NavActionsProps {
   isDark: boolean
+  isMobile: boolean
   onToggle: () => void
 }
 
-function NavActions({ isDark, onToggle }: NavActionsProps) {
+function NavActions({ isDark, isMobile, onToggle }: NavActionsProps) {
   const navigate = useNavigate()
   const accessToken = useAuthStore((state) => state.accessToken) ?? localStorage.getItem('renewsim-token')
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
@@ -68,25 +69,25 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
   function handleLogout() {
     useAuthStore.getState().clearAuth()
     localStorage.removeItem('renewsim-token')
-    navigate('/login')
+    navigate('/iniciar-sesion')
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={`flex gap-2 ${isMobile ? 'flex-col items-stretch' : 'items-center'}`}>
       <LocaleSwitcher />
       <DarkModeToggle isDark={isDark} onToggle={onToggle} />
       {isAuthenticated ? (
         <>
           <Link
             to="/simulador/configuracion"
-            className="hidden rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 sm:inline-flex"
+            className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'justify-center text-center' : ''}`}
           >
             {displayName ? `Hola, ${displayName}` : 'Perfil'}
           </Link>
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95"
+            className={`rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95 ${isMobile ? 'text-center' : ''}`}
           >
             Cerrar sesión
           </button>
@@ -94,14 +95,14 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
       ) : (
         <>
           <Link
-            to="/login"
-            className="hidden rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 sm:inline-flex"
+            to="/iniciar-sesion"
+            className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'text-center' : ''}`}
           >
             Iniciar sesión
           </Link>
           <Link
-            to="/register"
-            className="rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95"
+            to="/registro"
+            className={`rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95 ${isMobile ? 'text-center' : ''}`}
           >
             Crear cuenta
           </Link>
@@ -118,7 +119,7 @@ export function RootLayout() {
 
   return (
     <div className="flex flex-col min-h-screen bg-surface dark:bg-background-dark font-display text-on-surface dark:text-content-dark">
-      <Navbar links={links} cta={<NavActions isDark={isDark} onToggle={toggle} />} />
+      <Navbar links={links} renderActions={(isMobile) => <NavActions isDark={isDark} isMobile={isMobile} onToggle={toggle} />} />
       <main className="flex-grow">
         <Outlet />
       </main>

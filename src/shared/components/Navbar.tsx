@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState, type ReactNode } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Logo } from './Logo'
 
 export interface NavLink {
@@ -10,7 +10,7 @@ export interface NavLink {
 
 interface NavbarProps {
   links?: NavLink[]
-  cta?: ReactNode
+  renderActions?: (isMobile: boolean) => ReactNode
 }
 
 const DEFAULT_LINKS: NavLink[] = [
@@ -20,27 +20,32 @@ const DEFAULT_LINKS: NavLink[] = [
   { label: 'Simulador', href: '#' },
 ]
 
-function DefaultCta() {
+function DefaultActions(isMobile: boolean) {
   return (
-    <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors cursor-pointer"
-        >
-          Iniciar sesión
-        </button>
-        <button
-          type="button"
-          className="px-4 py-2 rounded-lg text-sm font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer"
-        >
-          Crear cuenta
-        </button>
-      </div>
+    <div className={`flex ${isMobile ? 'flex-col' : 'items-center'} gap-2`}>
+      <Link
+        to="/iniciar-sesion"
+        className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'text-center' : ''}`}
+      >
+        Iniciar sesión
+      </Link>
+      <Link
+        to="/registro"
+        className={`rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95 ${isMobile ? 'text-center' : ''}`}
+      >
+        Crear cuenta
+      </Link>
+    </div>
   )
 }
 
-export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarProps) {
+export function Navbar({ links = DEFAULT_LINKS, renderActions = DefaultActions }: NavbarProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
 
   function renderLink(link: NavLink, onNavigate?: () => void) {
     const className = link.active
@@ -75,7 +80,7 @@ export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarPr
           </div>
 
           <div className="hidden md:block">
-            {cta}
+            {renderActions(false)}
           </div>
 
           <button
@@ -99,7 +104,7 @@ export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarPr
                 {links.map((link) => renderLink(link, () => setIsMobileMenuOpen(false)))}
               </div>
               <div className="border-t border-outline-variant pt-4 dark:border-white/10">
-                {cta}
+                {renderActions(true)}
               </div>
             </div>
           </div>

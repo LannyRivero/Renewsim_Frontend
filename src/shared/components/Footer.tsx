@@ -8,7 +8,7 @@ export function Footer() {
           </p>
           <div className="flex items-center gap-6">
             {[
-              { label: 'Terminos del servicio', href: '#' },
+              { label: 'Términos del servicio', href: '#' },
               { label: 'Privacidad', href: '#' },
               { label: 'Contacto', href: '#' },
             ].map(({ label, href }) => (
