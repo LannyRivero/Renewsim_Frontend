@@ -4,13 +4,13 @@ export function Footer() {
       <div className="container mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-sm text-on-surface-variant dark:text-content-dark/40">
-            © 2024 RenewSim. All rights reserved.
+            © 2024 RenewSim. Todos los derechos reservados.
           </p>
           <div className="flex items-center gap-6">
             {[
-              { label: 'Terms of Service', href: '#' },
-              { label: 'Privacy Policy', href: '#' },
-              { label: 'Contact', href: '#' },
+              { label: 'Terminos del servicio', href: '#' },
+              { label: 'Privacidad', href: '#' },
+              { label: 'Contacto', href: '#' },
             ].map(({ label, href }) => (
               <a
                 key={label}

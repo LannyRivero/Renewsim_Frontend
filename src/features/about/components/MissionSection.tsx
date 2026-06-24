@@ -1,14 +1,26 @@
 export function MissionSection() {
   return (
-    <section>
-      <p className="text-lg text-on-surface-variant dark:text-content-dark/60 leading-relaxed">
-        At RenewSim, our mission is to empower individuals and communities to
-        make informed decisions about clean energy through interactive
-        simulations and AI-powered recommendations. We envision a future where
-        the transition to sustainable energy sources is accessible and
-        understandable for everyone, driving positive change toward a healthier
-        planet.
-      </p>
+    <section className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:items-start">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
+          Mision
+        </p>
+        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
+          Traducir complejidad tecnica en claridad para decidir.
+        </h2>
+      </div>
+
+      <div className="rounded-[1.8rem] border border-[#d5ddd4] bg-white/76 p-6 shadow-[0_22px_52px_-42px_rgba(15,23,42,0.36)] dark:border-white/10 dark:bg-white/[0.04]">
+        <p className="text-base leading-8 text-slate-700 dark:text-content-dark/64">
+          No buscamos solo mostrar simulaciones. Buscamos que una persona o un equipo
+          pueda comparar fuentes renovables, entender implicaciones operativas y ver
+          el impacto economico sin perderse en ruido visual ni en tecnicismos mal explicados.
+        </p>
+        <p className="mt-5 text-base leading-8 text-slate-700 dark:text-content-dark/64">
+          La vision es simple: que la transicion energetica se apoye en herramientas
+          mas sobrias, mas utiles y mas defendibles frente a negocio, operaciones y direccion.
+        </p>
+      </div>
     </section>
   )
 }

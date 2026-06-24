@@ -23,10 +23,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       const { token } = await login({ email, password })
       onSuccess(token)
     } catch {
-      setServerError('Invalid credentials. Please try again.')
+      setServerError('Credenciales invalidas. Intenta nuevamente.')
       useToastStore.getState().pushToast({
-        title: 'Authentication Error',
-        description: 'Invalid credentials. Please try again.',
+        title: 'Error de autenticacion',
+        description: 'Credenciales invalidas. Intenta nuevamente.',
         variant: 'error',
       })
     } finally {
@@ -46,7 +46,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          placeholder="Ingresa tu email"
           className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
         />
       </div>
@@ -54,7 +54,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       {/* Password */}
       <PasswordInput
         id="login-password"
-        label="Password"
+        label="Contrasena"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -72,15 +72,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         type="submit"
         disabled={isLoading}
         className="mt-2 h-12 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-        aria-label={isLoading ? 'Signing in...' : 'Sign in'}
+        aria-label={isLoading ? 'Iniciando sesion...' : 'Iniciar sesion'}
       >
-        {isLoading ? 'Signing in...' : 'Sign in'}
+        {isLoading ? 'Iniciando sesion...' : 'Iniciar sesion'}
       </button>
 
       <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
-        Don't have an account?{' '}
-        <Link to="/register" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
-          Sign up
+        No tenes cuenta?{' '}
+        <Link to="/registro" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
+          Crear cuenta
         </Link>
       </p>
     </form>

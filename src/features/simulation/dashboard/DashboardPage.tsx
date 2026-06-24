@@ -55,12 +55,7 @@ export function DashboardPage() {
           </div>
         ) : null}
 
-        <PerformanceSnapshot
-          metrics={efficiencyMetrics}
-          targetVsActual={targetVsActual}
-        />
-
-        <div className="flex min-h-0 flex-[1.15] flex-col">
+        <div className="flex min-h-0 flex-col">
           <div className="mb-0.5">
             <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/70">
               Resumen de Energía
@@ -70,7 +65,7 @@ export function DashboardPage() {
             </p>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.75fr)_minmax(320px,1fr)]">
+          <div className="grid min-h-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.75fr)_minmax(320px,1fr)]">
             <div className="min-h-0">
               <EnergyBarChart data={energyBySource} />
             </div>
@@ -79,6 +74,11 @@ export function DashboardPage() {
             </div>
           </div>
         </div>
+
+        <PerformanceSnapshot
+          metrics={efficiencyMetrics}
+          targetVsActual={targetVsActual}
+        />
       </div>
     </SimulationPageShell>
   )

@@ -6,64 +6,82 @@ interface Feature {
 
 const FEATURES: Feature[] = [
   {
-    icon: 'settings_suggest',
-    title: 'Custom simulation',
-    description:
-      'Adapt simulations to your needs and specific scenarios to obtain accurate results.',
+    icon: 'account_tree',
+    title: 'Escenarios comparables',
+    description: 'Contrasta alternativas tecnologicas bajo la misma logica para decidir con menos ruido y mas criterio.',
   },
   {
-    icon: 'bar_chart',
-    title: 'Visual comparison',
-    description:
-      'Compare performance, costs, and environmental impact across different energy sources.',
+    icon: 'finance_mode',
+    title: 'Lectura financiera clara',
+    description: 'Resume retorno, ahorro y exposicion economica con un lenguaje util para negocio y direccion.',
   },
   {
-    icon: 'psychology',
-    title: 'Predictive AI',
-    description:
-      'Smart recommendations based on predictive analysis to optimize your decisions.',
+    icon: 'monitoring',
+    title: 'Analitica accionable',
+    description: 'Convierte datos tecnicos en señales entendibles para priorizar inversiones y planes energeticos.',
   },
   {
-    icon: 'eco',
-    title: 'Environmental education',
-    description:
-      'Learn about the environmental impact of clean energy in an interactive way.',
+    icon: 'verified',
+    title: 'Presentacion sobria',
+    description: 'Interfaz limpia, consistente y preparada para mostrar resultados con confianza frente a stakeholders.',
   },
+]
+
+const OPERATING_PRINCIPLES = [
+  'Menos adornos, mas claridad ejecutiva',
+  'Comparacion tecnica y financiera en una sola lectura',
+  'Preparado para equipos que necesitan justificar decisiones',
 ]
 
 function FeatureCard({ icon, title, description }: Feature) {
   return (
-    <div className="card rounded-2xl p-7 flex flex-col gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
-      <div className="p-3 w-fit rounded-xl bg-primary-container/12 dark:bg-primary-container/15">
-        <span className="material-symbols-outlined text-primary dark:text-primary-inverse text-2xl">{icon}</span>
+    <div className="rounded-[1.6rem] border border-[#d5ddd4] bg-[linear-gradient(180deg,rgba(255,255,255,0.86)_0%,rgba(246,249,245,0.95)_100%)] p-6 shadow-[0_20px_44px_-38px_rgba(15,23,42,0.38)] transition-all duration-200 hover:-translate-y-0.5 dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.025)_100%)]">
+      <div className="flex size-12 items-center justify-center rounded-2xl bg-[#e9f1eb] dark:bg-emerald-400/10">
+        <span className="material-symbols-outlined text-2xl text-[#1a6a45] dark:text-emerald-300">{icon}</span>
       </div>
-      <h3 className="text-base font-bold text-on-surface dark:text-content-dark">{title}</h3>
-      <p className="text-sm leading-relaxed text-on-surface-variant dark:text-content-dark/55">{description}</p>
+      <h3 className="mt-5 text-lg font-black tracking-[-0.03em] text-slate-950 dark:text-content-dark">{title}</h3>
+      <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-content-dark/60">{description}</p>
     </div>
   )
 }
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 bg-surface-container-low dark:bg-white/2 border-y border-outline-variant dark:border-white/6">
+    <section className="border-t border-[#d9e1d8] py-24 dark:border-white/8">
       <div className="container mx-auto px-6">
-        <div className="max-w-2xl mb-14">
-          <p className="text-xs font-semibold tracking-widest uppercase text-primary dark:text-primary-inverse mb-3">
-            Capabilities
-          </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-            Why is RenewSim different?
-          </h2>
-          <p className="mt-4 text-base text-on-surface-variant dark:text-content-dark/55">
-            A platform designed so professionals and companies can make
-            energy decisions with confidence and precision.
-          </p>
-        </div>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6a45] dark:text-emerald-300">
+              Capacidades clave
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
+              Una home con presencia enterprise necesita comunicar control, no gritar.
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 dark:text-content-dark/62">
+              RenewSim tiene que verse como un producto serio: menos landing generica,
+              mas estructura, jerarquia y confianza visual. Esta base ya empuja esa direccion.
+            </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {FEATURES.map((feature) => (
-            <FeatureCard key={feature.title} {...feature} />
-          ))}
+            <div className="mt-8 rounded-[1.7rem] border border-[#d5ddd4] bg-white/75 p-5 shadow-[0_24px_54px_-42px_rgba(15,23,42,0.34)] dark:border-white/10 dark:bg-white/[0.035]">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/55">
+                Principios de producto
+              </p>
+              <div className="mt-4 space-y-3">
+                {OPERATING_PRINCIPLES.map((item) => (
+                  <div key={item} className="flex items-start gap-3 rounded-2xl bg-[#f6f9f5] px-4 py-3 dark:bg-white/[0.03]">
+                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-[#1a6a45] dark:text-emerald-300">done</span>
+                    <p className="text-sm leading-6 text-slate-700 dark:text-content-dark/65">{item}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            {FEATURES.map((feature) => (
+              <FeatureCard key={feature.title} {...feature} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

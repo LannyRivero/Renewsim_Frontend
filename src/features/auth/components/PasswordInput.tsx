@@ -11,10 +11,10 @@ interface PasswordInputProps {
 
 export function PasswordInput({
   id,
-  label = 'Password',
+  label = 'Contrasena',
   value,
   onChange,
-  placeholder = 'Enter your password',
+  placeholder = 'Ingresa tu contrasena',
   errors = [],
 }: PasswordInputProps) {
   const [visible, setVisible] = useState(false)
@@ -40,7 +40,7 @@ export function PasswordInput({
         />
         <button
           type="button"
-          aria-label={visible ? 'Hide password' : 'Show password'}
+          aria-label={visible ? 'Ocultar contrasena' : 'Mostrar contrasena'}
           onClick={() => setVisible((v) => !v)}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant dark:text-content-dark/50 hover:text-on-surface dark:hover:text-content-dark transition-colors"
         >

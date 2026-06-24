@@ -22,13 +22,13 @@ describe('LoginForm', () => {
   it('renders email, password and submit button', () => {
     renderForm()
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(screen.getByLabelText('Password')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument()
+    expect(screen.getByLabelText('Contrasena')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /iniciar sesion/i })).toBeInTheDocument()
   })
 
   it('shows link to register page', () => {
     renderForm()
-    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('calls login service with email payload', async () => {
@@ -39,8 +39,8 @@ describe('LoginForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'user@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Pass1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Pass1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /iniciar sesion/i }))
 
     await waitFor(() => {
       expect(mockLogin).toHaveBeenCalledWith({
@@ -58,8 +58,8 @@ describe('LoginForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'bad@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Wrong1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Wrong1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /iniciar sesion/i }))
 
     expect(await screen.findByRole('alert')).toBeInTheDocument()
   })
@@ -71,11 +71,11 @@ describe('LoginForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'u@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Pass1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Pass1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /iniciar sesion/i }))
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /signing in|loading/i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /iniciando sesion|loading/i })).toBeDisabled()
     })
   })
 })

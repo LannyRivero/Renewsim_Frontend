@@ -15,7 +15,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-content-dark/55">{label}</p>
-              <p className="mt-1 text-[1.85rem] font-black tracking-[-0.03em] text-[#193126] dark:text-content-dark lg:text-[1.45rem]">{value}</p>
+              <p className="mt-1 truncate text-xl font-black leading-tight tracking-[-0.03em] text-[#193126] dark:text-content-dark lg:text-lg">{value}</p>
               <p className="mt-1.5 text-[10px] leading-4 text-slate-500 dark:text-content-dark/55 lg:hidden">{index % 2 === 0 ? 'Resumen operativo actual' : 'Actualizado con datos confirmados por backend'}</p>
             </div>
             <div className="rounded-2xl border border-[#d7dfd6] bg-[#f6f8f5] p-2 shadow-sm dark:border-white/10 dark:bg-white/8">
