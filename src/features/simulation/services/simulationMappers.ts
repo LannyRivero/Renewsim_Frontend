@@ -133,7 +133,8 @@ export function normalizeSimulation(item: RawSimulation, index: number): Simulat
       ? String(item.id)
       : `simulation-${index}`
   const date = formatDate(item.createdAt ?? item.date)
-  const energyType = readString(item.energyType ?? item.technologyName ?? item.sourceType, 'Unknown')
+  const rawEnergyType = item.energyType ?? item.technology ?? item.technologyName ?? item.sourceType
+  const energyType = typeof rawEnergyType === 'string' ? normalizeEnergyType(rawEnergyType) : readString(rawEnergyType, 'Unknown')
   const efficiency = toPercent(item.efficiency ?? item.efficiencyPercent, 'N/A')
   const roi = toPercent(item.roi ?? item.roiPercent, 'N/A')
 

@@ -8,7 +8,37 @@ type ApiResponse<T> = {
   data?: T
 }
 
+type PaginatedResponse<T> = {
+  content?: T[]
+}
+
 type RawSimulation = Record<string, unknown>
+
+function isPaginatedResponse(payload: ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation>): payload is PaginatedResponse<RawSimulation> {
+  return 'content' in payload
+}
+
+function isApiResponse(payload: ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation>): payload is ApiResponse<RawSimulation[]> {
+  return 'data' in payload
+}
+
+function extractHistoryPayload(
+  payload: ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation> | RawSimulation[],
+): RawSimulation[] {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+
+  if (isPaginatedResponse(payload)) {
+    return payload.content ?? []
+  }
+
+  if (isApiResponse(payload)) {
+    return payload.data ?? []
+  }
+
+  return []
+}
 
 function isHttpNotFound(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false
@@ -19,19 +49,19 @@ function isHttpNotFound(error: unknown): boolean {
 }
 
 export async function getSimulationHistory(): Promise<SimulationHistoryItem[]> {
-  let response: { data: ApiResponse<RawSimulation[]> | RawSimulation[] }
+  let response: { data: ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation> | RawSimulation[] }
 
   try {
-    response = await httpClient.get<ApiResponse<RawSimulation[]> | RawSimulation[]>('/simulations/user')
+    response = await httpClient.get<ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation> | RawSimulation[]>('/simulations/user')
   } catch (error) {
     if (!isHttpNotFound(error)) {
       throw error
     }
 
-    response = await httpClient.get<ApiResponse<RawSimulation[]> | RawSimulation[]>('/simulations/history')
+    response = await httpClient.get<ApiResponse<RawSimulation[]> | PaginatedResponse<RawSimulation> | RawSimulation[]>('/simulations/history')
   }
 
-  const payload = Array.isArray(response.data) ? response.data : response.data.data ?? []
+  const payload = extractHistoryPayload(response.data)
 
   return payload.map((item, index) => normalizeSimulation(item, index))
 }
