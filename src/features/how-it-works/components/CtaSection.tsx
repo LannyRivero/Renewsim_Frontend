@@ -1,33 +1,40 @@
+import { Link } from 'react-router-dom'
 import { useSimulatorNav } from '../../../shared/hooks'
 
 export function CtaSection() {
   const goToSimulator = useSimulatorNav()
-  return (
-    <section className="mt-20">
-      {/* Accent top bar */}
-      <div className="h-1 w-16 rounded-full accent-bar mb-10 mx-auto" />
 
-      <div className="text-center">
-        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-on-surface dark:text-content-dark">
-          Ready to optimize your energy?
-        </h2>
-        <p className="mt-4 max-w-xl mx-auto text-lg text-on-surface-variant dark:text-content-dark/55">
-          Join the companies already making smarter energy decisions with RenewSim.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <button
-            type="button"
-            onClick={goToSimulator}
-            className="inline-flex cursor-pointer items-center justify-center rounded-lg h-12 px-10 bg-primary-container text-on-primary text-base font-bold hover:brightness-95 transition-all shadow-sm"
-          >
-            Start Simulation
-          </button>
-          <button
-            type="button"
-            className="inline-flex cursor-pointer items-center justify-center rounded-lg h-12 px-8 text-base font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors"
-          >
-            Request demo
-          </button>
+  return (
+    <section className="mt-16 lg:mt-20">
+      <div className="rounded-[2rem] border border-[#d5ddd4] bg-[linear-gradient(135deg,rgba(26,106,69,0.98)_0%,rgba(43,88,68,0.98)_100%)] px-6 py-8 text-white shadow-[0_28px_70px_-44px_rgba(26,106,69,0.55)] sm:px-8 lg:px-10 lg:py-10 dark:border-white/10 dark:bg-[linear-gradient(135deg,rgba(18,71,49,1)_0%,rgba(25,52,40,1)_100%)]">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/68">
+              Siguiente paso
+            </p>
+            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-4xl">
+              Si el producto quiere verse premium, el recorrido tambien tiene que sentirse directo.
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-8 text-white/78">
+              Entra al simulador, carga un escenario y evalua resultados con una interfaz pensada para analisis real, no para decorar una demo.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3 lg:justify-end">
+            <button
+              type="button"
+              onClick={goToSimulator}
+              className="inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 text-sm font-bold text-[#184f37] transition-colors hover:bg-[#f3f7f2]"
+            >
+              Abrir simulador
+            </button>
+            <Link
+              to="/registro"
+              className="inline-flex h-12 items-center justify-center rounded-xl border border-white/18 px-6 text-sm font-semibold text-white transition-colors hover:bg-white/8"
+            >
+              Crear cuenta
+            </Link>
+          </div>
         </div>
       </div>
     </section>

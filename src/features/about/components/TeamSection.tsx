@@ -1,16 +1,20 @@
 export function TeamSection() {
   return (
-    <section>
-      <h2 className="text-2xl md:text-3xl font-bold text-on-surface dark:text-content-dark mb-4">
-        Team and Credits
+    <section className="rounded-[2rem] border border-[#d5ddd4] bg-[linear-gradient(135deg,rgba(26,106,69,0.98)_0%,rgba(43,88,68,0.98)_100%)] px-6 py-8 text-white shadow-[0_28px_70px_-44px_rgba(26,106,69,0.55)] dark:border-white/10 dark:bg-[linear-gradient(135deg,rgba(18,71,49,1)_0%,rgba(25,52,40,1)_100%)] lg:px-8 lg:py-9">
+      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/68">
+        Equipo y creditos
+      </p>
+      <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-4xl">
+        RenewSim existe por una conviccion compartida, no por una pagina de marketing.
       </h2>
-      <div className="h-1 w-10 rounded-full accent-bar mb-6" />
-      <p className="text-lg text-on-surface-variant dark:text-content-dark/60 leading-relaxed">
-        RenewSim is the result of a collaborative effort by a team passionate
-        about sustainable energy and education. We thank our collaborators,
-        scientific advisors, and the community for their support and
-        contributions to this project. Their knowledge and dedication have been
-        essential to making RenewSim a valuable tool for the energy transition.
+      <p className="mt-5 max-w-3xl text-base leading-8 text-white/80">
+        Detras del producto hay colaboracion entre personas interesadas en energia,
+        educacion y tecnologia aplicada. Valoramos a quienes aportan criterio tecnico,
+        validacion, contexto y empuje para que la herramienta sirva de verdad.
+      </p>
+      <p className="mt-4 max-w-3xl text-base leading-8 text-white/74">
+        El objetivo no es solo construir una app correcta. Es construir una herramienta
+        que ayude a tomar mejores decisiones en la transicion energetica.
       </p>
     </section>
   )
