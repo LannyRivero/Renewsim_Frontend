@@ -28,8 +28,8 @@ describe('SimuladorSidebar', () => {
 
     renderSidebar()
 
-    expect(screen.queryByText('Admin Panel')).not.toBeInTheDocument()
-    expect(screen.queryByText('Technologies')).not.toBeInTheDocument()
+    expect(screen.queryByText('Panel de admin')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tecnologias')).not.toBeInTheDocument()
   })
 
   it('shows admin link for admin users', () => {
@@ -41,8 +41,8 @@ describe('SimuladorSidebar', () => {
 
     renderSidebar()
 
-    expect(screen.getByText('Admin Panel')).toBeInTheDocument()
-    expect(screen.getByText('Technologies')).toBeInTheDocument()
+    expect(screen.getByText('Panel de admin')).toBeInTheDocument()
+    expect(screen.getByText('Tecnologias')).toBeInTheDocument()
   })
 
   it('clears auth and token on logout', () => {
@@ -54,7 +54,7 @@ describe('SimuladorSidebar', () => {
     })
 
     renderSidebar()
-    fireEvent.click(screen.getByRole('button', { name: 'Logout' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar sesion' }))
 
     expect(useAuthStore.getState().isAuthenticated).toBe(false)
     expect(localStorage.getItem('renewsim-token')).toBeNull()
@@ -68,9 +68,21 @@ describe('SimuladorSidebar', () => {
     })
 
     renderSidebar()
-    fireEvent.click(screen.getByRole('button', { name: /Appearance/i }))
+    fireEvent.click(screen.getByRole('button', { name: /Apariencia/i }))
     fireEvent.click(screen.getByRole('button', { name: 'dark' }))
 
     expect(localStorage.getItem('renewsim-theme')).toBe('dark')
+  })
+
+  it('links the brand block to the home page', () => {
+    useAuthStore.setState({
+      accessToken: 'token',
+      isAuthenticated: true,
+      user: { id: 1, username: 'admin', roles: ['ADMIN'] },
+    })
+
+    renderSidebar()
+
+    expect(screen.getByRole('link', { name: /RenewSim/i })).toHaveAttribute('href', '/')
   })
 })
