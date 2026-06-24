@@ -13,7 +13,7 @@ describe('PerformanceSnapshot', () => {
 
     expect(screen.getByText('KPIs de Eficiencia')).toBeInTheDocument()
     expect(screen.getByText('Objetivo vs Actual')).toBeInTheDocument()
-    expect(screen.getByText('Capacity factor')).toBeInTheDocument()
-    expect(screen.getByText('Energy output')).toBeInTheDocument()
+    expect(screen.getByText('Factor de capacidad')).toBeInTheDocument()
+    expect(screen.getByText('Producción energética')).toBeInTheDocument()
   })
 })
