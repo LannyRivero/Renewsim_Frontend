@@ -8,10 +8,10 @@ import { useDarkMode } from '@/shared/hooks'
 const NAV_ITEMS = [
   { to: '/simulador', label: 'Simulaciones', icon: 'insights', end: true },
   { to: '/simulador/historial', label: 'Historial', icon: 'history' },
-  { to: '/simulador/nueva', label: 'Nueva simulacion', icon: 'add_chart' },
+  { to: '/simulador/nueva', label: 'Nueva simulación', icon: 'add_chart' },
   { to: '/simulador/resultados', label: 'Resultados', icon: 'monitoring' },
-  { to: '/simulador/tecnologias', label: 'Tecnologias', icon: 'hub' },
-  { to: '/simulador/configuracion', label: 'Configuracion', icon: 'settings' },
+  { to: '/simulador/tecnologias', label: 'Tecnologías', icon: 'hub' },
+  { to: '/simulador/configuracion', label: 'Configuración', icon: 'settings' },
   { to: '/simulador/admin', label: 'Panel de admin', icon: 'admin_panel_settings' },
 ]
 
@@ -73,7 +73,7 @@ export function SimuladorSidebar() {
       <div className="mt-6 border-t border-[#d1dad0] pt-4 dark:border-white/8">
         <div className="divide-y divide-[#d4ddd3] dark:divide-white/10">
           <p className="px-2 py-2 text-sm font-medium text-slate-600 dark:text-content-dark/70">
-            Sesion iniciada como: <span className="font-semibold text-slate-900 dark:text-content-dark">{displayName}</span>
+            Sesión iniciada como: <span className="font-semibold text-slate-900 dark:text-content-dark">{displayName}</span>
           </p>
           <div className="px-1 py-1.5">
           <button
@@ -116,13 +116,13 @@ export function SimuladorSidebar() {
           </div>
           <button
             type="button"
-            aria-label="Cerrar sesion"
+            aria-label="Cerrar sesión"
             onClick={handleLogout}
             className="group w-full flex items-center justify-between rounded-sm px-2 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-[#edf2eb] hover:text-slate-900 dark:text-content-dark/80 dark:hover:bg-white/5 dark:hover:text-content-dark"
           >
             <span className="inline-flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px] text-slate-500 dark:text-content-dark/65">logout</span>
-              Cerrar sesion
+              Cerrar sesión
             </span>
             <span className="material-symbols-outlined text-[16px] text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-content-dark/45">chevron_right</span>
           </button>

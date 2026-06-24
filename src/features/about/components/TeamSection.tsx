@@ -5,16 +5,16 @@ export function TeamSection() {
         Equipo y creditos
       </p>
       <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-4xl">
-        RenewSim existe por una conviccion compartida, no por una pagina de marketing.
+        RenewSim existe por una convicción compartida, no por una página de marketing.
       </h2>
       <p className="mt-5 max-w-3xl text-base leading-8 text-white/80">
-        Detras del producto hay colaboracion entre personas interesadas en energia,
-        educacion y tecnologia aplicada. Valoramos a quienes aportan criterio tecnico,
-        validacion, contexto y empuje para que la herramienta sirva de verdad.
+        Detrás del producto hay colaboración entre personas interesadas en energía,
+        educación y tecnología aplicada. Valoramos a quienes aportan criterio técnico,
+        validación, contexto y empuje para que la herramienta sirva de verdad.
       </p>
       <p className="mt-4 max-w-3xl text-base leading-8 text-white/74">
         El objetivo no es solo construir una app correcta. Es construir una herramienta
-        que ayude a tomar mejores decisiones en la transicion energetica.
+        que ayude a tomar mejores decisiones en la transición energética.
       </p>
     </section>
   )

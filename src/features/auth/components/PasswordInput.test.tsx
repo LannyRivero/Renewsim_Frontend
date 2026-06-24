@@ -3,9 +3,9 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { PasswordInput } from './PasswordInput'
 
 describe('PasswordInput', () => {
-  it('renders with label "Contrasena" by default', () => {
+  it('renders with label "Contraseña" by default', () => {
     render(<PasswordInput id="pwd" value="" onChange={() => {}} />)
-    expect(screen.getByLabelText('Contrasena')).toBeInTheDocument()
+    expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
   })
 
   it('renders with a custom label', () => {
@@ -15,14 +15,14 @@ describe('PasswordInput', () => {
 
   it('input type is password by default', () => {
     render(<PasswordInput id="pwd" value="" onChange={() => {}} />)
-    expect(screen.getByLabelText('Contrasena')).toHaveAttribute('type', 'password')
+    expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'password')
   })
 
   it('toggles to text when show/hide button is clicked', { timeout: 10000 }, () => {
     render(<PasswordInput id="pwd" value="" onChange={() => {}} />)
     const toggle = screen.getByRole('button', { name: /mostrar|ocultar/i })
     fireEvent.click(toggle)
-    expect(screen.getByLabelText('Contrasena')).toHaveAttribute('type', 'text')
+    expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'text')
   })
 
   it('toggles back to password on second click', { timeout: 10000 }, () => {
@@ -30,7 +30,7 @@ describe('PasswordInput', () => {
     const toggle = screen.getByRole('button', { name: /mostrar|ocultar/i })
     fireEvent.click(toggle)
     fireEvent.click(toggle)
-    expect(screen.getByLabelText('Contrasena')).toHaveAttribute('type', 'password')
+    expect(screen.getByLabelText('Contraseña')).toHaveAttribute('type', 'password')
   })
 
   it('displays validation errors when provided', () => {
@@ -39,17 +39,17 @@ describe('PasswordInput', () => {
         id="pwd"
         value="weak"
         onChange={() => {}}
-        errors={['Minimo 8 caracteres', 'Al menos un numero']}
+        errors={['Mínimo 8 caracteres', 'Al menos un número']}
       />
     )
-    expect(screen.getByText('Minimo 8 caracteres')).toBeInTheDocument()
-    expect(screen.getByText('Al menos un numero')).toBeInTheDocument()
+    expect(screen.getByText('Mínimo 8 caracteres')).toBeInTheDocument()
+    expect(screen.getByText('Al menos un número')).toBeInTheDocument()
   })
 
   it('calls onChange when user types', () => {
     const handleChange = vi.fn()
     render(<PasswordInput id="pwd" value="" onChange={handleChange} />)
-    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Test1!' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Test1!' } })
     expect(handleChange).toHaveBeenCalled()
   })
 })

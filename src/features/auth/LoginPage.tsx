@@ -38,7 +38,7 @@ export function LoginPage() {
     }))
     localStorage.setItem('renewsim-token', token)
     useToastStore.getState().pushToast({
-      title: 'Sesion iniciada',
+      title: 'Sesión iniciada',
       description: 'Bienvenido a RenewSim.',
       variant: 'success',
     })
@@ -53,7 +53,7 @@ export function LoginPage() {
             Acceso seguro
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-[-0.05em] text-slate-950 dark:text-content-dark md:text-5xl">
-            Entra a tu espacio de simulacion con una experiencia mas sobria.
+            Entra a tu espacio de simulación con una experiencia más sobria.
           </h1>
           <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 dark:text-content-dark/62">
             Accede a tus escenarios, resultados y comparativas desde una interfaz pensada para trabajo real, no para una demo pasajera.
@@ -61,7 +61,7 @@ export function LoginPage() {
           <div className="mt-8 grid gap-3 sm:grid-cols-3">
             {[
               'Seguimiento de simulaciones',
-              'Lectura tecnica y financiera',
+              'Lectura técnica y financiera',
               'Continuidad entre equipos',
             ].map((item) => (
               <div key={item} className="rounded-2xl bg-[#f6f9f5] px-4 py-4 text-sm leading-6 text-slate-700 dark:bg-white/[0.03] dark:text-content-dark/62">
@@ -74,13 +74,13 @@ export function LoginPage() {
         <div className="rounded-[2rem] border border-[#d5ddd4] bg-white/80 p-6 shadow-[0_24px_60px_-44px_rgba(15,23,42,0.38)] dark:border-white/10 dark:bg-white/[0.04] lg:p-8">
           <div className="mb-8 text-center lg:text-left">
             <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
-              Iniciar sesion
+              Iniciar sesión
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark">
               Accede a tu cuenta
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-content-dark/58">
-              Continua donde dejaste tus analisis en RenewSim.
+              Continúa donde dejaste tus análisis en RenewSim.
             </p>
           </div>
 

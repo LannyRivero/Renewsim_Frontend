@@ -1,11 +1,11 @@
 const IMPACT_SIGNALS = [
   {
     title: 'Menos intuicion aislada',
-    description: 'La plataforma ordena entradas y comparativas para bajar decisiones tomadas solo por percepcion.',
+    description: 'La plataforma ordena entradas y comparativas para bajar decisiones tomadas solo por percepción.',
   },
   {
     title: 'Mas contexto financiero',
-    description: 'Los escenarios no se quedan en rendimiento tecnico: se conectan con ahorro, retorno y viabilidad.',
+    description: 'Los escenarios no se quedan en rendimiento técnico: se conectan con ahorro, retorno y viabilidad.',
   },
   {
     title: 'Mejor narrativa interna',

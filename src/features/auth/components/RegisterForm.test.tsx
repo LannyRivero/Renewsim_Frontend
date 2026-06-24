@@ -25,13 +25,13 @@ describe('RegisterForm', () => {
     renderForm()
     expect(screen.getByLabelText('Nombre')).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(screen.getByLabelText('Contrasena')).toBeInTheDocument()
+    expect(screen.getByLabelText('Contraseña')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('shows link to login page', () => {
     renderForm()
-    expect(screen.getByRole('link', { name: /iniciar sesion/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /iniciar sesión/i })).toBeInTheDocument()
   })
 
   it('shows password validation errors when submitting weak password', async () => {
@@ -40,10 +40,10 @@ describe('RegisterForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'weak' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'weak' } })
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
-    expect(await screen.findByText('Minimo 8 caracteres')).toBeInTheDocument()
+    expect(await screen.findByText('Mínimo 8 caracteres')).toBeInTheDocument()
     expect(mockRegister).not.toHaveBeenCalled()
   })
 
@@ -62,7 +62,7 @@ describe('RegisterForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Secure1!' } })
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     await waitFor(() => {
@@ -83,7 +83,7 @@ describe('RegisterForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'dup@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Secure1!' } })
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     expect(await screen.findByRole('alert')).toBeInTheDocument()
@@ -97,7 +97,7 @@ describe('RegisterForm', () => {
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.change(screen.getByLabelText('Contraseña'), { target: { value: 'Secure1!' } })
     fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     await waitFor(() => {

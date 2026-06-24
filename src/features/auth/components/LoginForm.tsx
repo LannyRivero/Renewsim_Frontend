@@ -23,10 +23,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       const { token } = await login({ email, password })
       onSuccess(token)
     } catch {
-      setServerError('Credenciales invalidas. Intenta nuevamente.')
+      setServerError('Credenciales inválidas. Intenta nuevamente.')
       useToastStore.getState().pushToast({
-        title: 'Error de autenticacion',
-        description: 'Credenciales invalidas. Intenta nuevamente.',
+        title: 'Error de autenticación',
+        description: 'Credenciales inválidas. Intenta nuevamente.',
         variant: 'error',
       })
     } finally {
@@ -54,7 +54,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       {/* Password */}
       <PasswordInput
         id="login-password"
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
@@ -72,13 +72,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         type="submit"
         disabled={isLoading}
         className="mt-2 h-12 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-        aria-label={isLoading ? 'Iniciando sesion...' : 'Iniciar sesion'}
+        aria-label={isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       >
-        {isLoading ? 'Iniciando sesion...' : 'Iniciar sesion'}
+        {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
       </button>
 
       <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
-        No tenes cuenta?{' '}
+        ¿No tenés cuenta?{' '}
         <Link to="/registro" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
           Crear cuenta
         </Link>

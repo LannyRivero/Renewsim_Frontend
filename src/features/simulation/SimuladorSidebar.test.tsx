@@ -29,7 +29,7 @@ describe('SimuladorSidebar', () => {
     renderSidebar()
 
     expect(screen.queryByText('Panel de admin')).not.toBeInTheDocument()
-    expect(screen.queryByText('Tecnologias')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tecnologías')).not.toBeInTheDocument()
   })
 
   it('shows admin link for admin users', () => {
@@ -42,7 +42,7 @@ describe('SimuladorSidebar', () => {
     renderSidebar()
 
     expect(screen.getByText('Panel de admin')).toBeInTheDocument()
-    expect(screen.getByText('Tecnologias')).toBeInTheDocument()
+    expect(screen.getByText('Tecnologías')).toBeInTheDocument()
   })
 
   it('clears auth and token on logout', () => {
@@ -54,7 +54,7 @@ describe('SimuladorSidebar', () => {
     })
 
     renderSidebar()
-    fireEvent.click(screen.getByRole('button', { name: 'Cerrar sesion' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
     expect(useAuthStore.getState().isAuthenticated).toBe(false)
     expect(localStorage.getItem('renewsim-token')).toBeNull()

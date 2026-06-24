@@ -55,7 +55,7 @@ export function RegisterPage() {
               Crea tu cuenta
             </h2>
             <p className="mt-2 text-sm text-slate-600 dark:text-content-dark/58">
-              Abre tu acceso a RenewSim y organiza tus analisis desde el primer escenario.
+              Abre tu acceso a RenewSim y organiza tus análisis desde el primer escenario.
             </p>
           </div>
 

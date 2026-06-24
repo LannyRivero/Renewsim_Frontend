@@ -15,7 +15,7 @@ interface NavbarProps {
 
 const DEFAULT_LINKS: NavLink[] = [
   { label: 'Inicio', href: '/' },
-  { label: 'Como funciona', href: '/como-funciona' },
+  { label: 'Cómo funciona', href: '/como-funciona' },
   { label: 'Acerca de', href: '/acerca-de' },
   { label: 'Simulador', href: '#' },
 ]
@@ -27,7 +27,7 @@ function DefaultCta() {
           type="button"
           className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface dark:text-content-dark border border-outline-variant dark:border-white/10 hover:bg-surface-container-low dark:hover:bg-white/5 transition-colors cursor-pointer"
         >
-          Iniciar sesion
+          Iniciar sesión
         </button>
         <button
           type="button"
@@ -83,7 +83,7 @@ export function Navbar({ links = DEFAULT_LINKS, cta = <DefaultCta /> }: NavbarPr
             className="inline-flex items-center justify-center rounded-xl border border-outline-variant px-3 py-2 text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 md:hidden"
             aria-expanded={isMobileMenuOpen}
             aria-controls="public-mobile-menu"
-            aria-label={isMobileMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
+            aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
           >
             <span className="material-symbols-outlined text-[20px]">

@@ -4,12 +4,12 @@ const VALUES = [
     description: 'Cada pantalla tiene que ayudar a entender una decision, no distraerla.',
   },
   {
-    title: 'Rigor sin friccion innecesaria',
-    description: 'La base tecnica importa, pero tiene que presentarse con una experiencia entendible y util.',
+    title: 'Rigor sin fricción innecesaria',
+    description: 'La base técnica importa, pero tiene que presentarse con una experiencia entendible y útil.',
   },
   {
     title: 'Sostenibilidad con criterio de negocio',
-    description: 'El discurso ambiental solo es serio cuando tambien conversa con viabilidad economica y operativa.',
+    description: 'El discurso ambiental solo es serio cuando también conversa con viabilidad económica y operativa.',
   },
 ]
 

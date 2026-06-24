@@ -6,7 +6,7 @@ export function MissionSection() {
           Mision
         </p>
         <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
-          Traducir complejidad tecnica en claridad para decidir.
+          Traducir complejidad técnica en claridad para decidir.
         </h2>
       </div>
 
@@ -14,11 +14,11 @@ export function MissionSection() {
         <p className="text-base leading-8 text-slate-700 dark:text-content-dark/64">
           No buscamos solo mostrar simulaciones. Buscamos que una persona o un equipo
           pueda comparar fuentes renovables, entender implicaciones operativas y ver
-          el impacto economico sin perderse en ruido visual ni en tecnicismos mal explicados.
+          el impacto económico sin perderse en ruido visual ni en tecnicismos mal explicados.
         </p>
         <p className="mt-5 text-base leading-8 text-slate-700 dark:text-content-dark/64">
-          La vision es simple: que la transicion energetica se apoye en herramientas
-          mas sobrias, mas utiles y mas defendibles frente a negocio, operaciones y direccion.
+          La visión es simple: que la transición energética se apoye en herramientas
+          más sobrias, más útiles y más defendibles frente a negocio, operaciones y dirección.
         </p>
       </div>
     </section>

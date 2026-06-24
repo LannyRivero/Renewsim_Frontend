@@ -10,37 +10,37 @@ import { readDisplayName } from '@/shared/utils/authToken'
 const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
   '/': [
     { label: 'Inicio', href: '/', active: true },
-    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Cómo funciona', href: '/como-funciona' },
     { label: 'Acerca de', href: '/acerca-de' },
     { label: 'Simulador', href: '/simulador' },
   ],
   '/how-it-works': [
     { label: 'Inicio', href: '/' },
-    { label: 'Como funciona', href: '/como-funciona', active: true },
+    { label: 'Cómo funciona', href: '/como-funciona', active: true },
     { label: 'Acerca de', href: '/acerca-de' },
     { label: 'Simulador', href: '/simulador' },
   ],
   '/como-funciona': [
     { label: 'Inicio', href: '/' },
-    { label: 'Como funciona', href: '/como-funciona', active: true },
+    { label: 'Cómo funciona', href: '/como-funciona', active: true },
     { label: 'Acerca de', href: '/acerca-de' },
     { label: 'Simulador', href: '/simulador' },
   ],
   '/about': [
     { label: 'Inicio', href: '/' },
-    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Cómo funciona', href: '/como-funciona' },
     { label: 'Acerca de', href: '/acerca-de', active: true },
     { label: 'Simulador', href: '/simulador' },
   ],
   '/acerca-de': [
     { label: 'Inicio', href: '/' },
-    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Cómo funciona', href: '/como-funciona' },
     { label: 'Acerca de', href: '/acerca-de', active: true },
     { label: 'Simulador', href: '/simulador' },
   ],
   '/simulador': [
     { label: 'Inicio', href: '/' },
-    { label: 'Como funciona', href: '/como-funciona' },
+    { label: 'Cómo funciona', href: '/como-funciona' },
     { label: 'Acerca de', href: '/acerca-de' },
     { label: 'Simulador', href: '/simulador', active: true },
   ],
@@ -48,7 +48,7 @@ const NAV_LINKS_BY_ROUTE: Record<string, NavLink[]> = {
 
 const DEFAULT_LINKS: NavLink[] = [
   { label: 'Inicio', href: '/' },
-  { label: 'Como funciona', href: '/como-funciona' },
+  { label: 'Cómo funciona', href: '/como-funciona' },
   { label: 'Acerca de', href: '/acerca-de' },
   { label: 'Simulador', href: '/simulador' },
 ]
@@ -88,7 +88,7 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
             onClick={handleLogout}
             className="rounded-lg bg-primary-container px-4 py-2 text-sm font-bold text-on-primary transition-all hover:brightness-95"
           >
-            Cerrar sesion
+            Cerrar sesión
           </button>
         </>
       ) : (
@@ -97,7 +97,7 @@ function NavActions({ isDark, onToggle }: NavActionsProps) {
             to="/login"
             className="hidden rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 sm:inline-flex"
           >
-            Iniciar sesion
+            Iniciar sesión
           </Link>
           <Link
             to="/register"

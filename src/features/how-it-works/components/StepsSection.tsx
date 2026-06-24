@@ -10,26 +10,26 @@ const STEPS: Step[] = [
   {
     number: '01',
     icon: 'database',
-    title: 'Captura del contexto energetico',
+    title: 'Captura del contexto energético',
     description:
-      'Se organiza ubicacion, consumo, restricciones y preferencia tecnologica para partir de una base comparable y sin ambiguedad.',
+      'Se organiza ubicación, consumo, restricciones y preferencia tecnológica para partir de una base comparable y sin ambigüedad.',
     checkpoint: 'Entrada clara y trazable',
   },
   {
     number: '02',
     icon: 'model_training',
-    title: 'Simulacion tecnica con lectura economica',
+    title: 'Simulación técnica con lectura económica',
     description:
       'El motor cruza variables operativas con rendimiento esperado, costos y retorno para aterrizar escenarios viables.',
-    checkpoint: 'Analisis con criterio tecnico-financiero',
+    checkpoint: 'Análisis con criterio técnico-financiero',
   },
   {
     number: '03',
     icon: 'fact_check',
     title: 'Resultado listo para defender decisiones',
     description:
-      'La salida resume comparativas, impacto y narrativa ejecutiva para que negocio, operaciones y direccion hablen el mismo idioma.',
-    checkpoint: 'Conclusion accionable',
+      'La salida resume comparativas, impacto y narrativa ejecutiva para que negocio, operaciones y dirección hablen el mismo idioma.',
+    checkpoint: 'Conclusión accionable',
   },
 ]
 
@@ -65,10 +65,10 @@ export function StepsSection() {
     <section className="mt-14">
       <div className="max-w-2xl">
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
-          Flujo de simulacion
+          Flujo de simulación
         </p>
         <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
-          Tres pasos. Mucha mas profundidad que una landing comun.
+          Tres pasos. Mucha más profundidad que una landing común.
         </h2>
       </div>
 

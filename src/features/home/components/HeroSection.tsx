@@ -4,8 +4,8 @@ import { useSimulatorNav } from '../../../shared/hooks'
 const KPI_CARDS = [
   { value: '8.4 MWh', label: 'Energia proyectada anual', icon: 'bolt', delta: '+12%' },
   { value: '$1,240', label: 'Ahorro estimado anual', icon: 'savings', delta: '+8%' },
-  { value: '3.2 t', label: 'CO2 evitado al ano', icon: 'eco', delta: '-18%' },
-  { value: '4.2 anos', label: 'Retorno estimado', icon: 'trending_up', delta: null },
+  { value: '3.2 t', label: 'CO2 evitado al año', icon: 'eco', delta: '-18%' },
+  { value: '4.2 años', label: 'Retorno estimado', icon: 'trending_up', delta: null },
 ]
 
 const PROOF_POINTS = [
@@ -14,7 +14,7 @@ const PROOF_POINTS = [
   { value: '50+', label: 'Equipos analizando inversiones' },
 ]
 
-const FOCUS_AREAS = ['Solar', 'Eolica', 'Biomasa', 'Escenarios hibridos']
+const FOCUS_AREAS = ['Solar', 'Eólica', 'Biomasa', 'Escenarios híbridos']
 
 export function HeroSection() {
   const goToSimulator = useSimulatorNav()
@@ -28,18 +28,18 @@ export function HeroSection() {
             <div className="inline-flex items-center gap-2 rounded-full border border-[#cfd9ce] bg-white/72 px-3 py-1.5 shadow-sm backdrop-blur-sm dark:border-white/10 dark:bg-white/5">
               <span className="size-1.5 rounded-full bg-[#1a6a45] dark:bg-emerald-400" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/55">
-                Plataforma de decision energetica
+                Plataforma de decisión energética
               </span>
             </div>
 
             <h1 className="mt-7 text-5xl font-black leading-[1.02] tracking-[-0.05em] text-slate-950 dark:text-content-dark md:text-6xl xl:text-[4.8rem]">
               Inteligencia para decidir
               <br className="hidden sm:inline" />
-              <span className="text-[#1a6a45] dark:text-emerald-400"> inversiones energeticas</span>
+              <span className="text-[#1a6a45] dark:text-emerald-400"> inversiones energéticas</span>
             </h1>
 
             <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-600 dark:text-content-dark/65 lg:mx-0 lg:max-w-xl">
-              RenewSim convierte escenarios tecnicos en decisiones ejecutivas claras.
+              RenewSim convierte escenarios técnicos en decisiones ejecutivas claras.
               Simula fuentes renovables, compara riesgo, costo y retorno, y presenta
               resultados con una lectura sobria lista para equipos enterprise.
             </p>
@@ -82,7 +82,7 @@ export function HeroSection() {
                     Portafolio solar · Madrid
                   </p>
                   <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/60">
-                    Resumen operativo para analisis de inversion y aprobacion interna.
+                    Resumen operativo para análisis de inversión y aprobación interna.
                   </p>
                 </div>
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#e8f1eb] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.16em] text-[#1a6a45] dark:bg-emerald-400/10 dark:text-emerald-300">
@@ -119,10 +119,10 @@ export function HeroSection() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/55">
-                      Cobertura de analisis
+                      Cobertura de análisis
                     </p>
                     <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/62">
-                      Unifica simulacion tecnica, lectura financiera y narrativa ejecutiva.
+                      Unifica simulación técnica, lectura financiera y narrativa ejecutiva.
                     </p>
                   </div>
                   <p className="text-2xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark">87%</p>

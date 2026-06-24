@@ -8,17 +8,17 @@ const FEATURES: Feature[] = [
   {
     icon: 'account_tree',
     title: 'Escenarios comparables',
-    description: 'Contrasta alternativas tecnologicas bajo la misma logica para decidir con menos ruido y mas criterio.',
+    description: 'Contrasta alternativas tecnológicas bajo la misma lógica para decidir con menos ruido y más criterio.',
   },
   {
     icon: 'finance_mode',
     title: 'Lectura financiera clara',
-    description: 'Resume retorno, ahorro y exposicion economica con un lenguaje util para negocio y direccion.',
+    description: 'Resume retorno, ahorro y exposición económica con un lenguaje útil para negocio y dirección.',
   },
   {
     icon: 'monitoring',
     title: 'Analitica accionable',
-    description: 'Convierte datos tecnicos en señales entendibles para priorizar inversiones y planes energeticos.',
+    description: 'Convierte datos técnicos en señales entendibles para priorizar inversiones y planes energéticos.',
   },
   {
     icon: 'verified',
@@ -28,8 +28,8 @@ const FEATURES: Feature[] = [
 ]
 
 const OPERATING_PRINCIPLES = [
-  'Menos adornos, mas claridad ejecutiva',
-  'Comparacion tecnica y financiera en una sola lectura',
+  'Menos adornos, más claridad ejecutiva',
+  'Comparación técnica y financiera en una sola lectura',
   'Preparado para equipos que necesitan justificar decisiones',
 ]
 
@@ -58,8 +58,8 @@ export function FeaturesSection() {
               Una home con presencia enterprise necesita comunicar control, no gritar.
             </h2>
             <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 dark:text-content-dark/62">
-              RenewSim tiene que verse como un producto serio: menos landing generica,
-              mas estructura, jerarquia y confianza visual. Esta base ya empuja esa direccion.
+              RenewSim tiene que verse como un producto serio: menos landing genérica,
+              más estructura, jerarquía y confianza visual. Esta base ya empuja esa dirección.
             </p>
 
             <div className="mt-8 rounded-[1.7rem] border border-[#d5ddd4] bg-white/75 p-5 shadow-[0_24px_54px_-42px_rgba(15,23,42,0.34)] dark:border-white/10 dark:bg-white/[0.035]">

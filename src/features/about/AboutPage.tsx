@@ -4,8 +4,8 @@ import { ValuesSection } from './components/ValuesSection'
 import { TeamSection } from './components/TeamSection'
 
 const POSITIONING_POINTS = [
-  { value: 'Estrategia', label: 'Decision energetica con criterio ejecutivo' },
-  { value: 'Datos', label: 'Modelado tecnico con lectura financiera' },
+  { value: 'Estrategia', label: 'Decisión energética con criterio ejecutivo' },
+  { value: 'Datos', label: 'Modelado técnico con lectura financiera' },
   { value: 'Confianza', label: 'Interfaz clara para presentar escenarios' },
 ]
 
@@ -25,7 +25,7 @@ export function AboutPage() {
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-600 dark:text-content-dark/64">
               RenewSim nace para cerrar una brecha concreta: demasiadas decisiones
-              energeticas siguen apoyandose en hojas dispersas, narrativas confusas
+              energéticas siguen apoyándose en hojas dispersas, narrativas confusas
               y comparaciones poco defendibles. Nuestra apuesta es convertir eso en
               una experiencia sobria, entendible y util para equipos reales.
             </p>

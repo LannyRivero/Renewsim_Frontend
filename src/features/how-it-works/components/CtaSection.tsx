@@ -13,10 +13,10 @@ export function CtaSection() {
               Siguiente paso
             </p>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-4xl">
-              Si el producto quiere verse premium, el recorrido tambien tiene que sentirse directo.
+              Si el producto quiere verse premium, el recorrido también tiene que sentirse directo.
             </h2>
             <p className="mt-4 max-w-2xl text-base leading-8 text-white/78">
-              Entra al simulador, carga un escenario y evalua resultados con una interfaz pensada para analisis real, no para decorar una demo.
+              Entra al simulador, carga un escenario y evalúa resultados con una interfaz pensada para análisis real, no para decorar una demo.
             </p>
           </div>
 

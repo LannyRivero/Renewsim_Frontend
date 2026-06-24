@@ -76,7 +76,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       {/* Password */}
       <PasswordInput
         id="reg-password"
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChange={(e) => {
           setPassword(e.target.value)
@@ -104,9 +104,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       </button>
 
       <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
-        Ya tenes cuenta?{' '}
+        ¿Ya tenés cuenta?{' '}
         <Link to="/iniciar-sesion" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
-          Iniciar sesion
+          Iniciar sesión
         </Link>
       </p>
     </form>

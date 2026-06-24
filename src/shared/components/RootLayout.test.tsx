@@ -39,9 +39,9 @@ describe('RootLayout auth actions', () => {
   it('shows public auth actions when user is not authenticated', () => {
     renderLayout()
 
-    expect(screen.getByRole('link', { name: 'Iniciar sesion' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Crear cuenta' })).toBeInTheDocument()
-    expect(screen.queryByRole('button', { name: 'Cerrar sesion' })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Cerrar sesión' })).not.toBeInTheDocument()
   })
 
   it('shows profile and logout when user is authenticated', () => {
@@ -54,8 +54,8 @@ describe('RootLayout auth actions', () => {
     renderLayout()
 
     expect(screen.getByRole('link', { name: 'Hola, omar' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Cerrar sesion' })).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: 'Iniciar sesion' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Cerrar sesión' })).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Iniciar sesión' })).not.toBeInTheDocument()
   })
 
   it('clears auth and redirects to login on logout', () => {
@@ -67,7 +67,7 @@ describe('RootLayout auth actions', () => {
     })
 
     renderLayout()
-    fireEvent.click(screen.getByRole('button', { name: 'Cerrar sesion' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Cerrar sesión' }))
 
     expect(useAuthStore.getState().isAuthenticated).toBe(false)
     expect(localStorage.getItem('renewsim-token')).toBeNull()
