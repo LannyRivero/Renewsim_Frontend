@@ -83,7 +83,7 @@ export async function createSimulation(payload: CreateSimulationPayload): Promis
 }
 
 export async function getSimulationById(simulationId: string): Promise<SimulationDetails> {
-  const response = await httpClient.get<ApiResponse<unknown> | unknown>(`/simulations/${simulationId}`)
+  const response = await httpClient.get<ApiResponse<unknown> | unknown>(`/simulations/${simulationId}/results`)
   const raw =
     response.data && typeof response.data === 'object' && 'data' in response.data
       ? (response.data as ApiResponse<unknown>).data
