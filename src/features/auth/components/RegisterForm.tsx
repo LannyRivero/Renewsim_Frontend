@@ -30,10 +30,10 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       await register({ email, password, fullName: name })
       onSuccess()
     } catch {
-      setServerError('Could not create account. Please try again.')
+      setServerError('No se pudo crear la cuenta. Intenta nuevamente.')
       useToastStore.getState().pushToast({
-        title: 'Registration Error',
-        description: 'Could not create account. Please try again.',
+        title: 'Error de registro',
+        description: 'No se pudo crear la cuenta. Intenta nuevamente.',
         variant: 'error',
       })
     } finally {
@@ -46,14 +46,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       {/* Name */}
       <div className="flex flex-col gap-2">
         <label className="text-sm font-medium text-on-surface dark:text-content-dark" htmlFor="reg-name">
-          Name
+          Nombre
         </label>
         <input
           id="reg-name"
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Enter your name"
+          placeholder="Ingresa tu nombre"
           className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
         />
       </div>
@@ -68,7 +68,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
+          placeholder="Ingresa tu email"
           className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
         />
       </div>
@@ -76,7 +76,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       {/* Password */}
       <PasswordInput
         id="reg-password"
-        label="Password"
+        label="Contrasena"
         value={password}
         onChange={(e) => {
           setPassword(e.target.value)
@@ -98,15 +98,15 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         type="submit"
         disabled={isLoading}
         className="mt-2 h-12 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-        aria-label={isLoading ? 'Signing up...' : 'Sign up'}
+        aria-label={isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
       >
-        {isLoading ? 'Signing up...' : 'Sign up'}
+        {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
 
       <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
-        Already have an account?{' '}
-        <Link to="/login" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
-          Sign in
+        Ya tenes cuenta?{' '}
+        <Link to="/iniciar-sesion" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
+          Iniciar sesion
         </Link>
       </p>
     </form>
