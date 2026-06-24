@@ -160,6 +160,8 @@ describe('simulationService.createSimulation', () => {
 
     const result = await getSimulationById('28')
 
+    expect(mockedGet).toHaveBeenCalledWith('/simulations/28')
+
     expect(result).toEqual({
       id: '28',
       name: 'Solar Demo',
