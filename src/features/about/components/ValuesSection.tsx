@@ -1,18 +1,38 @@
+const VALUES = [
+  {
+    title: 'Claridad antes que ornamento',
+    description: 'Cada pantalla tiene que ayudar a entender una decision, no distraerla.',
+  },
+  {
+    title: 'Rigor sin friccion innecesaria',
+    description: 'La base tecnica importa, pero tiene que presentarse con una experiencia entendible y util.',
+  },
+  {
+    title: 'Sostenibilidad con criterio de negocio',
+    description: 'El discurso ambiental solo es serio cuando tambien conversa con viabilidad economica y operativa.',
+  },
+]
+
 export function ValuesSection() {
   return (
-    <section>
-      <h2 className="text-2xl md:text-3xl font-bold text-on-surface dark:text-content-dark mb-4">
-        Values and Goals
-      </h2>
-      <div className="h-1 w-10 rounded-full accent-bar mb-6" />
-      <p className="text-lg text-on-surface-variant dark:text-content-dark/60 leading-relaxed">
-        Our core values include transparency, scientific accuracy,
-        accessibility, and commitment to sustainability. We strive to provide
-        clear and accurate information based on real data so users can explore
-        different energy scenarios and understand their implications. Our goal
-        is to promote greater awareness of renewable energy and support the
-        adoption of more sustainable practices.
-      </p>
+    <section className="grid gap-6 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
+          Principios
+        </p>
+        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
+          La identidad del producto se sostiene en decisiones de fondo.
+        </h2>
+      </div>
+
+      <div className="space-y-4">
+        {VALUES.map((value) => (
+          <article key={value.title} className="rounded-[1.6rem] border border-[#d5ddd4] bg-white/76 p-5 shadow-[0_22px_52px_-42px_rgba(15,23,42,0.36)] dark:border-white/10 dark:bg-white/[0.04]">
+            <h3 className="text-lg font-black tracking-[-0.03em] text-slate-950 dark:text-content-dark">{value.title}</h3>
+            <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-content-dark/62">{value.description}</p>
+          </article>
+        ))}
+      </div>
     </section>
   )
 }

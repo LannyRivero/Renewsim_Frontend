@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "test": "vitest",
-    "test:run": "vitest run",
+    "test:run": "vitest run --maxWorkers=1",
     "test:coverage": "vitest run --coverage",
     "precommit": "pnpm lint && pnpm typecheck",
     "prepr": "pnpm lint && pnpm typecheck && pnpm test:run",

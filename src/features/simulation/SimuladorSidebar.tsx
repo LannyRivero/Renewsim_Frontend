@@ -6,13 +6,13 @@ import { hasRole, readDisplayName, readRoles } from '@/shared/utils/authToken'
 import { useDarkMode } from '@/shared/hooks'
 
 const NAV_ITEMS = [
-  { to: '/simulador', label: 'Simulations', icon: 'insights', end: true },
-  { to: '/simulador/historial', label: 'History', icon: 'history' },
-  { to: '/simulador/nueva', label: 'New Simulation', icon: 'add_chart' },
-  { to: '/simulador/resultados', label: 'Results', icon: 'monitoring' },
-  { to: '/simulador/tecnologias', label: 'Technologies', icon: 'hub' },
-  { to: '/simulador/configuracion', label: 'Settings', icon: 'settings' },
-  { to: '/simulador/admin', label: 'Admin Panel', icon: 'admin_panel_settings' },
+  { to: '/simulador', label: 'Simulaciones', icon: 'insights', end: true },
+  { to: '/simulador/historial', label: 'Historial', icon: 'history' },
+  { to: '/simulador/nueva', label: 'Nueva simulacion', icon: 'add_chart' },
+  { to: '/simulador/resultados', label: 'Resultados', icon: 'monitoring' },
+  { to: '/simulador/tecnologias', label: 'Tecnologias', icon: 'hub' },
+  { to: '/simulador/configuracion', label: 'Configuracion', icon: 'settings' },
+  { to: '/simulador/admin', label: 'Panel de admin', icon: 'admin_panel_settings' },
 ]
 
 export function SimuladorSidebar() {
@@ -36,18 +36,18 @@ export function SimuladorSidebar() {
 
   return (
     <aside className="hidden w-[276px] shrink-0 border-r border-[#ced7ce] bg-[linear-gradient(180deg,rgba(239,243,238,0.98)_0%,rgba(232,237,231,0.98)_100%)] px-6 py-7 shadow-[10px_0_28px_-30px_rgba(89,103,92,0.14)] dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(20,33,27,0.98)_0%,rgba(14,24,20,0.98)_100%)] lg:flex lg:min-h-screen lg:flex-col">
-      <div className="mb-10 flex items-center gap-3">
+      <NavLink to="/" className="mb-10 flex items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a6a45]/35">
         <div className="flex size-10 items-center justify-center rounded-2xl bg-[#1a6a45] shadow-[0_12px_20px_-18px_rgba(26,106,69,0.22)] dark:bg-emerald-400">
           <span className="material-symbols-outlined text-on-primary text-lg">bolt</span>
         </div>
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-content-dark/45">Control Center</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-content-dark/45">Centro de control</p>
           <span className="text-lg font-extrabold tracking-[-0.03em] text-slate-950 dark:text-content-dark">RenewSim</span>
         </div>
-      </div>
+      </NavLink>
 
       <nav className="flex-1">
-        <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-content-dark/45">Workspace</p>
+        <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-content-dark/45">Espacio de trabajo</p>
         <ul className="flex flex-col gap-1.5">
           {navItems.map(({ to, label, icon, end }) => (
             <li key={to}>
@@ -73,7 +73,7 @@ export function SimuladorSidebar() {
       <div className="mt-6 border-t border-[#d1dad0] pt-4 dark:border-white/8">
         <div className="divide-y divide-[#d4ddd3] dark:divide-white/10">
           <p className="px-2 py-2 text-sm font-medium text-slate-600 dark:text-content-dark/70">
-            Logged in as: <span className="font-semibold text-slate-900 dark:text-content-dark">{displayName}</span>
+            Sesion iniciada como: <span className="font-semibold text-slate-900 dark:text-content-dark">{displayName}</span>
           </p>
           <div className="px-1 py-1.5">
           <button
@@ -84,7 +84,7 @@ export function SimuladorSidebar() {
           aria-controls="sidebar-appearance-panel"
         >
             <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60">
-              Appearance
+              Apariencia
             </span>
             <span className="material-symbols-outlined text-[16px] text-slate-500 transition-transform group-hover:translate-y-[1px] dark:text-content-dark/60">
               {isAppearanceOpen ? 'keyboard_arrow_up' : 'keyboard_arrow_down'}
@@ -116,13 +116,13 @@ export function SimuladorSidebar() {
           </div>
           <button
             type="button"
-            aria-label="Logout"
+            aria-label="Cerrar sesion"
             onClick={handleLogout}
             className="group w-full flex items-center justify-between rounded-sm px-2 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-[#edf2eb] hover:text-slate-900 dark:text-content-dark/80 dark:hover:bg-white/5 dark:hover:text-content-dark"
           >
             <span className="inline-flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px] text-slate-500 dark:text-content-dark/65">logout</span>
-              Logout
+              Cerrar sesion
             </span>
             <span className="material-symbols-outlined text-[16px] text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-content-dark/45">chevron_right</span>
           </button>
@@ -132,7 +132,7 @@ export function SimuladorSidebar() {
           >
             <span className="inline-flex items-center gap-2">
               <span className="material-symbols-outlined text-[18px] text-slate-500 dark:text-content-dark/60">help_outline</span>
-              Help
+              Ayuda
             </span>
             <span className="material-symbols-outlined text-[16px] text-slate-400 transition-transform group-hover:translate-x-0.5 dark:text-content-dark/45">chevron_right</span>
           </a>

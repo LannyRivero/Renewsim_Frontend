@@ -23,27 +23,27 @@ beforeEach(() => {
 describe('RegisterForm', () => {
   it('renders all fields and submit button', () => {
     renderForm()
-    expect(screen.getByLabelText('Name')).toBeInTheDocument()
+    expect(screen.getByLabelText('Nombre')).toBeInTheDocument()
     expect(screen.getByLabelText('Email')).toBeInTheDocument()
-    expect(screen.getByLabelText('Password')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /sign up/i })).toBeInTheDocument()
+    expect(screen.getByLabelText('Contrasena')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /crear cuenta/i })).toBeInTheDocument()
   })
 
   it('shows link to login page', () => {
     renderForm()
-    expect(screen.getByRole('link', { name: /sign in/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /iniciar sesion/i })).toBeInTheDocument()
   })
 
   it('shows password validation errors when submitting weak password', async () => {
     renderForm()
-    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ana' } })
+    fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Ana' } })
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'weak' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'weak' } })
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
-    expect(await screen.findByText('Minimum 8 characters')).toBeInTheDocument()
+    expect(await screen.findByText('Minimo 8 caracteres')).toBeInTheDocument()
     expect(mockRegister).not.toHaveBeenCalled()
   })
 
@@ -58,12 +58,12 @@ describe('RegisterForm', () => {
     const onSuccess = vi.fn()
     renderForm(onSuccess)
 
-    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ana López' } })
+    fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Ana López' } })
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Secure1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith({
@@ -79,12 +79,12 @@ describe('RegisterForm', () => {
     mockRegister.mockRejectedValueOnce(new Error('El usuario ya existe'))
     renderForm()
 
-    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ana' } })
+    fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Ana' } })
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'dup@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Secure1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     expect(await screen.findByRole('alert')).toBeInTheDocument()
   })
@@ -93,15 +93,15 @@ describe('RegisterForm', () => {
     mockRegister.mockImplementationOnce(() => new Promise(() => {}))
     renderForm()
 
-    fireEvent.change(screen.getByLabelText('Name'), { target: { value: 'Ana' } })
+    fireEvent.change(screen.getByLabelText('Nombre'), { target: { value: 'Ana' } })
     fireEvent.change(screen.getByLabelText('Email'), {
       target: { value: 'ana@test.com' },
     })
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'Secure1!' } })
-    fireEvent.click(screen.getByRole('button', { name: /sign up/i }))
+    fireEvent.change(screen.getByLabelText('Contrasena'), { target: { value: 'Secure1!' } })
+    fireEvent.click(screen.getByRole('button', { name: /crear cuenta/i }))
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /signing up|loading/i })).toBeDisabled()
+      expect(screen.getByRole('button', { name: /creando cuenta|loading/i })).toBeDisabled()
     })
   })
 })
