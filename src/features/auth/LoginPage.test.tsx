@@ -24,19 +24,19 @@ describe('LoginPage', () => {
         initialEntries={[
           {
             pathname: '/login',
-            state: { from: { pathname: '/simulador/resultados' } },
+            state: { from: { pathname: '/simulador/detalles' } },
           },
         ]}
       >
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/simulador/resultados" element={<p>Results page</p>} />
+          <Route path="/simulador/detalles" element={<p>Details page</p>} />
         </Routes>
       </MemoryRouter>,
     )
 
     fireEvent.click(screen.getByRole('button', { name: 'Mock login success' }))
-    expect(screen.getByText('Results page')).toBeInTheDocument()
+    expect(screen.getByText('Details page')).toBeInTheDocument()
   })
 
   it('redirects to /simulador by default when no from state exists', () => {
