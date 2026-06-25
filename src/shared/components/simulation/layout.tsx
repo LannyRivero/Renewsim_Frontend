@@ -5,13 +5,14 @@ interface SimulationPageShellProps {
   children: ReactNode
   className?: string
   contentClassName?: string
+  bodyClassName?: string
 }
 
 interface SimulationPageContentProps extends ComponentPropsWithoutRef<'div'> {
   spacing?: 'compact' | 'comfortable'
 }
 
-export function SimulationPageShell({ children, className, contentClassName }: SimulationPageShellProps) {
+export function SimulationPageShell({ children, className, contentClassName, bodyClassName }: SimulationPageShellProps) {
   return (
     <div className={cn('w-full py-2 sm:py-3 lg:h-[calc(100vh-4.5rem)] lg:py-0', className)}>
       <section
@@ -23,7 +24,7 @@ export function SimulationPageShell({ children, className, contentClassName }: S
         <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.18)_35%,rgba(255,255,255,0)_100%)] dark:bg-[linear-gradient(90deg,rgba(255,255,255,0)_0%,rgba(255,255,255,0.04)_35%,rgba(255,255,255,0)_100%)]" />
         <div className="pointer-events-none absolute -right-24 -top-24 h-52 w-52 rounded-full bg-[#d7e0d7]/26 blur-3xl dark:bg-white/5" />
         <div className="pointer-events-none absolute -left-16 bottom-0 h-48 w-48 rounded-full bg-[#dde8dc]/35 blur-3xl dark:bg-emerald-500/10" />
-        <div className="relative h-full">{children}</div>
+        <div className={cn('relative h-full', bodyClassName)}>{children}</div>
       </section>
     </div>
   )
