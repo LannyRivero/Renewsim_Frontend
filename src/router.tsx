@@ -14,7 +14,6 @@ import { SimuladorLayout } from './features/simulation/SimuladorLayout'
 
 const DashboardPage = lazy(() => import('./features/simulation/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
 const NewSimulationPage = lazy(() => import('./features/simulation/new-simulation/NewSimulationPage').then((m) => ({ default: m.NewSimulationPage })))
-const SimulationResultsPage = lazy(() => import('./features/simulation/results/SimulationResultsPage').then((m) => ({ default: m.SimulationResultsPage })))
 const SimulationHistoryPage = lazy(() => import('./features/simulation/history/SimulationHistoryPage').then((m) => ({ default: m.SimulationHistoryPage })))
 const EditSimulationPage = lazy(() => import('./features/simulation/edit/EditSimulationPage').then((m) => ({ default: m.EditSimulationPage })))
 const SimulationDetailsPage = lazy(() => import('./features/simulation/details/SimulationDetailsPage').then((m) => ({ default: m.SimulationDetailsPage })))
@@ -58,7 +57,7 @@ export const router = createBrowserRouter([
       { path: 'detalles', element: lazyElement(<SimulationDetailsPage />) },
       { path: 'editar', element: lazyElement(<EditSimulationPage />) },
       { path: 'nueva', element: lazyElement(<NewSimulationPage />, 'new-simulation') },
-      { path: 'resultados', element: lazyElement(<SimulationResultsPage />) },
+      { path: 'resultados', element: lazyElement(<SimulationDetailsPage />) },
       {
         path: 'tecnologias',
         element: (
