@@ -9,7 +9,6 @@ const NAV_ITEMS = [
   { to: '/simulador', label: 'Simulaciones', icon: 'insights', end: true },
   { to: '/simulador/historial', label: 'Historial', icon: 'history' },
   { to: '/simulador/nueva', label: 'Nueva simulación', icon: 'add_chart' },
-  { to: '/simulador/resultados', label: 'Resultados', icon: 'monitoring' },
   { to: '/simulador/tecnologias', label: 'Tecnologías', icon: 'hub' },
   { to: '/simulador/configuracion', label: 'Configuración', icon: 'settings' },
   { to: '/simulador/admin', label: 'Panel de admin', icon: 'admin_panel_settings' },
@@ -35,7 +34,7 @@ export function SimuladorSidebar() {
   }
 
   return (
-    <aside className="hidden w-[276px] shrink-0 border-r border-[#ced7ce] bg-[linear-gradient(180deg,rgba(239,243,238,0.98)_0%,rgba(232,237,231,0.98)_100%)] px-6 py-7 shadow-[10px_0_28px_-30px_rgba(89,103,92,0.14)] dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(20,33,27,0.98)_0%,rgba(14,24,20,0.98)_100%)] lg:flex lg:min-h-screen lg:flex-col">
+    <aside className="hidden h-screen w-[276px] shrink-0 overflow-y-auto border-r border-[#ced7ce] bg-[linear-gradient(180deg,rgba(239,243,238,0.98)_0%,rgba(232,237,231,0.98)_100%)] px-6 py-7 shadow-[10px_0_28px_-30px_rgba(89,103,92,0.14)] dark:border-white/8 dark:bg-[linear-gradient(180deg,rgba(20,33,27,0.98)_0%,rgba(14,24,20,0.98)_100%)] lg:flex lg:flex-col">
       <NavLink to="/" className="mb-10 flex items-center gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a6a45]/35">
         <div className="flex size-10 items-center justify-center rounded-2xl bg-[#1a6a45] shadow-[0_12px_20px_-18px_rgba(26,106,69,0.22)] dark:bg-emerald-400">
           <span className="material-symbols-outlined text-on-primary text-lg">bolt</span>

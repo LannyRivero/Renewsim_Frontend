@@ -43,7 +43,7 @@ export function useSimulationSubmission({
         variant: 'success',
       })
       queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
-      navigate(`/simulador/resultados?id=${encodeURIComponent(result.id)}`)
+      navigate(`/simulador/detalles?id=${encodeURIComponent(result.id)}`)
     },
     onError: () => {
       useToastStore.getState().pushToast({

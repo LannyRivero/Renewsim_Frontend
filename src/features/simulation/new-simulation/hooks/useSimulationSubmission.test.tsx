@@ -135,6 +135,6 @@ describe('useSimulationSubmission', () => {
       locationLatitude: 40.4168,
       locationLongitude: -3.7038,
     })
-    expect(mockNavigate).toHaveBeenCalledWith('/simulador/resultados?id=sim-1')
+    expect(mockNavigate).toHaveBeenCalledWith('/simulador/detalles?id=sim-1')
   })
 })

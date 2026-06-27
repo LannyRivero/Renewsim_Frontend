@@ -1,6 +1,6 @@
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
 import { SimulationDetailsPage } from './SimulationDetailsPage'
 import { getSimulationById } from '../services/simulationService'
@@ -38,6 +38,13 @@ beforeEach(() => {
     temperature: 21,
     climateSource: 'OPENWEATHER',
     climatePeriod: 'recent_10yr',
+    capex: 1000000,
+    opex: 120000,
+    revenue: 150000,
+    paybackYears: 6.7,
+    npv: 220000,
+    irr: 11.2,
+    energyGenerated: 600000,
   })
 
   useSimulationStore.setState({
@@ -71,28 +78,37 @@ describe('SimulationDetailsPage', () => {
   it('renders page title and description', () => {
     renderPage()
     expect(screen.getByRole('heading', { name: 'Detalles de la simulación' })).toBeInTheDocument()
-    expect(screen.getByText(/Revisá el escenario activo en una vista consistente/i)).toBeInTheDocument()
+    expect(screen.getByText(/Esta vista resume los indicadores disponibles del escenario actual/i)).toBeInTheDocument()
   })
 
-  it('renders overview and comparison sections', () => {
+  it('renders summary view by default and exposes internal tabs', () => {
     renderPage()
-    expect(screen.getByRole('heading', { name: 'Resumen de la simulación' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Comparación de fuentes de energía' })).toBeInTheDocument()
+
+    expect(screen.getByRole('button', { name: 'Resumen' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Financiero' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Comparativa' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Clima' })).toBeInTheDocument()
+    expect(screen.getByText('Resumen de la simulación')).toBeInTheDocument()
+    expect(screen.queryByText('Escenario verificado')).not.toBeInTheDocument()
   })
 
-  it('renders financial and environmental insights', () => {
+  it('renders comparison and climate sections only when their tabs are opened', () => {
     renderPage()
-    expect(screen.getByRole('heading', { name: 'Resumen financiero' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Impacto ambiental' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Comparativa' }))
+    expect(screen.getByRole('heading', { name: 'Comparativa no disponible en esta etapa' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Clima' }))
     expect(screen.getByRole('heading', { name: 'Condiciones climáticas utilizadas' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Conclusiones educativas' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura ejecutiva' })).toBeInTheDocument()
   })
 
-  it('renders overview values from store fallback', () => {
+  it('renders overview values from store fallback', async () => {
     renderPage()
-    expect(screen.getByText('wind Simulación')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Eólica · Valencia' })).toBeInTheDocument()
     expect(screen.getByText('Valencia')).toBeInTheDocument()
-    expect(screen.getByText('ROI total: 17%')).toBeInTheDocument()
+    expect(screen.getAllByText('17%').length).toBeGreaterThan(0)
+    expect(await screen.findByText('600,000 kWh')).toBeInTheDocument()
   })
 
   it('prefers URL id and fetches details by query parameter', async () => {
@@ -104,13 +120,19 @@ describe('SimulationDetailsPage', () => {
       roi: 21,
       efficiency: 95,
       createdAt: '2024-05-12T00:00:00.000Z',
+      capex: 850000,
+      revenue: 210000,
+      paybackYears: 5.1,
+      npv: 420000,
+      irr: 13.4,
+      energyGenerated: 780000,
     })
 
     renderPage(['/simulador/detalles?id=sim-url-1'])
 
-    expect(await screen.findByText('Hydro Demo')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Hidráulica · Sevilla' })).toBeInTheDocument()
     expect(screen.getByText('Sevilla')).toBeInTheDocument()
-    expect(screen.getByText('ROI total: 21%')).toBeInTheDocument()
+    expect(screen.getAllByText('21%').length).toBeGreaterThan(0)
     expect(mockedGetSimulationById).toHaveBeenCalledWith('sim-url-1')
   })
 })
