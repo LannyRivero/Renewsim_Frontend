@@ -1,242 +1,173 @@
+import { Bar, BarChart, CartesianGrid, Cell, XAxis, YAxis } from 'recharts'
 import { SimulationCard } from '@/shared/components'
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
+import {
+  SimulationDetailPlaceholder,
+  SimulationDetailPrimaryMetrics,
+  SimulationDetailSectionFrame,
+  SimulationDetailSupportingMetrics,
+} from './SimulationDetailsSectionPrimitives'
+import type { DetailChartDatum, DetailPlaceholderContent, DetailSectionContent } from './simulationDetailsViewModel'
 
-export function SimulationOverviewCard({
-  displayTitle,
-  date,
-  location,
-  roi,
-  efficiency,
-  energyGenerated,
-  decisionStatus,
-  decisionHeadline,
-  decisionSummary,
-  decisionDrivers,
+export function SimulationDetailSectionCard({
+  content,
+  contextLabel,
 }: {
-  displayTitle: string
-  date: string
-  location: string
-  roi: string
-  efficiency: string
-  energyGenerated: string
-  decisionStatus: string
-  decisionHeadline: string
-  decisionSummary: string
-  decisionDrivers: string[]
+  content: DetailSectionContent
+  contextLabel?: string
 }) {
-  const toneClass =
-    decisionStatus === 'Recomendado'
-      ? 'border-emerald-200 bg-emerald-50/80 text-emerald-800 dark:border-emerald-500/20 dark:bg-emerald-500/10 dark:text-emerald-200'
-      : decisionStatus === 'Viable con reservas'
-        ? 'border-amber-200 bg-amber-50/80 text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100'
-        : 'border-rose-200 bg-rose-50/80 text-rose-800 dark:border-rose-500/20 dark:bg-rose-500/10 dark:text-rose-100'
-
   return (
-    <SimulationCard className="border-[#cad4c8] bg-[linear-gradient(180deg,rgba(252,253,250,0.98)_0%,rgba(244,248,243,0.98)_100%)] p-4 dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,36,30,0.95)_0%,rgba(17,29,24,0.95)_100%)]">
-      <div>
-        <p className="inline-flex rounded-full border border-[#d4ddd2] bg-[#edf3ec] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:border-white/10 dark:bg-white/[0.05] dark:text-content-dark/60">
-          Resumen de la simulación
-        </p>
-        <h2 className="mt-2.5 text-[1.85rem] font-black tracking-[-0.035em] text-[#14261c] dark:text-content-dark">{displayTitle}</h2>
-        <div className={`mt-2.5 inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] ${toneClass}`}>
-          {decisionStatus}
-        </div>
-        <p className="mt-2.5 max-w-3xl text-[1.05rem] font-bold tracking-[-0.025em] text-[#14261c] dark:text-content-dark">{decisionHeadline}</p>
-        <p className="mt-1.5 max-w-3xl text-sm leading-5 text-slate-600 dark:text-content-dark/65">{decisionSummary}</p>
-
-        <div className="mt-2.5 flex flex-wrap gap-2 text-sm text-slate-600 dark:text-content-dark/65">
-          <span className="rounded-full border border-[#d8e0d6] bg-white/70 px-3 py-1 dark:border-white/10 dark:bg-white/[0.04]">
-            {date}
-          </span>
-          <span className="rounded-full border border-[#d8e0d6] bg-white/70 px-3 py-1 dark:border-white/10 dark:bg-white/[0.04]">
-            {location}
-          </span>
-        </div>
-
-        <div className="mt-3.5 grid gap-2 sm:grid-cols-3">
-          <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/75 px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">ROI</p>
-            <p className="mt-1 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{roi}</p>
-          </div>
-          <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/75 px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Eficiencia</p>
-            <p className="mt-1 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{efficiency}</p>
-          </div>
-          <div className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/75 px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Generación</p>
-            <p className="mt-1 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{energyGenerated}</p>
-          </div>
-        </div>
-
-        <div className="mt-3.5 grid gap-2 lg:grid-cols-3">
-          {decisionDrivers.slice(0, 3).map((driver) => (
-            <div key={driver} className="rounded-[0.9rem] border border-[#d8e0d6] bg-white/70 px-4 py-2.5 dark:border-white/10 dark:bg-white/[0.04]">
-              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Clave de decisión</p>
-              <p className="mt-1 text-sm leading-5 text-slate-700 dark:text-content-dark/75">{driver}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </SimulationCard>
+    <SimulationDetailSectionFrame content={content} contextLabel={contextLabel}>
+      <SimulationDetailPrimaryMetrics metrics={content.primaryMetrics} />
+      {content.supportingMetrics?.length ? <SimulationDetailSupportingMetrics metrics={content.supportingMetrics} /> : null}
+    </SimulationDetailSectionFrame>
   )
 }
 
-export function SimulationExecutiveSummaryGrid({
-  revenue,
-  capex,
-  paybackYears,
-  climateLabel,
-  climateValue,
+export function SimulationOverviewCard({ content }: { content: DetailSectionContent }) {
+  return <SimulationDetailSectionCard content={content} contextLabel="Lectura ejecutiva del escenario" />
+}
+
+export function SimulationExecutiveSummaryGrid({ content }: { content: DetailSectionContent }) {
+  return <SimulationDetailSectionCard content={content} />
+}
+
+export function SimulationComparisonPositionCard({ content }: { content: DetailSectionContent }) {
+  return <SimulationDetailSectionCard content={content} contextLabel="Baseline para contraste" />
+}
+
+export function SimulationFinancialSnapshot({ content }: { content: DetailSectionContent }) {
+  return <SimulationDetailSectionCard content={content} contextLabel="Defensa economica del escenario" />
+}
+
+function formatCurrencyValue(value: number | string | undefined) {
+  return `$${Math.round(Number(value ?? 0)).toLocaleString('en-US')}`
+}
+
+function FinancialMiniChart({
+  title,
+  description,
+  data,
 }: {
-  revenue: string
-  capex: string
-  paybackYears: string
-  climateLabel: string
-  climateValue: string
+  title: string
+  description: string
+  data: DetailChartDatum[]
 }) {
   return (
-    <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2 xl:grid-cols-3">
-      <SimulationCard className="p-3.5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Finanzas</p>
-        <h3 className="mt-1.5 text-[0.95rem] font-bold text-[#14261c] dark:text-content-dark">Ingreso estimado</h3>
-        <p className="mt-1.5 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{revenue}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/65">Inversión inicial: {capex}</p>
-      </SimulationCard>
+    <div className="rounded-[0.75rem] border border-[#dde4dc] bg-[#fbfcfb] p-4 dark:border-white/10 dark:bg-white/[0.025]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60">{title}</p>
+      <p className="mt-1 text-sm leading-5 text-slate-600 dark:text-content-dark/65">{description}</p>
 
-      <SimulationCard className="p-3.5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Retorno</p>
-        <h3 className="mt-1.5 text-[0.95rem] font-bold text-[#14261c] dark:text-content-dark">Tiempo de retorno</h3>
-        <p className="mt-1.5 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{paybackYears}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/65">Tiempo estimado para recuperar la inversión inicial.</p>
-      </SimulationCard>
-
-      <SimulationCard className="p-3.5">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Clima</p>
-        <h3 className="mt-1.5 text-[0.95rem] font-bold text-[#14261c] dark:text-content-dark">{climateLabel}</h3>
-        <p className="mt-1.5 text-[1.35rem] font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{climateValue}</p>
-        <p className="mt-1 text-sm text-slate-600 dark:text-content-dark/65">Variable climática clave del escenario.</p>
-      </SimulationCard>
-
+      <div className="mt-4 h-[180px]" role="img" aria-label={title}>
+        <ChartContainer className="h-[180px]">
+          <BarChart width={520} height={180} data={data} layout="vertical" margin={{ top: 2, right: 8, left: 8, bottom: 2 }} accessibilityLayer>
+            <CartesianGrid horizontal stroke="rgba(15,23,42,0.06)" vertical={false} />
+            <XAxis
+              type="number"
+              tick={{ fill: '#64748b', fontSize: 11, fontFamily: 'Manrope' }}
+              tickFormatter={(value) => formatCurrencyValue(value)}
+              axisLine={false}
+              tickLine={false}
+            />
+            <YAxis
+              type="category"
+              dataKey="label"
+              width={96}
+              tick={{ fill: '#475569', fontSize: 12, fontFamily: 'Manrope' }}
+              axisLine={false}
+              tickLine={false}
+            />
+            <ChartTooltip content={<ChartTooltipContent formatter={(value) => formatCurrencyValue(value)} />} />
+            <Bar dataKey="value" radius={6} maxBarSize={18}>
+              {data.map((item) => (
+                <Cell key={item.label} fill={`var(--color-${item.tone})`} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+      </div>
     </div>
   )
 }
 
-export function SimulationFinancialSnapshot({
-  capex,
-  opex,
-  revenue,
-  paybackYears,
-  npv,
-  irr,
-}: {
-  capex: string
-  opex: string
-  revenue: string
-  paybackYears: string
-  npv: string
-  irr: string
-}) {
-  return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Inversión</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Inversión inicial</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{capex}</p>
-      </SimulationCard>
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Operación</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Costo operativo</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{opex}</p>
-      </SimulationCard>
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Ingresos</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Ingreso estimado</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{revenue}</p>
-      </SimulationCard>
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Payback</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Retorno</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{paybackYears}</p>
-      </SimulationCard>
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Valor</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Valor presente neto</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{npv}</p>
-      </SimulationCard>
-      <SimulationCard className="p-4">
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Rentabilidad</p>
-        <h3 className="mt-3 text-lg font-bold text-[#14261c] dark:text-content-dark">Tasa interna</h3>
-        <p className="mt-3 text-xl font-black tracking-[-0.03em] text-[#14261c] dark:text-content-dark">{irr}</p>
-      </SimulationCard>
-    </div>
-  )
-}
+export function SimulationFinancialSignalChart({ data }: { data: DetailChartDatum[] }) {
+  const chartConfig = {
+    capital: { label: 'CAPEX', color: 'var(--chart-5)' },
+    budget: { label: 'Presupuesto', color: 'var(--chart-2)' },
+    revenue: { label: 'Ingreso anual', color: 'var(--chart-3)' },
+    net: { label: 'Flujo neto anual', color: 'var(--chart-4)' },
+  }
+  const capitalData = data.filter((item) => item.tone === 'capital' || item.tone === 'budget')
+  const annualFlowData = data.filter((item) => item.tone === 'revenue' || item.tone === 'net')
 
-export function RealDataNoticeCard({ title, description }: { title: string; description: string }) {
   return (
-    <SimulationCard className="border border-[#d8e0d6] bg-[#f7faf5] p-6 dark:border-white/10 dark:bg-white/[0.03]">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Disponibilidad de datos</p>
-      <h3 className="mt-2 text-xl font-bold text-[#14261c] dark:text-content-dark">{title}</h3>
-      <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">{description}</p>
+    <SimulationCard className="border-[#d7dfd6] bg-white p-4 dark:border-white/10 dark:bg-[#16201d]">
+      <div className="space-y-4">
+        <div>
+          <p className="inline-flex rounded-md border border-[#dde4dc] bg-[#f7f9f6] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark/60">
+            Financiero
+          </p>
+          <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60">
+            Relacion entre capital y flujo
+          </p>
+          <h2 className="mt-2.5 text-[1.45rem] font-bold tracking-[-0.025em] text-[#1c2a22] dark:text-content-dark">
+            Lectura visual del caso
+          </h2>
+          <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">
+            Separamos capital y flujo anual para evitar una comparacion engañosa entre magnitudes que no juegan en la misma escala.
+          </p>
+        </div>
+
+        {data.length > 0 ? (
+          <div className="grid gap-4 xl:grid-cols-2">
+            <ChartContainer config={chartConfig}>
+              <FinancialMiniChart
+                title="Capital comprometido"
+                description="Compara inversion requerida contra capacidad presupuestaria disponible del caso."
+                data={capitalData}
+              />
+            </ChartContainer>
+            <ChartContainer config={chartConfig}>
+              <FinancialMiniChart
+                title="Flujo anual esperado"
+                description="Cruza ingreso anual con flujo neto para leer capacidad de defensa operativa del escenario."
+                data={annualFlowData}
+              />
+            </ChartContainer>
+          </div>
+        ) : (
+          <div className="rounded-[0.75rem] border border-dashed border-[#d8dfd7] bg-[#fbfcfb] p-4 text-sm leading-6 text-slate-600 dark:border-white/10 dark:bg-white/[0.025] dark:text-content-dark/65">
+            Todavia no hay suficiente informacion consolidada para construir la comparacion visual del caso financiero.
+          </div>
+        )}
+      </div>
     </SimulationCard>
   )
 }
 
-export function ClimateConditionsCard({
-  irradiance,
-  windSpeed,
-  hydrology,
-  averageTemperature,
-  climateSource,
-  climatePeriod,
-}: {
-  irradiance: string | number
-  windSpeed: string | number
-  hydrology: string | number
-  averageTemperature: string
-  climateSource: string
-  climatePeriod: string
-}) {
+export function RealDataNoticeCard({ content }: { content: DetailPlaceholderContent }) {
+  return <SimulationDetailPlaceholder content={content} />
+}
+
+export function FinancialPendingNoteCard({ content }: { content: DetailPlaceholderContent }) {
   return (
-    <SimulationCard tone="soft" className="space-y-4 p-6">
-      <div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Contexto climático</p>
-        <h3 className="mt-2 text-xl font-bold text-[#14261c] dark:text-content-dark">Condiciones climáticas utilizadas</h3>
-      </div>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Irradiancia</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{irradiance} kWh/m2/día</p>
-        </div>
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Viento</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{windSpeed} m/s</p>
-        </div>
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Hidrología</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{hydrology}</p>
-        </div>
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Temperatura</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{averageTemperature}</p>
-        </div>
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Fuente</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{climateSource}</p>
-        </div>
-        <div className="rounded-[1rem] border border-[#d8e0d6] bg-white/70 p-4 dark:border-white/10 dark:bg-white/[0.04]">
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Período</p>
-          <p className="mt-2 text-base font-semibold text-[#14261c] dark:text-content-dark">{climatePeriod}</p>
-        </div>
-      </div>
+    <SimulationCard className="border-dashed border-[#dbe3db] bg-[#fafcf9] p-4 dark:border-white/10 dark:bg-white/[0.02]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60">{content.sectionLabel}</p>
+      <h3 className="mt-2 text-base font-semibold text-[#1c2a22] dark:text-content-dark">{content.title}</h3>
+      <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-content-dark/65">{content.description}</p>
     </SimulationCard>
   )
+}
+
+export function ClimateConditionsCard({ content }: { content: DetailSectionContent }) {
+  return <SimulationDetailSectionCard content={content} contextLabel="Recurso y trazabilidad de entrada" />
 }
 
 export function EducationalConclusionsCard() {
   return (
-    <SimulationCard className="border border-[#cfe0cf] bg-[linear-gradient(180deg,rgba(235,244,234,0.92)_0%,rgba(225,237,225,0.92)_100%)] p-6 dark:border-emerald-500/20 dark:bg-[linear-gradient(180deg,rgba(22,54,38,0.34)_0%,rgba(17,38,29,0.28)_100%)]">
-      <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/60">Cierre ejecutivo</p>
-      <h3 className="mb-2 mt-2 text-xl font-bold text-[#14261c] dark:text-content-dark">Lectura ejecutiva</h3>
+    <SimulationCard className="border border-[#d8dfd7] bg-[#f8faf8] p-6 dark:border-white/10 dark:bg-[#17211e]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 dark:text-content-dark/60">Notas operativas</p>
+      <h3 className="mb-2 mt-2 text-lg font-bold text-[#1c2a22] dark:text-content-dark">Lectura de contexto</h3>
       <p className="text-sm leading-6 text-slate-700 dark:text-content-dark/80">
         Esta vista resume los indicadores disponibles del escenario actual para facilitar una lectura clara de desempeño, viabilidad y contexto operativo.
       </p>

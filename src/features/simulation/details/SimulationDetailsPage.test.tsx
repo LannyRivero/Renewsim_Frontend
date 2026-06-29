@@ -78,37 +78,68 @@ describe('SimulationDetailsPage', () => {
   it('renders page title and description', () => {
     renderPage()
     expect(screen.getByRole('heading', { name: 'Detalles de la simulación' })).toBeInTheDocument()
-    expect(screen.getByText(/Esta vista resume los indicadores disponibles del escenario actual/i)).toBeInTheDocument()
+    expect(screen.getByText(/Vista consolidada del escenario para revisar desempeño, viabilidad financiera y condiciones operativas\./i)).toBeInTheDocument()
   })
 
   it('renders summary view by default and exposes internal tabs', () => {
     renderPage()
 
-    expect(screen.getByRole('button', { name: 'Resumen' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Financiero' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Comparativa' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Clima' })).toBeInTheDocument()
-    expect(screen.getByText('Resumen de la simulación')).toBeInTheDocument()
-    expect(screen.queryByText('Escenario verificado')).not.toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: 'Decisión' })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('tab', { name: 'Financiero' })).toHaveAttribute('aria-selected', 'false')
+    expect(screen.getByRole('tab', { name: 'Comparativa' })).toHaveAttribute('aria-selected', 'false')
+    expect(screen.getByRole('tab', { name: 'Clima' })).toHaveAttribute('aria-selected', 'false')
+    expect(screen.getByRole('tabpanel', { name: 'Decisión' })).toBeInTheDocument()
+    expect(screen.getByText('Lectura ejecutiva del escenario')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura para decisión' })).toBeInTheDocument()
+    expect(screen.getByText('Recomendación')).toBeInTheDocument()
+    expect(screen.getByText('Riesgo principal')).toBeInTheDocument()
+    expect(screen.getByText('Próximo paso')).toBeInTheDocument()
+    expect(screen.getAllByText('Indicadores principales')).toHaveLength(2)
+    expect(screen.queryByText('Comparativa no disponible en esta etapa')).not.toBeInTheDocument()
   })
 
   it('renders comparison and climate sections only when their tabs are opened', () => {
     renderPage()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Comparativa' }))
-    expect(screen.getByRole('heading', { name: 'Comparativa no disponible en esta etapa' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: 'Comparativa' }))
+    expect(screen.getByRole('tabpanel', { name: 'Comparativa' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Posicion del escenario actual' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Datos pendientes para comparativa real' })).toBeInTheDocument()
+    expect(screen.queryByText(/charts?/i)).not.toBeInTheDocument()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Clima' }))
-    expect(screen.getByRole('heading', { name: 'Condiciones climáticas utilizadas' })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Lectura ejecutiva' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('tab', { name: 'Clima' }))
+    expect(screen.getByRole('tabpanel', { name: 'Clima' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura climatica del recurso' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura de contexto' })).toBeInTheDocument()
+    expect(screen.getByText('Detalles complementarios')).toBeInTheDocument()
+  })
+
+  it('renders financial case plus backend-reserved signals when the financial tab is opened', () => {
+    renderPage()
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Financiero' }))
+
+    expect(screen.getByRole('tabpanel', { name: 'Financiero' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Caso financiero' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Señales pendientes para comité financiero' })).toBeInTheDocument()
+    expect(screen.getByText(/sensibilidad del escenario/i)).toBeInTheDocument()
+  })
+
+  it('renders split financial visuals once financial data is available', async () => {
+    renderPage()
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Financiero' }))
+
+    expect(await screen.findByText('Capital comprometido')).toBeInTheDocument()
+    expect(screen.getByText('Flujo anual esperado')).toBeInTheDocument()
   })
 
   it('renders overview values from store fallback', async () => {
     renderPage()
-    expect(screen.getByRole('heading', { name: 'Eólica · Valencia' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura para decisión' })).toBeInTheDocument()
     expect(screen.getByText('Valencia')).toBeInTheDocument()
     expect(screen.getAllByText('17%').length).toBeGreaterThan(0)
-    expect(await screen.findByText('600,000 kWh')).toBeInTheDocument()
+    expect(await screen.findByText('Viable con reservas')).toBeInTheDocument()
   })
 
   it('prefers URL id and fetches details by query parameter', async () => {
@@ -130,8 +161,9 @@ describe('SimulationDetailsPage', () => {
 
     renderPage(['/simulador/detalles?id=sim-url-1'])
 
-    expect(await screen.findByRole('heading', { name: 'Hidráulica · Sevilla' })).toBeInTheDocument()
-    expect(screen.getByText('Sevilla')).toBeInTheDocument()
+    expect(await screen.findByText('Sevilla')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Lectura para decisión' })).toBeInTheDocument()
+    expect(screen.getByText((content) => content.includes('Fecha:'))).toBeInTheDocument()
     expect(screen.getAllByText('21%').length).toBeGreaterThan(0)
     expect(mockedGetSimulationById).toHaveBeenCalledWith('sim-url-1')
   })
