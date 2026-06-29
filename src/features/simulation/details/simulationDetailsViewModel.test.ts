@@ -38,33 +38,67 @@ describe('buildSimulationDetailsViewModel', () => {
       resultFromStore: null,
     })
 
-    expect(viewModel.summarySection.sectionLabel).toBe('Resumen')
-    expect(viewModel.summarySection.title).toBe('Eólica · Valencia')
+    expect(viewModel.summarySection.sectionLabel).toBe('Decisión')
+    expect(viewModel.summarySection.title).toBe('Lectura para decisión')
     expect(viewModel.summarySection.primaryMetrics).toEqual([
+      {
+        label: 'Recomendación',
+        value: 'Viable con reservas',
+        helper:
+          'La relación entre inversión e ingreso esperado sugiere una revisión adicional del caso antes de priorizarlo. Horizonte simple de recuperación: 6.7 años.',
+      },
       { label: 'ROI', value: '17%' },
-      { label: 'Eficiencia', value: '90%' },
-      { label: 'Generación', value: '600,000 kWh' },
+      { label: 'Tiempo de retorno', value: '6.7 años' },
     ])
     expect(viewModel.summarySnapshotSection.primaryMetrics).toEqual([
-      { label: 'Ingreso estimado', value: '$150,000', helper: 'Inversión inicial: $1,000,000' },
-      { label: 'Tiempo de retorno', value: '6.7 años' },
-      { label: 'Velocidad del viento', value: '8.1 m/s' },
+      {
+        label: 'Retorno',
+        value: 'Señal económica',
+        helper: 'El retorno proyectado aporta una base económica más favorable para avanzar con evaluación ejecutiva.',
+      },
+      {
+        label: 'Recuperación',
+        value: 'Horizonte de inversión',
+        helper: 'El tiempo de retorno es moderado y conviene contrastarlo con objetivos de inversión y horizonte operativo.',
+      },
+      {
+        label: 'Desempeño técnico',
+        value: 'Condición operativa',
+        helper: 'La eficiencia operativa esperada acompaña una lectura técnica más consistente del escenario.',
+      },
     ])
     expect(viewModel.financialSection.primaryMetrics).toEqual([
-      { label: 'Inversión inicial', value: '$1,000,000' },
-      { label: 'Ingreso estimado', value: '$150,000' },
-      { label: 'Tiempo de retorno', value: '6.7 años' },
+      { label: 'Inversion inicial', value: '$1,000,000', helper: 'Capital requerido para activar el escenario.' },
+      { label: 'Tiempo de retorno', value: '6.7 años', helper: 'Tiempo estimado para recuperar la inversion inicial bajo los supuestos actuales.' },
+      { label: 'Valor presente neto', value: '$220,000', helper: 'La proyeccion mantiene creacion de valor bajo los supuestos actuales.' },
     ])
     expect(viewModel.climateSection.primaryMetrics).toEqual([
-      { label: 'Irradiancia', value: '4.8 kWh/m2/día' },
-      { label: 'Viento', value: '8.1 m/s' },
-      { label: 'Hidrología', value: '2.4' },
+      { label: 'Viento utilizable', value: '8.1 m/s', helper: 'Variable principal para leer la consistencia del recurso eolico.' },
+      { label: 'Temperatura promedio', value: '21.0 C', helper: 'Ayuda a contextualizar operacion esperada y condiciones ambientales del escenario.' },
+      { label: 'Ventana de datos', value: 'recent_10yr', helper: 'Periodo de referencia usado para sostener la lectura del recurso.' },
+    ])
+    expect(viewModel.comparisonSection.primaryMetrics).toEqual([
+      {
+        label: 'Retorno vs referencia',
+        value: '17%',
+        helper: 'El retorno cae en una banda que justifica contraste frente a otras alternativas.',
+      },
+      {
+        label: 'Recuperacion vs referencia',
+        value: '6.7 años',
+        helper: 'El horizonte de recuperacion sigue siendo exigente frente a una alternativa mas agresiva.',
+      },
+      {
+        label: 'Solidez tecnica',
+        value: '90%',
+        helper: 'La señal tecnica es suficientemente fuerte para merecer comparacion con otros escenarios.',
+      },
     ])
     expect(viewModel.comparisonPlaceholder).toEqual({
       sectionLabel: 'Comparativa',
-      title: 'Comparativa no disponible en esta etapa',
+      title: 'Datos pendientes para comparativa real',
       description:
-        'Esta simulación no cuenta todavía con una comparativa detallada entre alternativas dentro de esta vista. Cuando esté disponible, se incorporará como parte del análisis ejecutivo del escenario.',
+        'Para una comparativa real todavia falta que backend entregue alternativas lado a lado con mismos supuestos, misma ventana temporal y mismas metricas financieras y tecnicas para contraste directo.',
     })
   })
 
@@ -80,26 +114,46 @@ describe('buildSimulationDetailsViewModel', () => {
       },
     })
 
-    expect(viewModel.summarySection.title).toBe('Solar · Córdoba')
+    expect(viewModel.summarySection.title).toBe('Lectura para decisión')
     expect(viewModel.summarySection.primaryMetrics).toEqual([
+      {
+        label: 'Recomendación',
+        value: 'Viable con reservas',
+        helper: 'Los indicadores disponibles permiten continuar el análisis, aunque todavía no alcanzan una señal suficientemente concluyente.',
+      },
       { label: 'ROI', value: 'N/D' },
-      { label: 'Eficiencia', value: 'N/D' },
-      { label: 'Generación', value: 'N/D' },
+      { label: 'Tiempo de retorno', value: 'N/D' },
     ])
     expect(viewModel.summarySnapshotSection.primaryMetrics).toEqual([
-      { label: 'Ingreso estimado', value: 'N/D', helper: 'Inversión inicial: N/D' },
-      { label: 'Tiempo de retorno', value: 'N/D' },
-      { label: 'Irradiancia', value: 'N/D kWh/m2/día' },
+      {
+        label: 'Retorno',
+        value: 'Señal económica',
+        helper: 'El escenario todavía no cuenta con una lectura completa de retorno para sostener una recomendación firme.',
+      },
+      {
+        label: 'Recuperación',
+        value: 'Horizonte de inversión',
+        helper: 'No hay un tiempo de retorno consolidado disponible, lo que reduce la capacidad de defensa financiera del escenario.',
+      },
+      {
+        label: 'Desempeño técnico',
+        value: 'Condición operativa',
+        helper: 'La eficiencia esperada de la alternativa solar no está consolidada en esta corrida.',
+      },
     ])
     expect(viewModel.financialSection.supportingMetrics).toEqual([
-      { label: 'Costo operativo', value: 'N/D' },
-      { label: 'Valor presente neto', value: 'N/D' },
-      { label: 'Tasa interna', value: 'N/D' },
+      { label: 'Ingreso estimado', value: 'N/D', helper: 'Flujo economico esperado del escenario bajo los supuestos actuales.' },
+      { label: 'Ahorro estimado', value: 'N/D', helper: 'Impacto economico esperado por reduccion de costo o consumo frente al escenario actual.' },
+      { label: 'CAPEX vs presupuesto', value: 'N/D', helper: 'No hay presupuesto disponible cargado para contrastar la inversion requerida.' },
+      { label: 'Flujo neto anual', value: 'N/D', helper: 'No hay suficiente informacion para consolidar el flujo neto anual del caso.' },
+      { label: 'Costo operativo', value: 'N/D', helper: 'Carga operativa recurrente que acompana al caso.' },
+      { label: 'Tasa interna', value: 'N/D', helper: 'La rentabilidad porcentual todavia no esta consolidada.' },
     ])
     expect(viewModel.climateSection.supportingMetrics).toEqual([
-      { label: 'Temperatura promedio', value: 'N/D' },
-      { label: 'Fuente climática', value: 'N/D' },
-      { label: 'Período climático', value: 'N/D' },
+      { label: 'Fuente climatica', value: 'N/D', helper: 'Proveedor o fuente usada para la trazabilidad del dato.' },
+      { label: 'Irradiancia reportada', value: 'N/D' },
+      { label: 'Viento reportado', value: 'N/D' },
+      { label: 'Hidrologia reportada', value: 'N/D' },
     ])
   })
 })
