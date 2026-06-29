@@ -1,7 +1,10 @@
 const LOCALE = 'en-US'
 
 export function formatNumber(value: number): string {
-  return value.toLocaleString(LOCALE)
+  return value.toLocaleString(LOCALE, {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
 }
 
 export function formatKg(value: number): string {

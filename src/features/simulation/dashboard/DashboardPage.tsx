@@ -35,8 +35,8 @@ export function DashboardPage() {
   const distribution = data?.distribution ?? EMPTY_DASHBOARD_DATA.distribution
 
   return (
-    <SimulationPageShell contentClassName="px-4 py-4 sm:px-5 sm:py-5 lg:h-full lg:px-5 lg:py-5">
-      <SimulationPageContent spacing="compact">
+    <SimulationPageShell className="lg:h-auto" contentClassName="px-4 py-4 sm:px-5 sm:py-5 lg:h-auto lg:px-5 lg:py-5" bodyClassName="lg:h-auto">
+      <SimulationPageContent spacing="compact" className="lg:h-auto">
         <SimulationSectionHeader
           eyebrow="Comando de Operaciones"
           eyebrowIcon={<Activity className="h-3.5 w-3.5" />}
@@ -58,7 +58,7 @@ export function DashboardPage() {
 
         <div className="flex min-h-0 flex-col gap-3">
           <div>
-            <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/70">
+            <h2 className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-600 dark:text-content-dark/78">
               Resumen de Energía
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-content-dark/65">
@@ -66,11 +66,11 @@ export function DashboardPage() {
             </p>
           </div>
 
-          <div className="grid min-h-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.75fr)_minmax(320px,1fr)]">
-            <div className="min-h-0">
+          <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-[minmax(0,1.75fr)_minmax(320px,1fr)]">
+            <div>
               <EnergyBarChart data={energyBySource} />
             </div>
-            <div className="min-h-0">
+            <div>
               <DistributionDonut data={distribution} />
             </div>
           </div>

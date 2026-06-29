@@ -15,5 +15,6 @@ describe('PerformanceSnapshot', () => {
     expect(screen.getByText('Objetivo vs Actual')).toBeInTheDocument()
     expect(screen.getByText('Factor de capacidad')).toBeInTheDocument()
     expect(screen.getByText('Producción energética')).toBeInTheDocument()
+    expect(screen.getAllByText(/Debajo del objetivo|Cumple objetivo|Supera objetivo|Sin referencia/).length).toBeGreaterThan(0)
   })
 })
