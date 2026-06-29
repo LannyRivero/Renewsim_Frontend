@@ -44,3 +44,4 @@ coverage
 
 # Gentle AI local artifacts
 .atl/
+.codegraph/
