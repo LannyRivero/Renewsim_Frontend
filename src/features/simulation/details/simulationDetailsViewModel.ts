@@ -21,6 +21,16 @@ import {
 } from './simulationDetailsBuilders'
 import type { SimulationDetailsViewModel } from './simulationDetailsTypes'
 
+export type {
+  DecisionSummary,
+  DetailChartDatum,
+  DetailMetric,
+  DetailPlaceholderContent,
+  DetailSectionContent,
+  EffectiveSimulationResult,
+  SimulationDetailsViewModel,
+} from './simulationDetailsTypes'
+
 export function buildSimulationDetailsViewModel({
   data,
   requestedSimulationId,
