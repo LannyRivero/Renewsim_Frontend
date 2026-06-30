@@ -1,4 +1,4 @@
-import { formatEnergyTypeLabel, formatNumber } from './simulationDetailsFormatters'
+import { formatNumber } from './simulationDetailsFormatters'
 import type {
   DecisionSummary,
   DetailChartDatum,
