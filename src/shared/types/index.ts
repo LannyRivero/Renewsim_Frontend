@@ -1,5 +1,37 @@
 
 export type { LoginRequest, RegisterRequest, AuthResponse, RegisterResponse, AuthUser, UserProfile } from './auth'
-export type { SimulationHistoryItem, CreateSimulationPayload, SimulationResult } from './simulation'
+export type {
+  ApiErrorResponse,
+  CurrencyCode,
+  FinancialYearItem,
+  ListUserSimulationsResponse,
+  LocationCandidate,
+  MonthlyEnergyBalanceItem,
+  MonthlySeries,
+  RealCreateSimulationRequest,
+  RealSimulationDemandInput,
+  RealSimulationEconomicsInput,
+  RealSimulationSystemInput,
+  RecommendationReason,
+  RecommendationStatus,
+  ResolvedLocation,
+  ResourceSeries,
+  ReverseLocationResponse,
+  SearchLocationsResponse,
+  SimulationAssumptionsResponse,
+  SimulationDetailsResponse,
+  SimulationFinancialResponse,
+  SimulationHistoryItem,
+  SimulationHistoryRow,
+  SimulationReportResponse,
+  SimulationResult,
+  SimulationRunStatus,
+  SimulationSummaryResponse,
+  SimulationSystemLosses,
+  SimulationTechnicalResponse,
+  SimulationTechnology,
+  SimulationWarning,
+  WarningSeverity,
+} from './simulation'
 export type { TechnologyItem, CreateTechnologyPayload, UpdateTechnologyPayload } from './technology'
 export type { AdminUser } from './user'
