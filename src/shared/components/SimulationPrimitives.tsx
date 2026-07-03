@@ -4,8 +4,8 @@ export {
   SimulationCard,
   SimulationSectionHeader,
   SimulationToolbar,
-  SubSectionHeader,
 } from './simulation/layout'
+export { SubSectionHeader } from './section/SubSectionHeader'
 export {
   SimulationStatusBadge,
   SimulationStateMessage,
