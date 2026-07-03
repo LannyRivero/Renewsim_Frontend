@@ -1,5 +1,41 @@
-import type { ComponentPropsWithoutRef } from 'react'
+import type { ComponentPropsWithoutRef, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+
+interface FormFieldProps {
+  label: string
+  htmlFor?: string
+  children: ReactNode
+}
+
+export function FormField({ label, htmlFor, children }: FormFieldProps) {
+  return (
+    <div>
+      <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium">
+        {label}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+interface SimulationReadonlyFormInputProps extends ComponentPropsWithoutRef<'input'> {
+  value: string
+}
+
+export function SimulationReadonlyFormInput({ className, value, ...props }: SimulationReadonlyFormInputProps) {
+  return (
+    <input
+      value={value}
+      readOnly
+      aria-readonly="true"
+      className={cn(
+        'h-9 w-full rounded border border-[#d5dbe5] bg-[#f3f5f8] px-4 text-sm text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] outline-none dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark',
+        className,
+      )}
+      {...props}
+    />
+  )
+}
 
 interface SimulationActionButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: 'primary' | 'outline' | 'soft'
@@ -9,7 +45,7 @@ export function SimulationActionButton({ className, variant = 'outline', ...prop
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 disabled:opacity-60 disabled:shadow-none',
+        'inline-flex items-center justify-center gap-2 rounded-sm px-4 py-2.5 text-sm font-semibold transition-all duration-200 disabled:opacity-60 disabled:shadow-none',
         variant === 'primary'
           ? 'border border-transparent bg-[#0d5a37] text-white shadow-[0_14px_28px_-18px_rgba(13,90,55,0.38)] hover:-translate-y-px hover:bg-[#0b4d2f] dark:bg-emerald-400 dark:text-slate-950 dark:hover:bg-emerald-300'
           : variant === 'outline'
@@ -26,8 +62,8 @@ export function SimulationTextInput({ className, ...props }: ComponentPropsWitho
   return (
     <input
       className={cn(
-        'w-full rounded-xl border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none placeholder:text-[#8c9e92] focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:placeholder:text-content-dark/45 dark:focus:border-white/20 dark:focus:ring-white/10',
-        className,
+        'h-9 w-full rounded border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none placeholder:text-[#8c9e92] focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:placeholder:text-content-dark/45 dark:focus:border-white/20 dark:focus:ring-white/10',
+	        className,
       )}
       {...props}
     />
@@ -38,7 +74,7 @@ export function SimulationSelect({ className, ...props }: ComponentPropsWithoutR
   return (
     <select
       className={cn(
-        'w-full rounded-xl border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10',
+        'h-9 w-full rounded border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:focus:border-white/20 dark:focus:ring-white/10',
         className,
       )}
       {...props}
@@ -51,7 +87,7 @@ export function SimulationReadonlyInput({ className, ...props }: ComponentPropsW
     <input
       readOnly
       className={cn(
-        'w-full h-12 rounded-md border border-[#cfd8ce] bg-[#e7ede7] px-3 text-sm text-[#587063] cursor-not-allowed dark:border-white/10 dark:bg-white/5 dark:text-content-dark/70',
+        'h-9 w-full rounded border border-[#cfd8ce] bg-[#e7ede7] px-3 text-sm text-[#587063] cursor-not-allowed dark:border-white/10 dark:bg-white/5 dark:text-content-dark/70',
         className,
       )}
       {...props}
