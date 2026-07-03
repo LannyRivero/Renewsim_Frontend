@@ -47,18 +47,18 @@ describe('NewSimulationPage', () => {
     renderPage()
 
     expect(screen.getByLabelText('Ubicación')).toBeInTheDocument()
-    expect(screen.getByLabelText('Tipo de energía')).toBeInTheDocument()
-    expect(screen.getByLabelText('Tamaño del proyecto')).toBeInTheDocument()
-    expect(screen.getByLabelText('Presupuesto')).toBeInTheDocument()
-    expect(screen.getByLabelText('Tamaño del proyecto')).toHaveValue(null)
-    expect(screen.getByLabelText('Presupuesto')).toHaveValue(null)
+    expect(screen.getByLabelText('Nombre del proyecto')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tecnología')).toBeInTheDocument()
+    expect(screen.getByLabelText('Potencia instalada (kW)')).toBeInTheDocument()
+    expect(screen.getByLabelText('Inversión estimada')).toBeInTheDocument()
+    expect(screen.getByLabelText('Tecnología')).toHaveValue('Solar')
   })
 
   it('renders merged location section', () => {
     renderPage()
 
     expect(screen.getByRole('button', { name: 'Usar mi ubicación' })).toBeInTheDocument()
-    expect(screen.getByText(/Ingresá una referencia legible para la ubicación/)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Ingresá ciudad o región')).toBeInTheDocument()
   })
 
   it('does not render climate preview on this page', () => {
@@ -72,10 +72,19 @@ describe('NewSimulationPage', () => {
     expect(screen.getByRole('button', { name: 'Ejecutar simulación' })).toBeInTheDocument()
   })
 
+  it('keeps advanced settings collapsed by default', () => {
+    renderPage()
+
+    expect(screen.getByRole('button', { name: /Mostrar ajustes/ })).toBeInTheDocument()
+    expect(screen.queryByLabelText('Performance ratio')).not.toBeInTheDocument()
+  })
+
   it('fills location and coordinates when browser geolocation succeeds', async () => {
     mockedResolveLocation.mockResolvedValueOnce({
+      label: 'Mendoza, AR',
       name: 'Mendoza',
       country: 'AR',
+      countryCode: 'AR',
       lat: -32.8895,
       lon: -68.8458,
     })
@@ -116,8 +125,10 @@ describe('NewSimulationPage', () => {
   it('shows backend suggestions while typing and applies the selected location', async () => {
     mockedSearchLocations.mockResolvedValueOnce([
       {
+        label: 'Mendoza, AR',
         name: 'Mendoza',
         country: 'AR',
+        countryCode: 'AR',
         lat: -32.8895,
         lon: -68.8458,
       },
