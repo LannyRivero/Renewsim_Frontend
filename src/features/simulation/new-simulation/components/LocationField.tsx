@@ -9,7 +9,7 @@ interface LocationFieldModel {
   shouldShowSearchingMessage: boolean
   locationAssistMessage: string | null
   locationSuggestions: ResolvedLocation[]
-  useBrowserLocation: () => void
+  startBrowserLocationResolution: () => void
   applyLocationSuggestion: (suggestion: ResolvedLocation) => void
 }
 
@@ -124,7 +124,7 @@ export function LocationField({ form, location }: LocationFieldProps) {
         <LocationSearchInput
           form={form}
           isResolvingBrowserLocation={location.isResolvingBrowserLocation}
-          onUseBrowserLocation={location.useBrowserLocation}
+          onUseBrowserLocation={location.startBrowserLocationResolution}
         />
         <LocationMessages
           form={form}

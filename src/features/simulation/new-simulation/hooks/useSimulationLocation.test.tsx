@@ -30,13 +30,36 @@ function renderLocationHook(initialLocation = '') {
     () => {
       const form = useForm<SimulationCreateFormInput, undefined, SimulationCreateFormValues>({
         defaultValues: {
-          location: initialLocation,
-          energyType: 'solar',
-          projectSize: 500,
-          budget: 1_000_000,
-          energyConsumption: 1_000,
-          locationLatitude: 40.4168,
-          locationLongitude: -3.7038,
+          name: '',
+          technology: 'solar',
+          locationSearch: initialLocation,
+          location: {
+            label: '',
+            lat: 40.4168,
+            lon: -3.7038,
+            country: '',
+            countryCode: '',
+          },
+          system: {
+            installedCapacityKw: 500,
+            performanceRatio: 0.81,
+            degradationRateAnnualPct: 0.5,
+            availabilityPct: 99,
+            lossesPct: { inverter: 2, temperature: 6, wiring: 1, soiling: 3, other: 1 },
+          },
+          demand: {
+            annualConsumptionKwh: 1_000,
+            monthlyConsumptionKwh: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+          },
+          economics: {
+            currency: 'EUR',
+            capexTotal: 1_000_000,
+            opexAnnual: 7200,
+            electricityPurchasePricePerKwh: 0.18,
+            exportPricePerKwh: 0.07,
+            discountRatePct: 8,
+            projectLifetimeYears: 20,
+          },
         },
       })
 
@@ -61,7 +84,7 @@ describe('useSimulationLocation', () => {
 
   it('loads backend suggestions after the debounce window', async () => {
     mockedSearchLocations.mockResolvedValueOnce([
-      { name: 'Mendoza', country: 'AR', lat: -32.8895, lon: -68.8458 },
+      { label: 'Mendoza, AR', name: 'Mendoza', country: 'AR', countryCode: 'AR', lat: -32.8895, lon: -68.8458 },
     ])
 
     const { result } = renderLocationHook('Mend')
@@ -69,7 +92,7 @@ describe('useSimulationLocation', () => {
     await waitFor(() => {
       expect(mockedSearchLocations).toHaveBeenCalledWith('Mend')
       expect(result.current.location.locationSuggestions).toEqual([
-        { name: 'Mendoza', country: 'AR', lat: -32.8895, lon: -68.8458 },
+        { label: 'Mendoza, AR', name: 'Mendoza', country: 'AR', countryCode: 'AR', lat: -32.8895, lon: -68.8458 },
       ])
     }, { timeout: 1500 })
   })
@@ -79,22 +102,31 @@ describe('useSimulationLocation', () => {
 
     act(() => {
       result.current.location.applyLocationSuggestion({
+        label: 'Mendoza, AR',
         name: 'Mendoza',
         country: 'AR',
+        countryCode: 'AR',
         lat: -32.8895,
         lon: -68.8458,
       })
     })
 
-    expect(result.current.form.getValues('location')).toBe('Mendoza, AR')
-    expect(result.current.form.getValues('locationLatitude')).toBe(-32.8895)
-    expect(result.current.form.getValues('locationLongitude')).toBe(-68.8458)
+    expect(result.current.form.getValues('locationSearch')).toBe('Mendoza, AR')
+    expect(result.current.form.getValues('location')).toEqual({
+      label: 'Mendoza, AR',
+      lat: -32.8895,
+      lon: -68.8458,
+      country: 'AR',
+      countryCode: 'AR',
+    })
   })
 
   it('resolves browser geolocation into city and country', async () => {
     mockedResolveLocation.mockResolvedValueOnce({
+      label: 'Mendoza, AR',
       name: 'Mendoza',
       country: 'AR',
+      countryCode: 'AR',
       lat: -32.8895,
       lon: -68.8458,
     })
@@ -124,16 +156,21 @@ describe('useSimulationLocation', () => {
     const { result } = renderLocationHook()
 
     await act(async () => {
-      result.current.location.useBrowserLocation()
+      result.current.location.startBrowserLocationResolution()
       await Promise.resolve()
       await Promise.resolve()
     })
 
     await waitFor(() => {
       expect(mockedResolveLocation).toHaveBeenCalledWith(-32.8895, -68.8458)
-      expect(result.current.form.getValues('location')).toBe('Mendoza, AR')
-      expect(result.current.form.getValues('locationLatitude')).toBe(-32.8895)
-      expect(result.current.form.getValues('locationLongitude')).toBe(-68.8458)
+      expect(result.current.form.getValues('locationSearch')).toBe('Mendoza, AR')
+      expect(result.current.form.getValues('location')).toEqual({
+        label: 'Mendoza, AR',
+        lat: -32.8895,
+        lon: -68.8458,
+        country: 'AR',
+        countryCode: 'AR',
+      })
       expect(result.current.location.locationAssistMessage).toBe('Ubicación actual cargada: Mendoza, AR.')
     })
   })
