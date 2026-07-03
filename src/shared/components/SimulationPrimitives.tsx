@@ -12,13 +12,13 @@ export {
   SimulationModalActions,
 } from './simulation/feedback'
 export {
-  FormField,
   SimulationActionButton,
   SimulationTextInput,
   SimulationSelect,
   SimulationReadonlyInput,
-  SimulationReadonlyFormInput,
 } from './simulation/controls'
+export { FormField } from './form/FormField'
+export { ReadonlyFormInput as SimulationReadonlyFormInput } from './form/ReadonlyFormInput'
 export { SimulationFiltersToolbar } from './simulation/filters-toolbar'
 export {
   SimulationTableContainer,

@@ -1,41 +1,6 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react'
+import type { ComponentPropsWithoutRef } from 'react'
+import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
-
-interface FormFieldProps {
-  label: string
-  htmlFor?: string
-  children: ReactNode
-}
-
-export function FormField({ label, htmlFor, children }: FormFieldProps) {
-  return (
-    <div>
-      <label htmlFor={htmlFor} className="mb-1 block text-sm font-medium">
-        {label}
-      </label>
-      {children}
-    </div>
-  )
-}
-
-interface SimulationReadonlyFormInputProps extends ComponentPropsWithoutRef<'input'> {
-  value: string
-}
-
-export function SimulationReadonlyFormInput({ className, value, ...props }: SimulationReadonlyFormInputProps) {
-  return (
-    <input
-      value={value}
-      readOnly
-      aria-readonly="true"
-      className={cn(
-        'h-9 w-full rounded border border-[#d5dbe5] bg-[#f3f5f8] px-4 text-sm text-slate-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] outline-none dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
 
 interface SimulationActionButtonProps extends ComponentPropsWithoutRef<'button'> {
   variant?: 'primary' | 'outline' | 'soft'
@@ -60,7 +25,7 @@ export function SimulationActionButton({ className, variant = 'outline', ...prop
 
 export function SimulationTextInput({ className, ...props }: ComponentPropsWithoutRef<'input'>) {
   return (
-    <input
+    <Input
       className={cn(
         'h-9 w-full rounded border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none placeholder:text-[#8c9e92] focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:placeholder:text-content-dark/45 dark:focus:border-white/20 dark:focus:ring-white/10',
 	        className,
