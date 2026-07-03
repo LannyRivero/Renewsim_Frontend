@@ -1,7 +1,7 @@
 import { httpClient } from '@/services/httpClient'
 import type { ResolvedLocation } from '@/shared/types'
-import { decodeResolvedLocation, decodeResolvedLocations } from './decoder'
-import { LocationServiceError } from './errors'
+import { decodeResolvedLocation, decodeResolvedLocations } from './locationResponseDecoder'
+import { LocationServiceError } from './locationServiceErrors'
 
 type ApiEnvelope<T> = {
   data?: T

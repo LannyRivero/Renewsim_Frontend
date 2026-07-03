@@ -1,5 +1,5 @@
 import type { ResolvedLocation } from '@/shared/types'
-import { InvalidLocationPayloadError } from './errors'
+import { InvalidLocationPayloadError } from './locationServiceErrors'
 
 function readFiniteNumber(value: unknown): number | undefined {
   if (typeof value === 'number' && Number.isFinite(value)) {
