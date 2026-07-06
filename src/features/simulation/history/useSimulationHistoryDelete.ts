@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { deleteSimulationById } from '../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
-import type { SimulationHistoryItem } from '@/shared/types'
+import type { ListUserSimulationsResponse } from '@/shared/types'
 
 export function useSimulationHistoryDelete() {
   const queryClient = useQueryClient()
@@ -11,11 +11,15 @@ export function useSimulationHistoryDelete() {
     onMutate: async (simulationId) => {
       await queryClient.cancelQueries({ queryKey: ['simulation-history'] })
 
-      const previousHistory = queryClient.getQueryData<SimulationHistoryItem[]>(['simulation-history'])
+      const previousHistory = queryClient.getQueryData<ListUserSimulationsResponse>(['simulation-history'])
 
-      queryClient.setQueryData<SimulationHistoryItem[]>(['simulation-history'], (current) => {
+      queryClient.setQueryData<ListUserSimulationsResponse>(['simulation-history'], (current) => {
         if (!current) return current
-        return current.filter((item) => item.id !== simulationId)
+        return {
+          ...current,
+          items: current.items.filter((item) => item.id !== simulationId),
+          total: Math.max(0, current.total - (current.items.some((item) => item.id === simulationId) ? 1 : 0)),
+        }
       })
 
       return { previousHistory }
