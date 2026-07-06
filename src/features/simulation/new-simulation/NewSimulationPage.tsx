@@ -22,16 +22,7 @@ export function NewSimulationPage() {
     mode: 'onBlur',
   })
 
-  const {
-    isResolvingBrowserLocation,
-    isSearchingLocation,
-    locationAssistMessage,
-    locationSuggestions,
-    normalizedLocation,
-    hasResolvedLocation,
-    useBrowserLocation,
-    applyLocationSuggestion,
-  } = useSimulationLocation({ form })
+  const location = useSimulationLocation({ form })
 
   const { formError, isSubmitting, submitLabel, handleSubmit } = useSimulationSubmission({
     simulationActions: {
@@ -75,14 +66,7 @@ export function NewSimulationPage() {
             <div className="space-y-5">
               <LocationField
                 form={form}
-                normalizedLocation={normalizedLocation}
-                hasResolvedLocation={hasResolvedLocation}
-                isResolvingBrowserLocation={isResolvingBrowserLocation}
-                isSearchingLocation={isSearchingLocation}
-                locationAssistMessage={locationAssistMessage}
-                locationSuggestions={locationSuggestions}
-                onUseBrowserLocation={useBrowserLocation}
-                onSuggestionSelect={applyLocationSuggestion}
+                location={location}
               />
 
               <BasicFormFields form={form} />

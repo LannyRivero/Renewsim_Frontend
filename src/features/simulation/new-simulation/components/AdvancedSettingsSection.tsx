@@ -21,7 +21,7 @@ export function AdvancedSettingsSection({ form, isAdvancedOpen, onToggle }: Adva
         <div>
           <h3 className="text-sm font-semibold text-slate-900 dark:text-content-dark">Ajustes avanzados</h3>
           <p className="mt-1 text-xs text-slate-600 dark:text-content-dark/65">
-            Ajustá supuestos técnicos, pérdidas, consumo mensual y economía avanzada solo si necesitás más control.
+            Ajustes para técnicos, pérdidas, consumo mensual y economía avanzada solo si necesitás más control.
           </p>
         </div>
         <span className="inline-flex items-center justify-center gap-2 rounded-sm border border-[#d2d8e2] bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-[0_10px_20px_-18px_rgba(15,23,42,0.18)] transition-colors dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark">
