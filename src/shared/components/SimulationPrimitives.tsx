@@ -29,5 +29,6 @@ export {
   SimulationTableBodyRow,
   SimulationTableCell,
 } from './simulation/table'
-export { SimulationPagination } from './simulation/pagination'
+export { SimulationPagination, SimulationPageNav } from './simulation/pagination'
+export { SimulationSearchFilters } from './simulation/search-filters'
 export { SimulationRowActionsMenu } from './simulation/row-actions'

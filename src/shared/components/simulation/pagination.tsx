@@ -1,3 +1,6 @@
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { SimulationActionButton } from './controls'
+
 interface SimulationPaginationProps {
   summaryLabel: string
   pageLabel: string
@@ -40,6 +43,50 @@ export function SimulationPagination({
         >
           {nextLabel}
         </button>
+      </div>
+    </div>
+  )
+}
+
+interface SimulationPageNavProps {
+  currentPage: number
+  totalPages: number
+  onPrevious: () => void
+  onNext: () => void
+}
+
+export function SimulationPageNav({
+  currentPage,
+  totalPages,
+  onPrevious,
+  onNext,
+}: SimulationPageNavProps) {
+  if (totalPages <= 1) return null
+
+  return (
+    <div className="flex justify-end border-t border-[#dde4dc] pt-3 dark:border-white/8">
+      <div className="flex flex-wrap items-center justify-end gap-2 text-sm">
+        <SimulationActionButton
+          type="button"
+          variant="outline"
+          onClick={onPrevious}
+          disabled={currentPage === 1}
+          className="h-8 border-transparent bg-transparent px-2 py-1 text-sm font-medium text-[#6a7c71] shadow-none hover:border-transparent hover:bg-[#f5f8f4] dark:hover:bg-white/[0.05]"
+        >
+          <ChevronLeft className="h-4 w-4" />
+          Anterior
+        </SimulationActionButton>
+        <span className="px-1 text-sm font-medium text-[#6a7c71] dark:text-content-dark/60">{currentPage}/{totalPages}</span>
+        <SimulationActionButton
+          type="button"
+          variant="outline"
+          onClick={onNext}
+          disabled={currentPage === totalPages}
+          className="h-8 border-transparent bg-transparent px-2 py-1 text-sm font-medium shadow-none hover:border-transparent hover:bg-[#f5f8f4] dark:hover:bg-white/[0.05]"
+        >
+          Siguiente
+          <ChevronRight className="h-4 w-4" />
+        </SimulationActionButton>
       </div>
     </div>
   )

@@ -34,6 +34,8 @@ export {
   SimulationTableBodyRow,
   SimulationTableCell,
   SimulationPagination,
+  SimulationPageNav,
+  SimulationSearchFilters,
   SimulationRowActionsMenu,
   FormField,
   SubSectionHeader,
