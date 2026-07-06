@@ -2,7 +2,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import type { UseFormReturn } from 'react-hook-form'
 import { resolveLocation, searchLocations, type ResolvedLocation } from '../../services/simulationService'
-import type { SimulationCreateFormInput, SimulationCreateFormValues } from '../../schemas/simulationSchema'
+import {
+  DEFAULT_SIMULATION_FORM_VALUES,
+  type SimulationCreateFormInput,
+  type SimulationCreateFormValues,
+} from '../../schemas/simulationSchema'
 
 export type SimulationCreateFormController = UseFormReturn<
   SimulationCreateFormInput,
@@ -29,7 +33,16 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
   }, [])
 
   const watchedLocationSearch = form.watch('locationSearch')
+  const watchedResolvedLocationLabel = form.watch('location.label')
   const normalizedLocation = useMemo(() => watchedLocationSearch.trim(), [watchedLocationSearch])
+  const normalizedResolvedLocationLabel = useMemo(
+    () => watchedResolvedLocationLabel.trim(),
+    [watchedResolvedLocationLabel],
+  )
+
+  function clearResolvedLocation() {
+    form.setValue('location', { ...DEFAULT_SIMULATION_FORM_VALUES.location }, { shouldValidate: true, shouldDirty: true })
+  }
 
   const locationResolution = useMutation({
     mutationFn: ({ latitude, longitude }: { latitude: number; longitude: number }) =>
@@ -128,6 +141,22 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
     }, { shouldValidate: true, shouldDirty: true })
   }
 
+  function handleLocationSearchChange(nextValue: string) {
+    if (locationAssistMessage) {
+      setLocationAssistMessage(null)
+    }
+
+    if (normalizedResolvedLocationLabel.length === 0) {
+      return
+    }
+
+    if (nextValue.trim() === normalizedResolvedLocationLabel) {
+      return
+    }
+
+    clearResolvedLocation()
+  }
+
   return {
     isResolvingBrowserLocation,
     isSearchingLocation: locationSuggestionsQuery.isFetching,
@@ -136,5 +165,6 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
     locationSuggestions: locationSuggestionsQuery.data ?? [],
     startBrowserLocationResolution,
     applyLocationSuggestion,
+    handleLocationSearchChange,
   }
 }

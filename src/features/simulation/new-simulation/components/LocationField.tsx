@@ -11,6 +11,7 @@ interface LocationFieldModel {
   locationSuggestions: ResolvedLocation[]
   startBrowserLocationResolution: () => void
   applyLocationSuggestion: (suggestion: ResolvedLocation) => void
+  handleLocationSearchChange: (nextValue: string) => void
 }
 
 interface LocationFieldProps {
@@ -22,9 +23,17 @@ interface LocationSearchInputProps {
   form: SimulationCreateFormController
   isResolvingBrowserLocation: boolean
   onUseBrowserLocation: () => void
+  onLocationSearchChange: (nextValue: string) => void
 }
 
-function LocationSearchInput({ form, isResolvingBrowserLocation, onUseBrowserLocation }: LocationSearchInputProps) {
+function LocationSearchInput({
+  form,
+  isResolvingBrowserLocation,
+  onUseBrowserLocation,
+  onLocationSearchChange,
+}: LocationSearchInputProps) {
+  const locationSearchField = form.register('locationSearch')
+
   return (
     <div className="flex h-9 w-full items-center rounded border border-[#cfd8ce] bg-[#fafcf9] pl-3.5 pr-1 text-sm shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] transition-colors focus-within:border-[#9fb49f] focus-within:ring-4 focus-within:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:focus-within:border-white/20 dark:focus-within:ring-white/10">
       <input
@@ -32,7 +41,11 @@ function LocationSearchInput({ form, isResolvingBrowserLocation, onUseBrowserLoc
         type="text"
         placeholder="Ingresá ciudad o región"
         className="flex-1 border-none bg-transparent py-2.5 text-sm text-[#415447] outline-none placeholder:text-[#8c9e92] dark:text-content-dark dark:placeholder:text-content-dark/45"
-        {...form.register('locationSearch')}
+        {...locationSearchField}
+        onChange={(event) => {
+          locationSearchField.onChange(event)
+          onLocationSearchChange(event.target.value)
+        }}
       />
       <span className="group relative">
         <Button
@@ -125,6 +138,7 @@ export function LocationField({ form, location }: LocationFieldProps) {
           form={form}
           isResolvingBrowserLocation={location.isResolvingBrowserLocation}
           onUseBrowserLocation={location.startBrowserLocationResolution}
+          onLocationSearchChange={location.handleLocationSearchChange}
         />
         <LocationMessages
           form={form}

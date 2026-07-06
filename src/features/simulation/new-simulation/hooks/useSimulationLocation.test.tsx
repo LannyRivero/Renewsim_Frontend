@@ -121,6 +121,34 @@ describe('useSimulationLocation', () => {
     })
   })
 
+  it('clears the resolved location when the user edits the selected search text', () => {
+    const { result } = renderLocationHook()
+
+    act(() => {
+      result.current.location.applyLocationSuggestion({
+        label: 'Mendoza, AR',
+        name: 'Mendoza',
+        country: 'AR',
+        countryCode: 'AR',
+        lat: -32.8895,
+        lon: -68.8458,
+      })
+    })
+
+    act(() => {
+      result.current.form.setValue('locationSearch', 'Cordoba, AR', { shouldValidate: true, shouldDirty: true })
+      result.current.location.handleLocationSearchChange('Cordoba, AR')
+    })
+
+    expect(result.current.form.getValues('location')).toEqual({
+      label: '',
+      lat: 0,
+      lon: 0,
+      country: '',
+      countryCode: '',
+    })
+  })
+
   it('resolves browser geolocation into city and country', async () => {
     mockedResolveLocation.mockResolvedValueOnce({
       label: 'Mendoza, AR',
@@ -173,5 +201,57 @@ describe('useSimulationLocation', () => {
       })
       expect(result.current.location.locationAssistMessage).toBe('Ubicación actual cargada: Mendoza, AR.')
     })
+  })
+
+  it('clears the assist message when the user edits the search manually', async () => {
+    mockedResolveLocation.mockResolvedValueOnce({
+      label: 'Mendoza, AR',
+      name: 'Mendoza',
+      country: 'AR',
+      countryCode: 'AR',
+      lat: -32.8895,
+      lon: -68.8458,
+    })
+
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      geolocation: {
+        getCurrentPosition: (success: PositionCallback) => {
+          success({
+            coords: {
+              latitude: -32.8895,
+              longitude: -68.8458,
+              accuracy: 1,
+              altitude: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+              toJSON: () => ({}),
+            },
+            timestamp: Date.now(),
+            toJSON: () => ({}),
+          } as GeolocationPosition)
+        },
+      },
+    })
+
+    const { result } = renderLocationHook()
+
+    await act(async () => {
+      result.current.location.startBrowserLocationResolution()
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+
+    await waitFor(() => {
+      expect(result.current.location.locationAssistMessage).toBe('Ubicación actual cargada: Mendoza, AR.')
+    })
+
+    act(() => {
+      result.current.form.setValue('locationSearch', 'Cordoba, AR', { shouldValidate: true, shouldDirty: true })
+      result.current.location.handleLocationSearchChange('Cordoba, AR')
+    })
+
+    expect(result.current.location.locationAssistMessage).toBeNull()
   })
 })
