@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import {
   SimulationStateMessage,
   SimulationStatusBadge,
@@ -84,7 +85,9 @@ export function SimulationHistoryDesktopTable({
           <SimulationTableBodyRow key={row.id} className="border-[#e7ebf2] transition-colors hover:bg-[#fbfcfe] dark:border-white/6 dark:hover:bg-white/[0.02]">
             <SimulationTableCell className="py-2 text-sm text-on-surface-variant dark:text-content-dark/60">
               <div className="min-w-0">
-                <p className="line-clamp-2 font-semibold leading-5 text-slate-900 dark:text-content-dark">{row.name}</p>
+                <Link to={`/simulador/detalles?id=${row.id}`} className="line-clamp-2 font-semibold leading-5 text-slate-900 hover:text-primary dark:text-content-dark dark:hover:text-content-dark/80">
+                  {row.name}
+                </Link>
               </div>
             </SimulationTableCell>
             <SimulationTableCell className="px-3 py-2 text-sm">

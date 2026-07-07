@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { SimulationStatusBadge, SimulationTechnologyBadge } from '@/shared/components'
 import type { SimulationHistoryItem } from '@/shared/types'
 import { getStatusTone } from '../historyTable.utils'
@@ -26,7 +27,9 @@ export function SimulationHistoryMobileList({
         <article key={row.id} className="space-y-3 px-4 py-3.5">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <p className="line-clamp-2 font-semibold leading-6 text-slate-900 dark:text-content-dark">{row.name}</p>
+              <Link to={`/simulador/detalles?id=${row.id}`} className="line-clamp-2 font-semibold leading-6 text-slate-900 hover:text-primary dark:text-content-dark dark:hover:text-content-dark/80">
+                {row.name}
+              </Link>
               <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[#738679] dark:text-content-dark/55">{row.date}</p>
             </div>
             <SimulationHistoryRowActions

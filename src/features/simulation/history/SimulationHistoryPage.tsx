@@ -5,11 +5,13 @@ import { useQuery } from '@tanstack/react-query'
 import { getRealSimulationHistory } from '../services/simulationService'
 import {
   SimulationActionButton,
+  SimulationBreadcrumbs,
   SimulationPageContent,
   SimulationPageShell,
   SimulationSectionHeader,
   SimulationStateMessage,
 } from '@/shared/components'
+import type { BreadcrumbItem } from '@/shared/components'
 import type { SimulationHistoryItem, SimulationHistoryRow } from '@/shared/types'
 import { SimulationHistoryTable } from './SimulationHistoryTable'
 import { SimulationHistoryFilters } from './components/SimulationHistoryFilters'
@@ -135,6 +137,13 @@ export function SimulationHistoryPage() {
   return (
     <SimulationPageShell className="lg:h-auto" contentClassName="rounded-md px-3 pt-4 pb-4 sm:px-4 lg:h-auto lg:p-5" bodyClassName="lg:h-auto">
       <SimulationPageContent spacing="compact" className="lg:h-auto">
+        <SimulationBreadcrumbs
+          className="mb-1"
+          items={[
+            { label: 'Simulador', href: '/simulador' },
+            { label: 'Historial' },
+          ] satisfies BreadcrumbItem[]}
+        />
         <SimulationSectionHeader
           eyebrow="Archivo de simulaciones"
           eyebrowIcon={<Clock3 className="h-3.5 w-3.5" />}
