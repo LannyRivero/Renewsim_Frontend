@@ -66,7 +66,13 @@ export function toSimulationHistoryRow(value: unknown): SimulationHistoryRow {
 
 export function toListUserSimulationsResponse(value: unknown): ListUserSimulationsResponse {
   const candidate = readRecord(value)
-  const rawItems = Array.isArray(candidate?.items) ? candidate.items : Array.isArray(value) ? value : []
+  const rawItems = Array.isArray(candidate?.items)
+    ? candidate.items
+    : Array.isArray(candidate?.content)
+      ? candidate.content
+      : Array.isArray(value)
+        ? value
+        : []
 
   return {
     items: rawItems.map((item) => toSimulationHistoryRow(item)),

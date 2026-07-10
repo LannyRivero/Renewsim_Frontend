@@ -31,6 +31,8 @@ export function SimulationHistoryTable({
       <div>
         <SimulationHistoryMobileList
           rows={rows}
+          isLoading={isLoading}
+          isError={isError}
           openMenuId={openMenuId}
           isDeleting={isDeleting}
           onToggleMenu={(simulationId) => setOpenMenuId((current) => (current === simulationId ? null : simulationId))}

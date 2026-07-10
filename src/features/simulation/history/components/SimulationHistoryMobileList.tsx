@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom'
-import { SimulationStatusBadge, SimulationTechnologyBadge } from '@/shared/components'
+import { SimulationStateMessage, SimulationStatusBadge, SimulationTechnologyBadge } from '@/shared/components'
 import type { SimulationHistoryItem } from '@/shared/types'
 import { getStatusTone } from '../historyTable.utils'
 import { SimulationHistoryRowActions } from './SimulationHistoryRowActions'
 
 interface SimulationHistoryMobileListProps {
   rows: SimulationHistoryItem[]
+  isLoading: boolean
+  isError: boolean
   openMenuId: string | null
   isDeleting: boolean
   onToggleMenu: (simulationId: string) => void
@@ -15,12 +17,38 @@ interface SimulationHistoryMobileListProps {
 
 export function SimulationHistoryMobileList({
   rows,
+  isLoading,
+  isError,
   openMenuId,
   isDeleting,
   onToggleMenu,
   onCloseMenu,
   onDelete,
 }: SimulationHistoryMobileListProps) {
+  if (isLoading) {
+    return (
+      <div className="px-4 py-12 text-center lg:hidden">
+        <SimulationStateMessage>Cargando historial de simulaciones...</SimulationStateMessage>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="px-4 py-12 text-center lg:hidden">
+        <SimulationStateMessage tone="error">No se pudo cargar el historial de simulaciones. Intentá nuevamente.</SimulationStateMessage>
+      </div>
+    )
+  }
+
+  if (rows.length === 0) {
+    return (
+      <div className="px-4 py-12 text-center lg:hidden">
+        <SimulationStateMessage>Todavía no hay simulaciones. Creá tu primera simulación para ver resultados aquí.</SimulationStateMessage>
+      </div>
+    )
+  }
+
   return (
     <div className="divide-y divide-[#f1f4ef] dark:divide-white/6 lg:hidden">
       {rows.map((row) => (
