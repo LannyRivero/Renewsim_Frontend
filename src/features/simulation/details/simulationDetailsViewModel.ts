@@ -1,7 +1,6 @@
 import type { SimulationDetails } from '../schemas/simulationSchema'
-import type { SimulationResult } from '@/shared/types'
+import type { SimulationDetailsResponse, SimulationResult } from '@/shared/types'
 import {
-  buildDisplayTitle,
   formatCurrency,
   formatDate,
   formatEnergyTypeLabel,
@@ -11,10 +10,7 @@ import { buildEffectiveResult } from './simulationDetailsResult'
 import {
   buildClimateSection,
   buildComparisonPlaceholder,
-  buildComparisonSection,
   buildDecisionSummary,
-  buildFinancialChart,
-  buildFinancialPendingPlaceholder,
   buildFinancialSection,
   buildSummarySection,
   buildSummarySnapshotSection,
@@ -23,7 +19,6 @@ import type { SimulationDetailsViewModel } from './simulationDetailsTypes'
 
 export type {
   DecisionSummary,
-  DetailChartDatum,
   DetailMetric,
   DetailPlaceholderContent,
   DetailSectionContent,
@@ -31,18 +26,34 @@ export type {
   SimulationDetailsViewModel,
 } from './simulationDetailsTypes'
 
+function isLikelyEnglishText(value: string) {
+  return /\b(the|and|with|while|should|would|project|site|decision|validating|recovery|performance|targets|inputs|submitted|core|carefully|credible|review)\b/i.test(value)
+}
+
+function shouldUseSpanishFallback(realData: SimulationDetailsResponse) {
+  const texts = [
+    realData.summary.headline,
+    realData.summary.summary,
+    ...realData.summary.reasons.map((reason) => reason.message),
+  ]
+
+  return texts.some((text) => isLikelyEnglishText(text))
+}
+
 export function buildSimulationDetailsViewModel({
   data,
+  realData,
   requestedSimulationId,
   resultFromStore,
 }: {
   data: SimulationDetails | null | undefined
+  realData?: SimulationDetailsResponse | null
   requestedSimulationId: string | null
   resultFromStore: SimulationResult | null
 }): SimulationDetailsViewModel {
-  const effectiveResult = buildEffectiveResult(data, requestedSimulationId, resultFromStore)
+  const effectiveResult = buildEffectiveResult(data, realData, requestedSimulationId, resultFromStore)
 
-  const energyType = effectiveResult?.energyType ?? 'Unknown'
+  const energyType = effectiveResult?.energyType ?? ''
   const roiNumber = typeof effectiveResult?.roi === 'number' ? effectiveResult.roi : null
   const efficiencyNumber = typeof effectiveResult?.efficiency === 'number' ? effectiveResult.efficiency : null
   const capexNumber = typeof data?.capex === 'number' ? data.capex : typeof effectiveResult?.budget === 'number' ? effectiveResult.budget : null
@@ -57,8 +68,7 @@ export function buildSimulationDetailsViewModel({
         : null
   const location = effectiveResult?.location ?? 'N/A'
   const simulationName = effectiveResult?.name ?? `${energyType} Simulación`
-  const displayTitle = buildDisplayTitle({ simulationName, energyType, location })
-  const decisionSummary = buildDecisionSummary({
+  const generatedDecisionSummary = buildDecisionSummary({
     roi: roiNumber,
     paybackYears: paybackYearsNumber,
     efficiency: efficiencyNumber,
@@ -66,21 +76,51 @@ export function buildSimulationDetailsViewModel({
     capex: capexNumber,
     energyTypeLabel: formatEnergyTypeLabel(energyType),
   })
+  const decisionSummary = realData
+    ? shouldUseSpanishFallback(realData)
+      ? {
+          ...generatedDecisionSummary,
+          decisionStatus:
+            realData.summary.recommendation === 'recommended'
+              ? 'Recomendado'
+              : realData.summary.recommendation === 'viable_with_reservations'
+                ? 'Viable con reservas'
+                : 'No recomendado',
+        }
+      : {
+        decisionStatus:
+          realData.summary.recommendation === 'recommended'
+            ? 'Recomendado'
+            : realData.summary.recommendation === 'viable_with_reservations'
+              ? 'Viable con reservas'
+              : 'No recomendado',
+        decisionHeadline: realData.summary.headline,
+        decisionSummary: realData.summary.summary,
+        decisionDrivers: realData.summary.reasons.map((reason) => reason.message),
+        mainSignal: realData.summary.reasons[0]?.message ?? 'El backend entregó una lectura consolidada del escenario.',
+        mainRisk:
+          realData.summary.reasons.find((reason) => reason.severity === 'critical' || reason.severity === 'warning')?.message ??
+          'Conviene validar sensibilidad y supuestos antes de comprometer inversión final.',
+        nextAction:
+          realData.summary.recommendation === 'recommended'
+            ? 'Pasar a validación final con supuestos y cierre financiero.'
+            : realData.summary.recommendation === 'viable_with_reservations'
+              ? 'Comparar sensibilidad y cerrar validaciones antes de priorizar.'
+              : 'Revisar supuestos técnicos y económicos antes de volver a presentarlo.',
+        }
+    : generatedDecisionSummary
   const roi = roiNumber !== null ? `${formatNumber(roiNumber)}%` : 'N/D'
-  const efficiency = efficiencyNumber !== null ? `${formatNumber(efficiencyNumber)}%` : 'N/D'
-  const capex = capexNumber !== null ? formatCurrency(capexNumber) : 'N/D'
-  const opex = typeof data?.opex === 'number' ? formatCurrency(data.opex) : 'N/D'
-  const revenue = revenueNumber !== null ? formatCurrency(revenueNumber) : 'N/D'
-  const paybackYears = paybackYearsNumber !== null ? `${formatNumber(paybackYearsNumber)} años` : 'N/D'
-  const npv = typeof data?.npv === 'number' ? formatCurrency(data.npv) : 'N/D'
-  const irr = typeof data?.irr === 'number' ? `${formatNumber(data.irr)}%` : 'N/D'
+  const capex = capexNumber !== null ? formatCurrency(capexNumber) : realData ? formatCurrency(realData.input.economics.capexTotal) : 'N/D'
+  const opex = typeof data?.opex === 'number' ? formatCurrency(data.opex) : realData ? formatCurrency(realData.input.economics.opexAnnual) : 'N/D'
+  const revenue = revenueNumber !== null ? formatCurrency(revenueNumber) : realData ? formatCurrency(realData.financial.annualExportRevenue) : 'N/D'
+  const paybackYears = paybackYearsNumber !== null ? `${formatNumber(paybackYearsNumber)} años` : realData?.financial.paybackYears !== null && typeof realData?.financial.paybackYears === 'number' ? `${formatNumber(realData.financial.paybackYears)} años` : 'N/D'
+  const npv = typeof data?.npv === 'number' ? formatCurrency(data.npv) : realData ? formatCurrency(realData.financial.npv) : 'N/D'
+  const irr = typeof data?.irr === 'number' ? `${formatNumber(data.irr)}%` : realData?.financial.irrPct !== null && typeof realData?.financial.irrPct === 'number' ? `${formatNumber(realData.financial.irrPct)}%` : 'N/D'
   const estimatedSavings = estimatedSavingsNumber !== null ? formatCurrency(estimatedSavingsNumber) : 'N/D'
   const budgetCoverage =
     budgetNumber !== null && capexNumber !== null ? formatCurrency(budgetNumber - capexNumber) : 'N/D'
   const netAnnualFlowNumber = revenueNumber !== null && typeof data?.opex === 'number' ? revenueNumber - data.opex : null
   const netAnnualFlow = netAnnualFlowNumber !== null ? formatCurrency(netAnnualFlowNumber) : 'N/D'
-  const energyGenerated =
-    typeof effectiveResult?.energyGenerated === 'number' ? `${Math.round(effectiveResult.energyGenerated).toLocaleString('en-US')} kWh` : 'N/D'
   const averageTemperature = typeof effectiveResult?.temperature === 'number' ? `${effectiveResult.temperature.toFixed(1)} C` : 'N/D'
   const irradiance = effectiveResult?.irradiance ?? 'N/D'
   const windSpeed = effectiveResult?.windSpeed ?? 'N/D'
@@ -89,32 +129,15 @@ export function buildSimulationDetailsViewModel({
   const climatePeriod = effectiveResult?.climatePeriod ?? 'N/D'
 
   return {
-    effectiveResult,
     location,
     energyType,
-    displayTitle,
     simulationName,
-    date: formatDate(data?.createdAt),
-    roi,
-    efficiency,
+    date: formatDate(realData?.createdAt ?? data?.createdAt),
     decisionStatus: decisionSummary.decisionStatus,
     decisionHeadline: decisionSummary.decisionHeadline,
     decisionSummary: decisionSummary.decisionSummary,
     decisionDrivers: decisionSummary.decisionDrivers,
-    capex,
-    opex,
-    revenue,
-    paybackYears,
-    npv,
-    irr,
-    energyGenerated,
-    averageTemperature,
-    irradiance,
-    windSpeed,
-    hydrology,
-    climateSource,
-    climatePeriod,
-      summarySection: buildSummarySection({
+    summarySection: buildSummarySection({
       decisionStatus: decisionSummary.decisionStatus,
       decisionHeadline: decisionSummary.decisionHeadline,
       decisionSummary: decisionSummary.decisionSummary,
@@ -145,13 +168,6 @@ export function buildSimulationDetailsViewModel({
       budgetCoverage,
       netAnnualFlow,
     }),
-    financialChart: buildFinancialChart({
-      capex: capexNumber,
-      budget: budgetNumber,
-      revenue: revenueNumber,
-      netAnnualFlow: netAnnualFlowNumber,
-    }),
-    financialPendingPlaceholder: buildFinancialPendingPlaceholder(),
     climateSection: buildClimateSection({
       energyType,
       irradiance,
@@ -160,12 +176,6 @@ export function buildSimulationDetailsViewModel({
       averageTemperature,
       climateSource,
       climatePeriod,
-    }),
-    comparisonSection: buildComparisonSection({
-      roi: roiNumber,
-      paybackYears: paybackYearsNumber,
-      efficiency: efficiencyNumber,
-      decisionStatus: decisionSummary.decisionStatus,
     }),
     comparisonPlaceholder: buildComparisonPlaceholder(),
   }

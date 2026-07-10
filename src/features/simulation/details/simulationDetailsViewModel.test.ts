@@ -68,31 +68,14 @@ describe('buildSimulationDetailsViewModel', () => {
       },
     ])
     expect(viewModel.financialSection.primaryMetrics).toEqual([
-      { label: 'Inversion inicial', value: '$1,000,000', helper: 'Capital requerido para activar el escenario.' },
+      { label: 'Inversión inicial', value: '$1,000,000', helper: 'Capital requerido para activar el escenario.' },
       { label: 'Tiempo de retorno', value: '6.7 años', helper: 'Tiempo estimado para recuperar la inversion inicial bajo los supuestos actuales.' },
       { label: 'Valor presente neto', value: '$220,000', helper: 'La proyeccion mantiene creacion de valor bajo los supuestos actuales.' },
     ])
     expect(viewModel.climateSection.primaryMetrics).toEqual([
-      { label: 'Viento utilizable', value: '8.1 m/s', helper: 'Variable principal para leer la consistencia del recurso eolico.' },
+      { label: 'Velocidad del viento', value: '8.1 m/s', helper: 'Variable principal para leer la consistencia del recurso eolico.' },
       { label: 'Temperatura promedio', value: '21.0 C', helper: 'Ayuda a contextualizar operacion esperada y condiciones ambientales del escenario.' },
       { label: 'Ventana de datos', value: 'recent_10yr', helper: 'Periodo de referencia usado para sostener la lectura del recurso.' },
-    ])
-    expect(viewModel.comparisonSection.primaryMetrics).toEqual([
-      {
-        label: 'Retorno vs referencia',
-        value: '17%',
-        helper: 'El retorno cae en una banda que justifica contraste frente a otras alternativas.',
-      },
-      {
-        label: 'Recuperacion vs referencia',
-        value: '6.7 años',
-        helper: 'El horizonte de recuperacion sigue siendo exigente frente a una alternativa mas agresiva.',
-      },
-      {
-        label: 'Solidez tecnica',
-        value: '90%',
-        helper: 'La señal tecnica es suficientemente fuerte para merecer comparacion con otros escenarios.',
-      },
     ])
     expect(viewModel.comparisonPlaceholder).toEqual({
       sectionLabel: 'Comparativa',

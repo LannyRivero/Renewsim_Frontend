@@ -1,5 +1,5 @@
 import type { SimulationDetails } from '../schemas/simulationSchema'
-import type { SimulationResult } from '@/shared/types'
+import type {  SimulationResult } from '@/shared/types'
 
 export type EffectiveSimulationResult = SimulationResult & Partial<SimulationDetails>
 
@@ -30,38 +30,18 @@ export type DetailChartDatum = {
 }
 
 export type SimulationDetailsViewModel = {
-  effectiveResult: EffectiveSimulationResult | null
   location: string
   energyType: string
-  displayTitle: string
   simulationName: string
   date: string
-  roi: string
-  efficiency: string
   decisionStatus: string
   decisionHeadline: string
   decisionSummary: string
   decisionDrivers: string[]
-  capex: string
-  opex: string
-  revenue: string
-  paybackYears: string
-  npv: string
-  irr: string
-  energyGenerated: string
-  averageTemperature: string
-  irradiance: string | number
-  windSpeed: string | number
-  hydrology: string | number
-  climateSource: string
-  climatePeriod: string
   summarySection: DetailSectionContent
   summarySnapshotSection: DetailSectionContent
   financialSection: DetailSectionContent
-  financialChart: DetailChartDatum[]
-  financialPendingPlaceholder: DetailPlaceholderContent
   climateSection: DetailSectionContent
-  comparisonSection: DetailSectionContent
   comparisonPlaceholder: DetailPlaceholderContent
 }
 

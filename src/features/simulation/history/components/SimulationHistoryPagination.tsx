@@ -5,6 +5,7 @@ interface SimulationHistoryPaginationProps {
   totalPages: number
   onPrevious: () => void
   onNext: () => void
+  onPageSelect: (page: number) => void
 }
 
 export function SimulationHistoryPagination({
@@ -12,6 +13,7 @@ export function SimulationHistoryPagination({
   totalPages,
   onPrevious,
   onNext,
+  onPageSelect,
 }: SimulationHistoryPaginationProps) {
   return (
     <SimulationPageNav
@@ -19,6 +21,7 @@ export function SimulationHistoryPagination({
       totalPages={totalPages}
       onPrevious={onPrevious}
       onNext={onNext}
+      onPageSelect={onPageSelect}
     />
   )
 }
