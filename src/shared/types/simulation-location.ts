@@ -19,6 +19,6 @@ export interface ResolvedLocation {
   timezone?: string
 }
 
-export interface SearchLocationsResponse extends Array<LocationCandidate> {}
+export type SearchLocationsResponse = LocationCandidate[]
 
 export type ReverseLocationResponse = ResolvedLocation
