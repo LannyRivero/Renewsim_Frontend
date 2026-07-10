@@ -7,6 +7,7 @@ import {
   searchLocations,
   updateSimulationById,
 } from './simulationService'
+import type { RealCreateSimulationRequest } from '@/shared/types'
 import { httpClient } from '@/services/httpClient'
 
 vi.mock('@/services/httpClient', () => ({
@@ -308,8 +309,70 @@ describe('simulationService', () => {
     })
   })
 
+  it('normalizes history rows from detailed simulation payloads', async () => {
+    mockedGet.mockResolvedValueOnce({
+      data: {
+        items: [
+          {
+            id: 'sim-real-4',
+            name: 'Solar - Cordoba warehouse',
+            technology: 'solar',
+            status: 'completed',
+            createdAt: '2026-07-01T09:30:00.000Z',
+            modelVersion: 'solar-spain-v1',
+            location: {
+              label: 'Cordoba, Andalucia, ES',
+              name: 'Cordoba',
+              country: 'Spain',
+              countryCode: 'ES',
+              lat: 37.8882,
+              lon: -4.7794,
+            },
+            summary: {
+              recommendation: 'viable_with_reservations',
+              headline: 'Proceed carefully.',
+              summary: 'Financials need another pass.',
+              reasons: [],
+            },
+            technical: {
+              annualGenerationKwh: 401000,
+              resource: {
+                source: 'PVGIS',
+                period: '2015-2020',
+                monthlyIrradianceKwhM2: [],
+                monthlyTemperatureC: [],
+              },
+            },
+            financial: {
+              annualSavings: 71000,
+              npv: 145000,
+              irrPct: 12.8,
+            },
+          },
+        ],
+        total: 1,
+      },
+    })
+
+    const result = await getRealSimulationHistory()
+
+    expect(result.total).toBe(1)
+    expect(result.items[0]).toMatchObject({
+      id: 'sim-real-4',
+      name: 'Solar - Cordoba warehouse',
+      technology: 'solar',
+      locationLabel: 'Cordoba, Andalucia, ES',
+      annualGenerationKwh: 401000,
+      annualSavings: 71000,
+      npv: 145000,
+      irrPct: 12.8,
+      recommendation: 'viable_with_reservations',
+      resourceSource: 'PVGIS',
+    })
+  })
+
   it('sends the real contract on update', async () => {
-    const payload = {
+    const payload: RealCreateSimulationRequest = {
       name: 'Solar Madrid Updated',
       technology: 'solar',
       location: {
