@@ -177,7 +177,7 @@ describe('SimulationHistoryPage', () => {
 
     expect((await screen.findAllByText('Zulu')).length).toBeGreaterThan(0)
     expect(screen.queryAllByText('Alpha')).toHaveLength(0)
-    expect(screen.getByText('1/2')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Página actual, 1' })).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Simulación' }))
     expect((await screen.findAllByText('Alpha')).length).toBeGreaterThan(0)
@@ -191,6 +191,6 @@ describe('SimulationHistoryPage', () => {
     expect(screen.getByRole('columnheader', { name: 'Estado operativo' })).toHaveAttribute('aria-sort', 'ascending')
 
     fireEvent.click(screen.getByRole('button', { name: 'Siguiente' }))
-    expect(screen.getByText('2/2')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Página actual, 2' })).toBeInTheDocument()
   })
 })

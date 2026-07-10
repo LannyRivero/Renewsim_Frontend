@@ -195,6 +195,7 @@ export function SimulationHistoryPage() {
           totalPages={totalPages}
           onPrevious={() => setCurrentPage((page) => Math.max(1, page - 1))}
           onNext={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+          onPageSelect={(page) => setCurrentPage(page)}
         />
       </SimulationPageContent>
     </SimulationPageShell>
