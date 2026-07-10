@@ -1,11 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
-import {
-  ClimateConditionsCard,
-  RealDataNoticeCard,
-  SimulationFinancialSnapshot,
-  SimulationOverviewCard,
-} from './SimulationDetailsSections'
+import { ClimateCompactBar, ComparisonCompactNote, MetricTile } from './SimulationDetailsSections'
 import { buildSimulationDetailsViewModel } from './simulationDetailsViewModel'
 
 const viewModel = buildSimulationDetailsViewModel({
@@ -38,40 +33,32 @@ const viewModel = buildSimulationDetailsViewModel({
 })
 
 describe('Simulation details sections', () => {
-  it('renders summary and financial sections with the same framing cues for primary and supporting information', () => {
-    render(
-      <div>
-        <SimulationOverviewCard content={viewModel.summarySection} />
-        <SimulationFinancialSnapshot content={viewModel.financialSection} />
-      </div>,
-    )
+  it('renders decision metric tiles', () => {
+    render(<div>
+      {viewModel.summarySection.primaryMetrics.map((metric) => (
+        <MetricTile key={metric.label} metric={metric} />
+      ))}
+    </div>)
 
-    expect(screen.getAllByText('Decisión')[0]).toBeInTheDocument()
-    expect(screen.getByText('Financiero')).toBeInTheDocument()
-    expect(screen.getAllByText('Indicadores principales')).toHaveLength(2)
-    expect(screen.getAllByText('Detalles complementarios')).toHaveLength(2)
-    expect(screen.getByRole('heading', { name: 'Lectura para decisión' })).toBeInTheDocument()
-    expect(screen.getByText('Señal principal')).toBeInTheDocument()
-    expect(screen.getByText('Caso financiero')).toBeInTheDocument()
-    expect(screen.getByText('Defensa economica del escenario')).toBeInTheDocument()
-    expect(screen.getByText('Ahorro estimado')).toBeInTheDocument()
-    expect(screen.getByText('CAPEX vs presupuesto')).toBeInTheDocument()
-    expect(screen.getByText('Flujo neto anual')).toBeInTheDocument()
+    expect(screen.getByText('Recomendación')).toBeInTheDocument()
+    expect(screen.getByText('ROI')).toBeInTheDocument()
+    expect(screen.getByText('Tiempo de retorno')).toBeInTheDocument()
+    expect(screen.getByText('Viable con reservas')).toBeInTheDocument()
+    expect(screen.getByText('17%')).toBeInTheDocument()
   })
 
-  it('renders explicit placeholder and climate framing without inventing comparison analytics', () => {
-    render(
-      <div>
-        <RealDataNoticeCard content={viewModel.comparisonPlaceholder} />
-        <ClimateConditionsCard content={viewModel.climateSection} />
-      </div>,
-    )
+  it('renders climate bar with key climate metrics', () => {
+    render(<ClimateCompactBar content={viewModel.climateSection} isOpen={true} onToggle={() => {}} />)
+
+    expect(screen.getByText('Clima')).toBeInTheDocument()
+    expect(screen.getByText(/Velocidad del viento/)).toBeInTheDocument()
+    expect(screen.getByText(/Temperatura promedio/)).toBeInTheDocument()
+  })
+
+  it('renders comparison placeholder note', () => {
+    render(<ComparisonCompactNote content={viewModel.comparisonPlaceholder} isOpen={true} onToggle={() => {}} />)
 
     expect(screen.getByText('Comparativa')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'Datos pendientes para comparativa real' })).toBeInTheDocument()
-    expect(screen.getByText('Clima')).toBeInTheDocument()
-    expect(screen.getByText('Indicadores principales')).toBeInTheDocument()
-    expect(screen.getByText('Detalles complementarios')).toBeInTheDocument()
-    expect(screen.queryByText(/charts?/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/Para una comparativa real todavia falta que backend entregue alternativas lado a lado/i)).toBeInTheDocument()
   })
 })
