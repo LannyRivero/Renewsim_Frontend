@@ -31,7 +31,7 @@ beforeEach(() => {
   mockedGetRealSimulationById.mockReset()
   mockedGetRealSimulationById.mockResolvedValue({
     id: 'sim-edit-1',
-    status: 'completed',
+    status: 'completed' as const,
     createdAt: '2026-07-01T10:00:00.000Z',
     updatedAt: '2026-07-01T10:00:02.000Z',
     modelVersion: 'solar-spain-v1',
@@ -124,7 +124,7 @@ beforeEach(() => {
 
   useSimulationStore.setState({
     draft: {
-      location: '',
+      location: { label: '', lat: 0, lon: 0, country: '', countryCode: '' },
       energyType: 'solar',
       projectSize: 500,
       budget: 1_000_000,

@@ -31,8 +31,8 @@ function buildRealSimulationPayload(draft: SimulationCreateFormValues): RealCrea
     },
     demand: {
       annualConsumptionKwh: draft.demand.annualConsumptionKwh,
-      monthlyConsumptionKwh: hasMeaningfulMonthlyConsumption(draft.demand.monthlyConsumptionKwh)
-        ? draft.demand.monthlyConsumptionKwh
+      monthlyConsumptionKwh: hasMeaningfulMonthlyConsumption(draft.demand.monthlyConsumptionKwh as MonthlySeries)
+        ? (draft.demand.monthlyConsumptionKwh as MonthlySeries)
         : buildMonthlyConsumptionKwh(draft.demand.annualConsumptionKwh),
     },
     economics: {

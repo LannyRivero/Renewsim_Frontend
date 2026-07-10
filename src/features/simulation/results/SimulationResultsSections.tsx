@@ -1,9 +1,6 @@
 import { SimulationCard, SimulationStateMessage } from '@/shared/components'
-import type {
-  ComparableTechnology,
-  ComparisonHeight,
-  SimulationResultsMetric,
-} from './simulationResultsViewModel'
+import type { ComparableTechnology, ComparisonHeight } from './simulationResultsComparison'
+import type { SimulationResultsMetric } from './simulationResultsViewModel'
 
 function MetricCard({
   label,

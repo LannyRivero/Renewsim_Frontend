@@ -15,11 +15,11 @@ const mockedGetRealSimulationById = vi.mocked(getRealSimulationById)
 function mockDetailsResponse(overrides: Record<string, unknown> = {}) {
   return {
     id: 'sim-store-1',
-    status: 'completed',
+    status: 'completed' as const,
     createdAt: '2024-05-12T00:00:00.000Z',
     updatedAt: '2024-05-12T00:00:00.000Z',
     modelVersion: 'solar-spain-v1',
-    technology: 'solar',
+    technology: 'solar' as const,
     location: {
       label: 'Valencia, ES',
       name: 'Valencia',
@@ -29,7 +29,7 @@ function mockDetailsResponse(overrides: Record<string, unknown> = {}) {
       lon: -0.3763,
     },
     summary: {
-      recommendation: 'viable_with_reservations',
+      recommendation: 'viable_with_reservations' as const,
       headline: 'El escenario puede seguir evaluándose con validaciones adicionales.',
       summary: 'Los indicadores permiten continuar el análisis, aunque todavía no alcanzan una señal concluyente.',
       reasons: [
@@ -129,7 +129,7 @@ beforeEach(() => {
 
   useSimulationStore.setState({
     draft: {
-      location: '',
+      location: { label: '', lat: 0, lon: 0, country: '', countryCode: '' },
       energyType: 'solar',
       projectSize: 500,
       budget: 1_000_000,
@@ -143,7 +143,7 @@ beforeEach(() => {
       efficiency: 90,
     },
     lastRunInput: {
-      location: 'Valencia',
+      location: { label: 'Valencia', lat: 39.4699, lon: -0.3763, country: 'Spain', countryCode: 'ES' },
       energyType: 'wind',
       projectSize: 650,
       budget: 900000,
