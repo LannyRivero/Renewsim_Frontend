@@ -129,7 +129,7 @@ beforeEach(() => {
       projectSize: 500,
       budget: 1_000_000,
       energyConsumption: 1_000,
-    },
+    } as never,
     lastResult: {
       id: 'sim-edit-1',
       location: 'Madrid',

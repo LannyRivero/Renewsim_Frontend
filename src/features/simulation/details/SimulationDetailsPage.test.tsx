@@ -33,9 +33,9 @@ function mockDetailsResponse(overrides: Record<string, unknown> = {}) {
       headline: 'El escenario puede seguir evaluándose con validaciones adicionales.',
       summary: 'Los indicadores permiten continuar el análisis, aunque todavía no alcanzan una señal concluyente.',
       reasons: [
-        { area: 'economics', severity: 'positive', message: 'El retorno proyectado aporta una base económica más favorable.' },
-        { area: 'economics', severity: 'warning', message: 'El tiempo de retorno es moderado.' },
-        { area: 'technical', severity: 'positive', message: 'La eficiencia operativa esperada acompaña una lectura técnica consistente.' },
+        { area: 'economics' as const, severity: 'positive' as const, message: 'El retorno proyectado aporta una base económica más favorable.' },
+        { area: 'economics' as const, severity: 'warning' as const, message: 'El tiempo de retorno es moderado.' },
+        { area: 'technical' as const, severity: 'positive' as const, message: 'La eficiencia operativa esperada acompaña una lectura técnica consistente.' },
       ],
     },
     input: {
@@ -134,7 +134,7 @@ beforeEach(() => {
       projectSize: 500,
       budget: 1_000_000,
       energyConsumption: 1_000,
-    },
+    } as never,
     lastResult: {
       id: 'sim-store-1',
       location: 'Valencia',
@@ -150,7 +150,7 @@ beforeEach(() => {
       energyConsumption: 1000,
       locationLatitude: 39.4699,
       locationLongitude: -0.3763,
-    },
+    } as never,
   })
 })
 
@@ -212,9 +212,9 @@ describe('SimulationDetailsPage', () => {
         headline: 'El escenario presenta una señal sólida.',
         summary: 'Indicadores alineados favorablemente.',
         reasons: [
-          { area: 'economics', severity: 'positive', message: 'Retorno favorable.' },
-          { area: 'economics', severity: 'positive', message: 'Tiempo de retorno razonable.' },
-          { area: 'technical', severity: 'positive', message: 'Eficiencia operativa consistente.' },
+          { area: 'economics' as const, severity: 'positive' as const, message: 'Retorno favorable.' },
+          { area: 'economics' as const, severity: 'positive' as const, message: 'Tiempo de retorno razonable.' },
+          { area: 'technical' as const, severity: 'positive' as const, message: 'Eficiencia operativa consistente.' },
         ],
       },
       financial: {
@@ -267,9 +267,9 @@ describe('SimulationDetailsPage', () => {
         headline: 'The scenario is viable, but the decision depends on validating core assumptions.',
         summary: 'The project shows credible technical output, while the financial profile still requires executive review of pricing, losses, and recovery targets.',
         reasons: [
-          { area: 'economics', severity: 'positive', message: 'The selected site is viable, but solar yield is moderate versus top Spanish locations.' },
-          { area: 'economics', severity: 'warning', message: 'Recovery is feasible, but discounted performance should be reviewed carefully.' },
-          { area: 'technical', severity: 'warning', message: 'The submitted inputs still need validation before committee review.' },
+          { area: 'economics' as const, severity: 'positive' as const, message: 'The selected site is viable, but solar yield is moderate versus top Spanish locations.' },
+          { area: 'economics' as const, severity: 'warning' as const, message: 'Recovery is feasible, but discounted performance should be reviewed carefully.' },
+          { area: 'technical' as const, severity: 'warning' as const, message: 'The submitted inputs still need validation before committee review.' },
         ],
       },
     }))
