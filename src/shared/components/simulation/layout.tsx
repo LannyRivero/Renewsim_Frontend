@@ -17,7 +17,7 @@ export function SimulationPageShell({ children, className, contentClassName, bod
     <div className={cn('w-full py-2 sm:py-3 lg:h-[calc(100vh-4.5rem)] lg:py-0', className)}>
       <section
         className={cn(
-          'rounded-[1rem] border border-[#cfd7cf] bg-[#f3f6f2] p-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.18)] dark:border-white/10 dark:bg-[#111917] sm:p-6 lg:h-full lg:p-7',
+          'rounded-md border border-white/15 bg-white/20 backdrop-blur-xl p-5 shadow-[0_12px_28px_-24px_rgba(15,23,42,0.18)] dark:border-white/8 dark:bg-[#111917]/30 sm:p-6 lg:h-full lg:p-7',
           contentClassName,
         )}
       >
@@ -36,7 +36,7 @@ export function SimulationPageContent({
     <div
       className={cn(
         'flex min-h-0 flex-col lg:h-full',
-        spacing === 'compact' ? 'gap-4' : 'gap-6',
+        spacing === 'compact' ? 'gap-3' : 'gap-6',
         className,
       )}
       {...props}
@@ -58,7 +58,7 @@ export function SimulationCard({
   return (
     <div
       className={cn(
-        'rounded-[0.875rem] border shadow-[0_10px_24px_-22px_rgba(15,23,42,0.18)]',
+        'rounded-sm border shadow-[0_10px_24px_-22px_rgba(15,23,42,0.18)]',
         tone === 'base'
           ? 'border-[#d5ddd4] bg-white dark:border-white/10 dark:bg-[#16201d]'
           : 'border-[#d8dfd7] bg-[#f6f8f5] dark:border-white/10 dark:bg-white/[0.03]',
@@ -90,10 +90,10 @@ export function SimulationSectionHeader({
   eyebrowIcon,
 }: SimulationSectionHeaderProps) {
   return (
-    <div className={cn('flex flex-col gap-4 border-b border-[#dde4dc] pb-4 md:flex-row md:items-end md:justify-between dark:border-white/8', className)}>
+    <div className={cn('flex flex-col gap-4 border-b border-[#dde4dc] pb-3 md:flex-row md:items-end md:justify-between dark:border-white/8', className)}>
       <div>
         {eyebrow ? (
-          <p className="inline-flex min-h-7 items-center gap-2 rounded-md border border-[#bccabf] bg-[#f7f9f6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#405448] dark:border-white/12 dark:bg-white/[0.04] dark:text-content-dark/82">
+          <p className="inline-flex min-h-7 items-center gap-2 rounded-sm border border-[#bccabf] bg-[#f7f9f6] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#405448] dark:border-white/12 dark:bg-white/[0.04] dark:text-content-dark/82">
             {eyebrowIcon}
             {eyebrow}
           </p>
@@ -123,3 +123,4 @@ export function SimulationToolbar({ className, columns = 2, ...props }: Simulati
     />
   )
 }
+

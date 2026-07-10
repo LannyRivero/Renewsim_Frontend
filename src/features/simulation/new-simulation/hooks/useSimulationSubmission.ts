@@ -2,16 +2,61 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { simulationCreateSchema, type SimulationCreateFormValues } from '../../schemas/simulationSchema'
-import {
-  createSimulation,
-  getSimulationById,
-  getSimulationHistory,
-} from '../../services/simulationService'
+import { createRealSimulation } from '../../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
+import type { MonthlySeries, RealCreateSimulationRequest, SimulationResult } from '@/shared/types'
+
+function buildMonthlyConsumptionKwh(annualConsumptionKwh: number): MonthlySeries {
+  const monthlyBase = Number((annualConsumptionKwh / 12).toFixed(2))
+  const values = Array.from({ length: 12 }, () => monthlyBase)
+  const partialTotal = Number((monthlyBase * 11).toFixed(2))
+  values[11] = Number((annualConsumptionKwh - partialTotal).toFixed(2))
+
+  return values as MonthlySeries
+}
+
+function hasMeaningfulMonthlyConsumption(monthlyConsumptionKwh: MonthlySeries): boolean {
+  return monthlyConsumptionKwh.some((value) => value > 0)
+}
+
+function buildRealSimulationPayload(draft: SimulationCreateFormValues): RealCreateSimulationRequest {
+  return {
+    name: draft.name.trim(),
+    technology: draft.technology,
+    location: {
+      ...draft.location,
+    },
+    system: {
+      ...draft.system,
+    },
+    demand: {
+      annualConsumptionKwh: draft.demand.annualConsumptionKwh,
+      monthlyConsumptionKwh: hasMeaningfulMonthlyConsumption(draft.demand.monthlyConsumptionKwh as MonthlySeries)
+        ? (draft.demand.monthlyConsumptionKwh as MonthlySeries)
+        : buildMonthlyConsumptionKwh(draft.demand.annualConsumptionKwh),
+    },
+    economics: {
+      ...draft.economics,
+    },
+  }
+}
+
+function toStoredSimulationResult(result: Awaited<ReturnType<typeof createRealSimulation>>): SimulationResult {
+  return {
+    id: result.id,
+    name: result.input.name,
+    status: result.status,
+    createdAt: result.createdAt,
+    location: result.location.label,
+    energyType: result.technology,
+    roi: result.financial.irrPct ?? undefined,
+    efficiency: Number((result.technical.performanceRatio * 100).toFixed(1)),
+  }
+}
 
 interface UseSimulationSubmissionParams {
   simulationActions: {
-    setLastResult: (result: Awaited<ReturnType<typeof createSimulation>>) => void
+    setLastResult: (result: SimulationResult) => void
     setLastRunInput: (payload: SimulationCreateFormValues) => void
   }
 }
@@ -24,24 +69,17 @@ export function useSimulationSubmission({
   const [formError, setFormError] = useState<string | null>(null)
 
   const mutation = useMutation({
-    mutationFn: createSimulation,
+    mutationFn: async (draft: SimulationCreateFormValues) => createRealSimulation(buildRealSimulationPayload(draft)),
     onSuccess: async (result) => {
-      await queryClient.fetchQuery({
-        queryKey: ['simulation-details', result.id],
-        queryFn: () => getSimulationById(result.id),
-      })
+      queryClient.setQueryData(['simulation-details', result.id], result)
 
-      await queryClient.fetchQuery({
-        queryKey: ['simulation-history'],
-        queryFn: getSimulationHistory,
-      })
-
-      simulationActions.setLastResult(result)
+      simulationActions.setLastResult(toStoredSimulationResult(result))
       useToastStore.getState().pushToast({
         title: 'Simulación completada',
         description: 'La simulación se creó correctamente.',
         variant: 'success',
       })
+      queryClient.invalidateQueries({ queryKey: ['simulation-history'] })
       queryClient.invalidateQueries({ queryKey: ['dashboard-data'] })
       navigate(`/simulador/detalles?id=${encodeURIComponent(result.id)}`)
     },
@@ -67,19 +105,8 @@ export function useSimulationSubmission({
       return
     }
 
-    const normalizedLocation = parsed.data.location.trim()
-    const payload = {
-      name: `${parsed.data.energyType.toUpperCase()} - ${normalizedLocation}`,
-      technology: parsed.data.energyType,
-      installedCapacity: parsed.data.projectSize,
-      location: {
-        lat: parsed.data.locationLatitude,
-        lon: parsed.data.locationLongitude,
-      },
-    } as const
-
     simulationActions.setLastRunInput(parsed.data)
-    mutation.mutate(payload)
+    mutation.mutate(parsed.data)
   }
 
   return {

@@ -1,28 +1,32 @@
-export interface SimulationHistoryItem {
-  id: string
-  date: string
-  energyType: string
-  efficiency: string
-  roi: string
-}
+export type CurrencyCode = 'EUR'
 
-export interface CreateSimulationPayload {
-  name: string
-  technology: 'solar' | 'wind' | 'hydro'
-  installedCapacity: number
-  location: {
-    lat: number
-    lon: number
-  }
-}
+export type SimulationTechnology = 'solar' | 'wind' | 'hydro'
 
-export interface SimulationResult {
-  id: string
-  name?: string
-  status?: string
-  createdAt?: string
-  location?: string
-  energyType?: string
-  roi?: number
-  efficiency?: number
+export type SimulationRunStatus = 'draft' | 'processing' | 'completed' | 'failed'
+
+export type RecommendationStatus = 'recommended' | 'viable_with_reservations' | 'not_recommended'
+
+export type WarningSeverity = 'info' | 'warning' | 'critical'
+
+export type MonthlySeries = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+]
+
+export interface SimulationSystemLosses {
+  inverter: number
+  temperature: number
+  wiring: number
+  soiling: number
+  other: number
 }

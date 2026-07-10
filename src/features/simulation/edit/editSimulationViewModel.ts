@@ -1,5 +1,5 @@
-import type { EditSimulationValues, SimulationDetails } from '../schemas/simulationSchema'
-import type { SimulationResult } from '@/shared/types'
+import type { EditSimulationValues } from '../schemas/simulationSchema'
+import type { SimulationDetailsResponse, SimulationResult } from '@/shared/types'
 
 export type EnergySourceOption = 'Paneles solares' | 'Turbina eólica' | 'Hidroeléctrica'
 
@@ -10,7 +10,7 @@ export type EditSimulationFormDefaults = EditSimulationValues & {
 const DEFAULT_FORM_VALUES: Omit<EditSimulationFormDefaults, 'simulationName' | 'location' | 'energySource'> = {
   systemSizeKw: 7.5,
   annualConsumptionKwh: 10000,
-  incentives: 1500,
+  incentives: 0,
   electricityRate: 0.18,
 }
 
@@ -32,17 +32,21 @@ export function buildEditSimulationFormDefaults({
   data,
   lastResult,
 }: {
-  data: SimulationDetails | null | undefined
+  data: SimulationDetailsResponse | null | undefined
   lastResult: SimulationResult | null
 }): EditSimulationFormDefaults {
-  const energyType = data?.energyType ?? lastResult?.energyType ?? 'Energía'
-  const location = data?.location ?? lastResult?.location ?? 'San Francisco, CA'
+  const energyType = data?.technology ?? lastResult?.energyType ?? 'Energía'
+  const location = data?.location.label ?? lastResult?.location ?? 'San Francisco, CA'
+  const simulationName = data?.input.name ?? lastResult?.name ?? `${energyType} Simulación`
 
   return {
-    simulationName: `${energyType} Simulación`,
+    simulationName,
     location,
-    energySource: toEnergySourceOption(data?.energyType ?? lastResult?.energyType),
-    ...DEFAULT_FORM_VALUES,
+    energySource: toEnergySourceOption(data?.technology ?? lastResult?.energyType),
+    systemSizeKw: data?.input.system.installedCapacityKw ?? DEFAULT_FORM_VALUES.systemSizeKw,
+    annualConsumptionKwh: data?.input.demand.annualConsumptionKwh ?? DEFAULT_FORM_VALUES.annualConsumptionKwh,
+    incentives: DEFAULT_FORM_VALUES.incentives,
+    electricityRate: data?.input.economics.electricityPurchasePricePerKwh ?? DEFAULT_FORM_VALUES.electricityRate,
   }
 }
 

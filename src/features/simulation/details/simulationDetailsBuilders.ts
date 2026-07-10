@@ -199,7 +199,7 @@ export function buildFinancialSection({
     title: 'Caso financiero',
     summary: 'Lectura economica del escenario para validar si la inversion se recupera, crea valor y sostiene una defensa frente a negocio.',
     primaryMetrics: [
-      { label: 'Inversion inicial', value: capex, helper: 'Capital requerido para activar el escenario.' },
+      { label: 'Inversión inicial', value: capex, helper: 'Capital requerido para activar el escenario.' },
       { label: 'Tiempo de retorno', value: paybackYears, helper: paybackHelper },
       { label: 'Valor presente neto', value: npv, helper: npvHelper },
     ],
@@ -310,7 +310,7 @@ export function buildClimateSection({
   const normalized = energyType.trim().toUpperCase()
   const primaryResource =
     normalized === 'WIND'
-      ? { label: 'Viento utilizable', value: windSpeed === 'N/D' ? 'N/D' : `${windSpeed} m/s`, helper: 'Variable principal para leer la consistencia del recurso eolico.' }
+      ? { label: 'Velocidad del viento', value: windSpeed === 'N/D' ? 'N/D' : `${windSpeed} m/s`, helper: 'Variable principal para leer la consistencia del recurso eolico.' }
       : normalized === 'HYDRO'
         ? { label: 'Condicion hidrologica', value: String(hydrology), helper: 'Variable principal para interpretar disponibilidad y estabilidad del recurso hidraulico.' }
         : { label: 'Irradiancia utilizable', value: irradiance === 'N/D' ? 'N/D' : `${irradiance} kWh/m2/día`, helper: 'Variable principal para interpretar el potencial solar del escenario.' }

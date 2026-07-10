@@ -1,22 +1,14 @@
 import { buildSimulationInsights } from '../utils/simulationInsights'
 import type { SimulationDetails, SimulationCreateFormValues } from '../schemas/simulationSchema'
-import type { SimulationResult, TechnologyItem } from '@/shared/types'
-
-export type ComparableTechnology = {
-  id: string
-  name: string
-  score: number
-  efficiency: number
-  co2Reduction: number
-  progressWidth: string
-}
-
-export type ComparisonHeight = {
-  label: 'Generación' | 'Ahorro' | 'CO2'
-  value: number
-  displayValue: string
-  height: string
-}
+import type { SimulationDetailsResponse, SimulationResult, TechnologyItem } from '@/shared/types'
+import {
+  buildComparableTechnologies,
+  buildComparisonHeights,
+  normalizeEnergyType,
+  type ComparableTechnology,
+  type ComparisonHeight,
+} from './simulationResultsComparison'
+import { buildEffectiveResult, type EffectiveSimulationResult } from './simulationResultsResult'
 
 export type SimulationResultsMetric = {
   label: string
@@ -25,11 +17,10 @@ export type SimulationResultsMetric = {
   positive?: boolean
 }
 
-export type EffectiveSimulationResult = SimulationResult & Partial<SimulationDetails>
-
 export type SimulationResultsViewModel = {
   effectiveResult: EffectiveSimulationResult | null
   recommendedTechnology: string
+  recommendationStatus?: string
   resultLocation: string
   normalizedEnergyType: 'SOLAR' | 'WIND' | 'HYDRO'
   roiValue: string
@@ -55,92 +46,21 @@ function formatPercent(value: number) {
   return `${Number(value.toFixed(1))}%`
 }
 
-function barHeight(value: number, max: number, min = 18) {
-  if (max <= 0) return `${min}%`
-  return `${Math.max(min, Math.round((value / max) * 100))}%`
-}
-
-export function normalizeEnergyType(value: string): 'SOLAR' | 'WIND' | 'HYDRO' {
-  const normalized = value.trim().toUpperCase()
-  if (normalized === 'WIND') return 'WIND'
-  if (normalized === 'HYDRO') return 'HYDRO'
-  return 'SOLAR'
-}
-
-function buildEffectiveResult(
-  data: SimulationDetails | null | undefined,
-  lastResult: SimulationResult | null,
-): EffectiveSimulationResult | null {
-  if (data) {
-    return {
-      id: data.id,
-      name: data.name,
-      location: data.location,
-      energyType: data.energyType,
-      roi: data.roi,
-      efficiency: data.efficiency,
-      projectSize: data.projectSize,
-      budget: data.budget,
-      energyGenerated: data.energyGenerated,
-      estimatedSavings: data.estimatedSavings,
-      irradiance: data.irradiance,
-      windSpeed: data.windSpeed,
-      hydrology: data.hydrology,
-      climateSource: data.climateSource,
-      climatePeriod: data.climatePeriod,
-      temperature: data.temperature,
-    }
-  }
-
-  return lastResult ?? null
-}
-
-function buildComparableTechnologies(
-  technologies: TechnologyItem[],
-  energyType: string,
-): ComparableTechnology[] {
-  const targetType = normalizeEnergyType(energyType)
-
-  const ranked = technologies
-    .filter((item) => normalizeEnergyType(item.energyType) === targetType)
-    .map((item) => {
-      const score =
-        item.efficiency * 0.45 +
-        item.capacityFactor * 0.25 +
-        item.co2Reduction * 0.2 +
-        Math.max(0, 100 - item.environmentalImpact) * 0.1
-
-      return {
-        id: item.id,
-        name: item.name,
-        score: Number(score.toFixed(1)),
-        efficiency: item.efficiency,
-        co2Reduction: item.co2Reduction,
-      }
-    })
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 5)
-
-  const bestScore = ranked[0]?.score ?? 0
-
-  return ranked.map((item) => ({
-    ...item,
-    progressWidth: `${Math.max(8, bestScore > 0 ? (item.score / bestScore) * 100 : 0)}%`,
-  }))
-}
 
 export function buildSimulationResultsViewModel({
   data,
+  realData,
   lastResult,
   lastRunInput,
   technologies,
 }: {
   data: SimulationDetails | null | undefined
+  realData?: SimulationDetailsResponse | null
   lastResult: SimulationResult | null
   lastRunInput: SimulationCreateFormValues | null
   technologies: TechnologyItem[]
 }): SimulationResultsViewModel {
-  const effectiveResult = buildEffectiveResult(data, lastResult)
+  const effectiveResult = buildEffectiveResult(data, realData, lastResult)
   const resultLocation = effectiveResult?.location ?? 'N/A'
   const resultEnergyType = effectiveResult?.energyType ?? 'solar'
   const normalizedEnergyType = normalizeEnergyType(resultEnergyType)
@@ -151,15 +71,17 @@ export function buildSimulationResultsViewModel({
     typeof effectiveResult?.estimatedSavings === 'number'
       ? effectiveResult.estimatedSavings
       : Math.round(energyGeneratedValue * 0.11)
-  const roiValue = `${typeof effectiveResult?.roi === 'number' ? effectiveResult.roi : insights.roiPercent}%`
-  const efficiencyValue = `${insights.efficiencyPercent}%`
+  const roiValue = `${typeof effectiveResult?.roi === 'number' ? Number(effectiveResult.roi.toFixed(1)) : insights.roiPercent}%`
+  const efficiencyValue = `${typeof effectiveResult?.efficiency === 'number' ? Number(effectiveResult.efficiency.toFixed(1)) : insights.efficiencyPercent}%`
   const energyValue = `${energyGeneratedValue.toLocaleString('en-US')} kWh`
   const paybackYears =
-    typeof effectiveResult?.budget === 'number' &&
-    effectiveResult.budget > 0 &&
-    typeof effectiveResult?.estimatedSavings === 'number' &&
-    effectiveResult.estimatedSavings > 0
-      ? Number((effectiveResult.budget / effectiveResult.estimatedSavings).toFixed(1))
+    typeof realData?.financial.paybackYears === 'number'
+      ? realData.financial.paybackYears
+      : typeof effectiveResult?.budget === 'number' &&
+          effectiveResult.budget > 0 &&
+          typeof effectiveResult?.estimatedSavings === 'number' &&
+          effectiveResult.estimatedSavings > 0
+        ? Number((effectiveResult.budget / effectiveResult.estimatedSavings).toFixed(1))
       : insights.paybackYears
   const paybackValue = `${paybackYears} years`
   const savingsValue = `${formatCurrency(estimatedSavingsValue)}/year`
@@ -169,20 +91,26 @@ export function buildSimulationResultsViewModel({
   const averageTemperature = typeof effectiveResult?.temperature === 'number' ? `${effectiveResult.temperature.toFixed(1)} C` : 'N/A'
   const comparableTechnologies = buildComparableTechnologies(technologies, resultEnergyType)
 
-  const rawComparisonHeights = [
-    { label: 'Generación' as const, value: energyGeneratedValue, displayValue: energyValue },
-    { label: 'Ahorro' as const, value: estimatedSavingsValue, displayValue: formatCurrency(estimatedSavingsValue) },
-    { label: 'CO2' as const, value: insights.co2AvoidedTons * 1000, displayValue: co2Value },
-  ]
-  const comparisonMax = Math.max(...rawComparisonHeights.map((item) => item.value), 1)
-  const comparisonHeights = rawComparisonHeights.map((item) => ({
-    ...item,
-    height: barHeight(item.value, comparisonMax),
-  }))
+  const comparisonHeights = buildComparisonHeights(
+    energyGeneratedValue,
+    estimatedSavingsValue,
+    insights.co2AvoidedTons,
+    energyValue,
+    formatCurrency(estimatedSavingsValue),
+    co2Value,
+  )
 
   return {
     effectiveResult,
-    recommendedTechnology: insights.recommendedTechnology,
+    recommendedTechnology:
+      realData?.summary.recommendation === 'recommended'
+        ? 'Escenario recomendado'
+        : realData?.summary.recommendation === 'viable_with_reservations'
+          ? 'Escenario viable con reservas'
+          : realData?.summary.recommendation === 'not_recommended'
+            ? 'Escenario no recomendado'
+            : insights.recommendedTechnology,
+    recommendationStatus: realData?.summary.recommendation,
     resultLocation,
     normalizedEnergyType,
     roiValue,

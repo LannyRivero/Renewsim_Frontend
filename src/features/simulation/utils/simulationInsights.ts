@@ -1,6 +1,14 @@
 import type { SimulationCreateFormValues, SimulationDetails } from '../schemas/simulationSchema'
 import type { SimulationResult } from '@/shared/types'
 
+type SupportedEnergyType = 'solar' | 'wind' | 'hydro'
+
+type ClimateProfile = {
+  solarIrradiance: number
+  windSpeed: number
+  hydrologyFlow: number
+}
+
 type InsightMetrics = {
   energyGeneratedKwh: number
   roiPercent: number
@@ -14,42 +22,122 @@ const ENERGY_FACTOR = {
   solar: 0.19,
   wind: 0.31,
   hydro: 0.42,
+} as const satisfies Record<SupportedEnergyType, number>
+
+const DEFAULT_PROJECT_SIZE_KW = 500
+
+const DEFAULT_CLIMATE = {
+  solarIrradiance: 4.5,
+  windSpeed: 6,
+  hydrologyFlow: 2.5,
 } as const
+
+const CLIMATE_BASELINE = {
+  solar: 5,
+  wind: 7,
+  hydro: 3,
+} as const satisfies Record<SupportedEnergyType, number>
+
+const GENERATION_BASE_KWH_PER_KW_PER_MONTH = 32
+const MONTHS_PER_YEAR = 12
+const GRID_CO2_TONS_PER_KWH = 0.00038
+
+const EFFICIENCY_MODEL = {
+  capPercent: 97,
+  basePercent: 72,
+  climateWeight: 18,
+  technologyWeight: 10,
+} as const
+
+const ROI_MODEL = {
+  basePercent: 6,
+  climateWeight: 6,
+  technologyWeight: 18,
+} as const
+
+const PAYBACK_MODEL = {
+  minimumYears: 3,
+  baseYears: 16,
+  roiDivisor: 2,
+} as const
+
+const TECHNOLOGY_LABELS = {
+  solar: 'Solar Power',
+  wind: 'Wind Turbine',
+  hydro: 'Hydroelectric Plant',
+} as const satisfies Record<SupportedEnergyType, string>
+
+function toFixedNumber(value: number, digits = 1) {
+  return Number(value.toFixed(digits))
+}
+
+function resolveClimateMultiplier(energyType: SupportedEnergyType, climate: ClimateProfile) {
+  if (energyType === 'solar') {
+    return climate.solarIrradiance / CLIMATE_BASELINE.solar
+  }
+
+  if (energyType === 'wind') {
+    return climate.windSpeed / CLIMATE_BASELINE.wind
+  }
+
+  return climate.hydrologyFlow / CLIMATE_BASELINE.hydro
+}
+
+function estimateEfficiencyPercent(energyType: SupportedEnergyType, climateMultiplier: number) {
+  const rawEfficiency =
+    EFFICIENCY_MODEL.basePercent +
+    climateMultiplier * EFFICIENCY_MODEL.climateWeight +
+    ENERGY_FACTOR[energyType] * EFFICIENCY_MODEL.technologyWeight
+
+  return toFixedNumber(Math.min(EFFICIENCY_MODEL.capPercent, rawEfficiency))
+}
+
+function estimateRoiPercent(energyType: SupportedEnergyType, climateMultiplier: number) {
+  return toFixedNumber(
+    ROI_MODEL.basePercent +
+      climateMultiplier * ROI_MODEL.climateWeight +
+      ENERGY_FACTOR[energyType] * ROI_MODEL.technologyWeight,
+  )
+}
+
+function estimatePaybackYears(roiPercent: number) {
+  return toFixedNumber(
+    Math.max(PAYBACK_MODEL.minimumYears, PAYBACK_MODEL.baseYears - roiPercent / PAYBACK_MODEL.roiDivisor),
+  )
+}
+
+function estimateCo2AvoidedTons(energyGeneratedKwh: number) {
+  return toFixedNumber(energyGeneratedKwh * GRID_CO2_TONS_PER_KWH)
+}
 
 export function buildSimulationInsights(
   input: SimulationCreateFormValues | null,
   result: (SimulationResult & Partial<SimulationDetails>) | null,
 ): InsightMetrics {
-  const projectSize = input?.projectSize ?? result?.projectSize ?? 500
+  const projectSize = input?.system.installedCapacityKw ?? result?.projectSize ?? DEFAULT_PROJECT_SIZE_KW
   const climate = {
-    irradiance: result?.irradiance ?? 4.5,
-    windSpeed: result?.windSpeed ?? 6,
-    hydrology: result?.hydrology ?? 2.5,
+    solarIrradiance: result?.irradiance ?? DEFAULT_CLIMATE.solarIrradiance,
+    windSpeed: result?.windSpeed ?? DEFAULT_CLIMATE.windSpeed,
+    hydrologyFlow: result?.hydrology ?? DEFAULT_CLIMATE.hydrologyFlow,
   }
-  const energyType = (input?.energyType ?? result?.energyType ?? 'solar') as 'solar' | 'wind' | 'hydro'
+  const energyType = (input?.technology ?? result?.energyType ?? 'solar') as SupportedEnergyType
 
-  const climateMultiplier =
-    energyType === 'solar'
-      ? climate.irradiance / 5
-      : energyType === 'wind'
-        ? climate.windSpeed / 7
-        : climate.hydrology / 3
-
-  const baseGeneration = projectSize * 32
-  const energyGeneratedKwh = Math.round(baseGeneration * ENERGY_FACTOR[energyType] * climateMultiplier * 12)
+  const climateMultiplier = resolveClimateMultiplier(energyType, climate)
+  const baseGeneration = projectSize * GENERATION_BASE_KWH_PER_KW_PER_MONTH
+  const energyGeneratedKwh = Math.round(baseGeneration * ENERGY_FACTOR[energyType] * climateMultiplier * MONTHS_PER_YEAR)
 
   const efficiencyPercent =
     typeof result?.efficiency === 'number'
-      ? Number(result.efficiency.toFixed(1))
-      : Number(Math.min(97, 72 + climateMultiplier * 18 + ENERGY_FACTOR[energyType] * 10).toFixed(1))
+      ? toFixedNumber(result.efficiency)
+      : estimateEfficiencyPercent(energyType, climateMultiplier)
 
   const roiPercent =
     typeof result?.roi === 'number'
-      ? Number(result.roi.toFixed(1))
-      : Number((6 + climateMultiplier * 6 + ENERGY_FACTOR[energyType] * 18).toFixed(1))
+      ? toFixedNumber(result.roi)
+      : estimateRoiPercent(energyType, climateMultiplier)
 
-  const paybackYears = Number(Math.max(3, 16 - roiPercent / 2).toFixed(1))
-  const co2AvoidedTons = Number((energyGeneratedKwh * 0.00038).toFixed(1))
+  const paybackYears = estimatePaybackYears(roiPercent)
+  const co2AvoidedTons = estimateCo2AvoidedTons(energyGeneratedKwh)
 
   return {
     energyGeneratedKwh,
@@ -57,7 +145,6 @@ export function buildSimulationInsights(
     efficiencyPercent,
     paybackYears,
     co2AvoidedTons,
-    recommendedTechnology:
-      energyType === 'solar' ? 'Solar Power' : energyType === 'wind' ? 'Wind Turbine' : 'Hydroelectric Plant',
+    recommendedTechnology: TECHNOLOGY_LABELS[energyType],
   }
 }

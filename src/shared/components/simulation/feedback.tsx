@@ -8,6 +8,11 @@ interface SimulationStatusBadgeProps {
   className?: string
 }
 
+interface SimulationTechnologyBadgeProps {
+  technology: string
+  className?: string
+}
+
 export function SimulationStatusBadge({
   children,
   icon,
@@ -27,6 +32,27 @@ export function SimulationStatusBadge({
       {icon}
       {children}
     </div>
+  )
+}
+
+export function SimulationTechnologyBadge({ technology, className }: SimulationTechnologyBadgeProps) {
+  const normalized = technology.trim().toLowerCase()
+
+  const label = normalized === 'solar' ? 'Solar' : normalized === 'wind' ? 'Eólica' : normalized === 'hydro' ? 'Hidro' : technology
+
+  const toneClass =
+    normalized === 'solar'
+      ? 'border-[#ead9a5] bg-[#fbf4dd] text-[#9a6a10] dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300'
+      : normalized === 'wind'
+        ? 'border-[#bfe3df] bg-[#e8f8f5] text-[#17786b] dark:border-teal-500/30 dark:bg-teal-500/10 dark:text-teal-300'
+        : normalized === 'hydro'
+          ? 'border-[#cad8f0] bg-[#eef4ff] text-[#355caa] dark:border-blue-500/30 dark:bg-blue-500/10 dark:text-blue-300'
+          : ''
+
+  return (
+    <SimulationStatusBadge tone="neutral" className={cn('whitespace-nowrap rounded-sm px-2 py-0.5', toneClass, className)}>
+      {label}
+    </SimulationStatusBadge>
   )
 }
 
