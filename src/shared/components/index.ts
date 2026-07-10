@@ -40,3 +40,5 @@ export {
   FormField,
   SubSectionHeader,
 } from './SimulationPrimitives'
+export { SimulationBreadcrumbs } from './simulation/breadcrumbs'
+export type { BreadcrumbItem } from './simulation/breadcrumbs'
