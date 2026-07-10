@@ -26,19 +26,18 @@ export function SimulationHistoryTable({
 }) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
 
+  const menuActions = {
+    openMenuId,
+    isDeleting,
+    onToggleMenu: (simulationId: string) => setOpenMenuId((current) => (current === simulationId ? null : simulationId)),
+    onCloseMenu: () => setOpenMenuId(null),
+    onDelete,
+  }
+
   return (
     <SimulationCard className="flex min-h-0 flex-col overflow-visible border-[#d8dee8] bg-[#f6f8fb] p-0 backdrop-blur-sm dark:border-white/10 dark:bg-[#15191d]">
       <div>
-        <SimulationHistoryMobileList
-          rows={rows}
-          isLoading={isLoading}
-          isError={isError}
-          openMenuId={openMenuId}
-          isDeleting={isDeleting}
-          onToggleMenu={(simulationId) => setOpenMenuId((current) => (current === simulationId ? null : simulationId))}
-          onCloseMenu={() => setOpenMenuId(null)}
-          onDelete={onDelete}
-        />
+        <SimulationHistoryMobileList rows={rows} isLoading={isLoading} isError={isError} {...menuActions} />
 
         <SimulationHistoryDesktopTable
           rows={rows}
@@ -47,11 +46,7 @@ export function SimulationHistoryTable({
           onSortChange={onSortChange}
           isLoading={isLoading}
           isError={isError}
-          openMenuId={openMenuId}
-          isDeleting={isDeleting}
-          onToggleMenu={(simulationId) => setOpenMenuId((current) => (current === simulationId ? null : simulationId))}
-          onCloseMenu={() => setOpenMenuId(null)}
-          onDelete={onDelete}
+          {...menuActions}
         />
       </div>
     </SimulationCard>

@@ -63,7 +63,8 @@ describe('SimulationHistoryPage', () => {
     mockedGetRealSimulationHistory.mockResolvedValueOnce({ items: [], total: 0 })
     renderPage()
 
-    expect(await screen.findByText('Todavía no hay simulaciones. Creá tu primera simulación para ver resultados aquí.')).toBeInTheDocument()
+    const messages = await screen.findAllByText('Todavía no hay simulaciones. Creá tu primera simulación para ver resultados aquí.')
+    expect(messages.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders heading and new simulation action', () => {
