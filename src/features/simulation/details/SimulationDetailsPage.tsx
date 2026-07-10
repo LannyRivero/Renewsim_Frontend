@@ -95,7 +95,6 @@ export function SimulationDetailsPage() {
             energyType={formatEnergyTypeLabel(viewModel.energyType)}
             decisionStatus={viewModel.decisionStatus}
             decisionHeadline={viewModel.decisionHeadline}
-            decisionSummary={viewModel.decisionSummary}
             keyMetrics={viewModel.summarySection.primaryMetrics}
             decisionDrivers={viewModel.decisionDrivers}
           />
