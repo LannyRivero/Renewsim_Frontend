@@ -8,7 +8,8 @@ import { LocationField } from './components/LocationField'
 import { useSimulationLocation } from './hooks/useSimulationLocation'
 import { useSimulationSubmission } from './hooks/useSimulationSubmission'
 import { DEFAULT_SIMULATION_FORM_VALUES, simulationCreateSchema, type SimulationCreateFormInput, type SimulationCreateFormValues} from '../schemas/simulationSchema'
-import { SimulationActionButton, SimulationCard, SimulationPageContent, SimulationPageShell, SimulationSectionHeader, SimulationStateMessage} from '@/shared/components'
+import { SimulationActionButton, SimulationBreadcrumbs, SimulationCard, SimulationPageContent, SimulationPageShell, SimulationSectionHeader, SimulationStateMessage} from '@/shared/components'
+import type { BreadcrumbItem } from '@/shared/components'
 import { useSimulationStore } from '@/stores/simulationStore'
 
 export function NewSimulationPage() {
@@ -33,6 +34,13 @@ export function NewSimulationPage() {
   return (
     <SimulationPageShell className="lg:h-auto" contentClassName="rounded-md px-3 pt-4 pb-4 sm:px-4 lg:p-5" bodyClassName="lg:h-auto">
       <SimulationPageContent spacing="compact">
+        <SimulationBreadcrumbs
+          className="mb-1"
+          items={[
+            { label: 'Simulador', href: '/simulador' },
+            { label: 'Nueva simulación' },
+          ] satisfies BreadcrumbItem[]}
+        />
         <SimulationSectionHeader
           eyebrow="Configuración de simulación"
           eyebrowIcon={<Sliders className="h-3.5 w-3.5" />}
