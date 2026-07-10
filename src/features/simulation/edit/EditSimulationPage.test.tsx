@@ -52,7 +52,7 @@ beforeEach(() => {
     },
     input: {
       name: 'SOLAR - Madrid',
-      technology: 'solar',
+      technology: 'solar' as const,
       location: {
         label: 'Madrid, ES',
         lat: 40.4168,

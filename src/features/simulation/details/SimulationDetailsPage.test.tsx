@@ -2,6 +2,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { vi } from 'vitest'
+import type { SimulationDetailsResponse } from '@/shared/types'
 import { SimulationDetailsPage } from './SimulationDetailsPage'
 import { getRealSimulationById } from '../services/simulationService'
 import { useSimulationStore } from '@/stores/simulationStore'
@@ -12,7 +13,7 @@ vi.mock('../services/simulationService', () => ({
 
 const mockedGetRealSimulationById = vi.mocked(getRealSimulationById)
 
-function mockDetailsResponse(overrides: Record<string, unknown> = {}) {
+function mockDetailsResponse(overrides: Partial<SimulationDetailsResponse> = {}): SimulationDetailsResponse {
   return {
     id: 'sim-store-1',
     status: 'completed' as const,
@@ -40,7 +41,7 @@ function mockDetailsResponse(overrides: Record<string, unknown> = {}) {
     },
     input: {
       name: 'Wind Demo',
-      technology: 'solar',
+      technology: 'solar' as const,
       location: {
         label: 'Valencia, ES',
         lat: 39.4699,
@@ -231,7 +232,7 @@ describe('SimulationDetailsPage', () => {
       },
       input: {
         name: 'Hydro Demo',
-        technology: 'solar',
+        technology: 'solar' as const,
         location: { label: 'Sevilla, ES', lat: 37.3891, lon: -5.9845, country: 'Spain', countryCode: 'ES' },
         system: { installedCapacityKw: 500, performanceRatio: 0.95, degradationRateAnnualPct: 0.5, availabilityPct: 99, lossesPct: { inverter: 2, temperature: 4, wiring: 1, soiling: 2, other: 1 } },
         demand: { annualConsumptionKwh: 1200, monthlyConsumptionKwh: [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100] },
