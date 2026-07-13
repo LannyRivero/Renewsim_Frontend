@@ -15,6 +15,7 @@ export {
   SimulationPageShell,
   SimulationPageContent,
   SimulationCard,
+  SimulationPageHeader,
   SimulationSectionHeader,
   SimulationStatusBadge,
   SimulationTechnologyBadge,

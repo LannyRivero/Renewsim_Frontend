@@ -1,4 +1,5 @@
 import { SimulationLocationSearchBar, SimulationStateMessage } from '@/shared/components'
+import { SIMULATION_FORM_LABELS, SIMULATION_FORM_PLACEHOLDERS } from '@/shared/components/simulation/form-copy'
 import type { ResolvedLocation } from '../../services/simulationService'
 import type { SimulationCreateFormController } from '../hooks/useSimulationLocation'
 
@@ -40,7 +41,7 @@ function LocationSearchInput({
         <input
           id="location"
           type="text"
-          placeholder="Ingresá ciudad o región"
+          placeholder={SIMULATION_FORM_PLACEHOLDERS.location}
           className="w-full border-none bg-transparent py-2.5 text-sm text-[#415447] outline-none placeholder:text-[#8c9e92] dark:text-content-dark dark:placeholder:text-content-dark/45"
           {...locationSearchField}
           onChange={(event) => {
@@ -117,7 +118,7 @@ export function LocationField({ form, location }: LocationFieldProps) {
   return (
     <div>
       <label htmlFor="location" className="mb-1 block text-sm font-medium">
-        Ubicación
+        {SIMULATION_FORM_LABELS.location}
       </label>
       <div className="rounded-sm border border-[#d8dee8] bg-[#f6f8fb] p-4 dark:border-white/10 dark:bg-[#15191d]">
         <LocationSearchInput

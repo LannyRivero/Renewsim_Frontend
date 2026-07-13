@@ -5,6 +5,7 @@ export {
   SimulationSectionHeader,
   SimulationToolbar,
 } from './simulation/layout'
+export { SimulationPageHeader } from './simulation/page-header'
 export { SubSectionHeader } from './section/SubSectionHeader'
 export {
   SimulationStatusBadge,
