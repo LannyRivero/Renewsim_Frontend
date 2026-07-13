@@ -120,25 +120,25 @@ export function RootLayout() {
   const { pathname } = useLocation()
   const { isDark, toggle } = useDarkMode()
   const links = NAV_LINKS_BY_ROUTE[pathname] ?? DEFAULT_LINKS
-  const isHomeConsole = pathname === '/'
+  const isConsolePublicRoute = pathname === '/' || pathname === '/como-funciona' || pathname === '/how-it-works'
 
   return (
     <div
       className={
-        isHomeConsole
+        isConsolePublicRoute
           ? 'flex min-h-screen flex-col bg-[linear-gradient(180deg,#f5f8f3_0%,#eef3ec_44%,#f4f7f2_100%)] font-display text-on-surface dark:bg-[linear-gradient(180deg,#0c1511_0%,#0a120f_100%)] dark:text-content-dark'
           : 'flex flex-col min-h-screen bg-surface font-display text-on-surface dark:bg-background-dark dark:text-content-dark'
       }
     >
       <Navbar
         links={links}
-        variant={isHomeConsole ? 'home-console' : 'default'}
+        variant={isConsolePublicRoute ? 'home-console' : 'default'}
         renderActions={(isMobile, onNavigate) => <NavActions isDark={isDark} isMobile={isMobile} onNavigate={onNavigate} onToggle={toggle} />}
       />
-      <main className={isHomeConsole ? 'flex-grow overflow-hidden' : 'flex-grow'}>
+      <main className={isConsolePublicRoute ? 'flex-grow overflow-hidden' : 'flex-grow'}>
         <Outlet />
       </main>
-      <Footer variant={isHomeConsole ? 'home-console' : 'default'} />
+      <Footer variant={isConsolePublicRoute ? 'home-console' : 'default'} />
       <ChatWidget />
     </div>
   )
