@@ -12,7 +12,7 @@ import { RegisterPage } from './features/auth/RegisterPage'
 import { LoginPage } from './features/auth/LoginPage'
 import { SimuladorLayout } from './features/simulation/SimuladorLayout'
 
-const DashboardPage = lazy(() => import('./features/simulation/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
+const DashboardPage = lazy(() => import('./features/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
 const NewSimulationPage = lazy(() => import('./features/simulation/new-simulation/NewSimulationPage').then((m) => ({ default: m.NewSimulationPage })))
 const SimulationHistoryPage = lazy(() => import('./features/simulation/history/SimulationHistoryPage').then((m) => ({ default: m.SimulationHistoryPage })))
 const EditSimulationPage = lazy(() => import('./features/simulation/edit/EditSimulationPage').then((m) => ({ default: m.EditSimulationPage })))
