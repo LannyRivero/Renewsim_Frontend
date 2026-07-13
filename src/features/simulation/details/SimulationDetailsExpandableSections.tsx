@@ -1,6 +1,5 @@
-import { ChevronDown } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { SimulationActionButton, SimulationCard } from '@/shared/components'
+import { SimulationAdvancedSettingsPanel } from '@/shared/components'
 import type { DetailPlaceholderContent, DetailSectionContent } from './simulationDetailsViewModel'
 import { MetricTile } from './SimulationDetailsMetricTile'
 
@@ -20,27 +19,19 @@ function ExpandableSectionShell({
   children: ReactNode
 }) {
   return (
-    <SimulationCard className="border-[#d7dfd6] bg-white p-3 shadow-[0_24px_60px_-48px_rgba(15,23,42,0.55)] dark:border-white/10 dark:bg-[#16201d] lg:p-4">
-      <SimulationActionButton
-        type="button"
-        onClick={onToggle}
-        aria-expanded={isOpen}
-        variant="soft"
-        className="h-auto w-full items-start justify-between gap-4 whitespace-normal px-4 py-2 text-left"
-      >
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-content-dark/55">{eyebrow}</p>
-          <h3 className="mt-1.5 text-[1.1rem] font-semibold tracking-[-0.02em] text-[#16231c] dark:text-content-dark">{title}</h3>
-          {isOpen && summary ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/60">{summary}</p> : null}
-        </div>
-        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-[#dce3de] bg-[#f7faf8] px-2.5 py-1 text-[10px] font-medium text-slate-600 shadow-[0_10px_22px_-20px_rgba(15,23,42,0.24)] transition-colors dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark/62">
-          {isOpen ? 'Ocultar sección' : 'Mostrar sección'}
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-        </span>
-      </SimulationActionButton>
-
-      {isOpen ? <div className="mt-3 border-t border-[#e3e9e4] pt-3 dark:border-white/8">{children}</div> : null}
-    </SimulationCard>
+    <SimulationAdvancedSettingsPanel
+      eyebrow={eyebrow}
+      title={title}
+      description={summary ?? ''}
+      icon={null}
+      openLabel="Mostrar sección"
+      closeLabel="Ocultar sección"
+      tone="detail"
+      isOpen={isOpen}
+      onToggle={onToggle}
+    >
+      {children}
+    </SimulationAdvancedSettingsPanel>
   )
 }
 
