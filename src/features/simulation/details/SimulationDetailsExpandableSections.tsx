@@ -20,26 +20,26 @@ function ExpandableSectionShell({
   children: ReactNode
 }) {
   return (
-    <SimulationCard className="border-[#d7dfd6] bg-white p-4 shadow-[0_24px_60px_-48px_rgba(15,23,42,0.55)] dark:border-white/10 dark:bg-[#16201d] lg:p-5">
+    <SimulationCard className="border-[#d7dfd6] bg-white p-3 shadow-[0_24px_60px_-48px_rgba(15,23,42,0.55)] dark:border-white/10 dark:bg-[#16201d] lg:p-4">
       <SimulationActionButton
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
         variant="soft"
-        className="w-full items-start justify-between gap-4 text-left px-4 py-2.5"
+        className="h-auto w-full items-start justify-between gap-4 whitespace-normal px-4 py-2 text-left"
       >
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-content-dark/55">{eyebrow}</p>
-          <h3 className="mt-2 text-[1.25rem] font-bold tracking-[-0.03em] text-[#16231c] dark:text-content-dark">{title}</h3>
-          {summary ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/60">{summary}</p> : null}
+          <h3 className="mt-1.5 text-[1.15rem] font-bold tracking-[-0.03em] text-[#16231c] dark:text-content-dark">{title}</h3>
+          {isOpen && summary ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/60">{summary}</p> : null}
         </div>
-        <span className="inline-flex shrink-0 items-center gap-2 rounded-sm border border-[#dce3de] bg-[#f7faf8] px-3 py-1.5 text-[11px] font-medium text-slate-600 shadow-[0_10px_22px_-20px_rgba(15,23,42,0.24)] transition-colors dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark/62">
+        <span className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-[#dce3de] bg-[#f7faf8] px-2.5 py-1 text-[10px] font-medium text-slate-600 shadow-[0_10px_22px_-20px_rgba(15,23,42,0.24)] transition-colors dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark/62">
           {isOpen ? 'Ocultar sección' : 'Mostrar sección'}
-          <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </span>
       </SimulationActionButton>
 
-      {isOpen ? <div className="mt-4 border-t border-[#e3e9e4] pt-4 dark:border-white/8">{children}</div> : null}
+      {isOpen ? <div className="mt-3 border-t border-[#e3e9e4] pt-3 dark:border-white/8">{children}</div> : null}
     </SimulationCard>
   )
 }
