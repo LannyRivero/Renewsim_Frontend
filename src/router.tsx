@@ -12,14 +12,14 @@ import { RegisterPage } from './features/auth/RegisterPage'
 import { LoginPage } from './features/auth/LoginPage'
 import { SimuladorLayout } from './features/simulation/SimuladorLayout'
 
-const DashboardPage = lazy(() => import('./features/simulation/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
+const DashboardPage = lazy(() => import('./features/dashboard/DashboardPage').then((m) => ({ default: m.DashboardPage })))
 const NewSimulationPage = lazy(() => import('./features/simulation/new-simulation/NewSimulationPage').then((m) => ({ default: m.NewSimulationPage })))
 const SimulationHistoryPage = lazy(() => import('./features/simulation/history/SimulationHistoryPage').then((m) => ({ default: m.SimulationHistoryPage })))
 const EditSimulationPage = lazy(() => import('./features/simulation/edit/EditSimulationPage').then((m) => ({ default: m.EditSimulationPage })))
 const SimulationDetailsPage = lazy(() => import('./features/simulation/details/SimulationDetailsPage').then((m) => ({ default: m.SimulationDetailsPage })))
-const ProfileSettingsPage = lazy(() => import('./features/simulation/settings/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })))
-const TecnologiasPage = lazy(() => import('./features/simulation/placeholders').then((m) => ({ default: m.TecnologiasPage })))
-const AdminPage = lazy(() => import('./features/simulation/placeholders').then((m) => ({ default: m.AdminPage })))
+const ProfileSettingsPage = lazy(() => import('./features/settings/ProfileSettingsPage').then((m) => ({ default: m.ProfileSettingsPage })))
+const TecnologiasPage = lazy(() => import('./features/admin/technologies/TechnologiesPage').then((m) => ({ default: m.TechnologiesPage })))
+const AdminPage = lazy(() => import('./features/admin/AdminPage').then((m) => ({ default: m.AdminPage })))
 
 function lazyElement(
   element: ReactNode,

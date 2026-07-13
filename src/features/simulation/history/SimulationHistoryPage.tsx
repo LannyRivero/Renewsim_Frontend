@@ -5,10 +5,9 @@ import { useQuery } from '@tanstack/react-query'
 import { getRealSimulationHistory } from '../services/simulationService'
 import {
   SimulationActionButton,
-  SimulationBreadcrumbs,
   SimulationPageContent,
+  SimulationPageHeader,
   SimulationPageShell,
-  SimulationSectionHeader,
   SimulationStateMessage,
 } from '@/shared/components'
 import type { BreadcrumbItem } from '@/shared/components'
@@ -137,19 +136,15 @@ export function SimulationHistoryPage() {
   return (
     <SimulationPageShell className="lg:h-auto" contentClassName="rounded-md px-3 pt-4 pb-4 sm:px-4 lg:h-auto lg:p-5" bodyClassName="lg:h-auto">
       <SimulationPageContent spacing="compact" className="lg:h-auto">
-        <SimulationBreadcrumbs
-          className="mb-1"
+        <SimulationPageHeader
           items={[
             { label: 'Simulador', href: '/simulador' },
             { label: 'Historial' },
           ] satisfies BreadcrumbItem[]}
-        />
-        <SimulationSectionHeader
           eyebrow="Archivo de simulaciones"
           eyebrowIcon={<Clock3 className="h-3.5 w-3.5" />}
           title="Simulaciones disponibles para seguimiento"
           description="Encontrá escenarios previos, reabrí análisis puntuales y gestioná el archivo operativo sin duplicar la lectura agregada del dashboard."
-          className="md:items-end"
           actions={
             <div className="w-full md:w-auto md:min-w-fit">
               <Link to="/simulador/nueva">

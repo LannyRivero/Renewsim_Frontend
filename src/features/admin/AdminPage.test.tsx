@@ -1,15 +1,15 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { AdminPage } from './placeholders'
+import { AdminPage } from './AdminPage'
 
-vi.mock('./admin/services/userService', () => ({
+vi.mock('./services/userService', () => ({
   getAllUsers: vi.fn(),
   updateUserRoles: vi.fn(),
   deleteUser: vi.fn(),
 }))
 
-import { getAllUsers, updateUserRoles, deleteUser } from './admin/services/userService'
+import { getAllUsers, updateUserRoles, deleteUser } from './services/userService'
 
 const mockedGetAllUsers = vi.mocked(getAllUsers)
 const mockedUpdateUserRoles = vi.mocked(updateUserRoles)

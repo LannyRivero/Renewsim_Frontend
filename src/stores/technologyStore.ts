@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { TechnologyFormValues } from '@/features/simulation/technologies/schemas/technologySchema'
+import type { TechnologyFormValues } from '@/features/admin/technologies/schemas/technologySchema'
 
 interface TechnologyState {
   draft: TechnologyFormValues

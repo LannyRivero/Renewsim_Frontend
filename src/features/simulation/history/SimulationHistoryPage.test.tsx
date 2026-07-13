@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { fireEvent, render, screen } from '@testing-library/react'
 import { SimulationHistoryPage } from './SimulationHistoryPage'
 import { getRealSimulationHistory } from '../services/simulationService'
+import { buildSimulationHistoryRowMock } from '../test/simulationTestFactories'
 
 vi.mock('../services/simulationService', () => ({
   getRealSimulationHistory: vi.fn(),
@@ -21,41 +22,6 @@ function renderPage() {
       </MemoryRouter>
     </QueryClientProvider>,
   )
-}
-
-function buildRealHistoryRow(
-  index: number,
-  overrides: Partial<{
-    id: string
-    name: string
-    status: 'draft' | 'processing' | 'completed' | 'failed'
-    createdAt: string
-    technology: 'solar' | 'wind' | 'hydro'
-    locationLabel: string
-    annualGenerationKwh: number
-    annualSavings: number
-    npv: number
-    irrPct: number | null
-    recommendation: 'recommended' | 'viable_with_reservations' | 'not_recommended'
-    modelVersion: string
-    resourceSource: 'PVGIS'
-  }> = {},
-) {
-  return {
-    id: overrides.id ?? `sim-${index}`,
-    name: overrides.name ?? `Simulación ${index}`,
-    status: overrides.status ?? 'completed',
-    createdAt: overrides.createdAt ?? `2024-05-${String(index).padStart(2, '0')}T00:00:00.000Z`,
-    technology: overrides.technology ?? 'solar',
-    locationLabel: overrides.locationLabel ?? `Ubicación ${index}`,
-    annualGenerationKwh: overrides.annualGenerationKwh ?? 100000 + index,
-    annualSavings: overrides.annualSavings ?? 10000 + index,
-    npv: overrides.npv ?? 5000 + index,
-    irrPct: overrides.irrPct ?? 10 + index,
-    recommendation: overrides.recommendation ?? 'recommended',
-    modelVersion: overrides.modelVersion ?? 'solar-spain-v1',
-    resourceSource: overrides.resourceSource ?? 'PVGIS',
-  }
 }
 
 describe('SimulationHistoryPage', () => {
@@ -92,7 +58,7 @@ describe('SimulationHistoryPage', () => {
   it('renders simulation rows and action buttons', async () => {
     mockedGetRealSimulationHistory.mockResolvedValueOnce({
       items: [
-        buildRealHistoryRow(1, {
+        buildSimulationHistoryRowMock(1, {
           id: 'sim-1',
           name: 'SOLAR - Sevilla, Spain',
           status: 'completed',
@@ -120,7 +86,7 @@ describe('SimulationHistoryPage', () => {
   it('filters visible simulations by search and technology', async () => {
     mockedGetRealSimulationHistory.mockResolvedValueOnce({
       items: [
-        buildRealHistoryRow(1, {
+        buildSimulationHistoryRowMock(1, {
           id: 'sim-1',
           name: 'Parque Solar Norte',
           technology: 'solar',
@@ -128,7 +94,7 @@ describe('SimulationHistoryPage', () => {
           createdAt: '2024-05-15T00:00:00.000Z',
           irrPct: 12,
         }),
-        buildRealHistoryRow(2, {
+        buildSimulationHistoryRowMock(2, {
           id: 'sim-2',
           name: 'Corredor Eolico Sur',
           status: 'draft',
@@ -160,17 +126,17 @@ describe('SimulationHistoryPage', () => {
   it('sorts and paginates visible simulations', async () => {
     mockedGetRealSimulationHistory.mockResolvedValueOnce({
       items: [
-        buildRealHistoryRow(1, { name: 'Alpha', irrPct: 11 }),
-        buildRealHistoryRow(2, { name: 'Bravo', irrPct: 12 }),
-        buildRealHistoryRow(3, { name: 'Charlie', irrPct: 13 }),
-        buildRealHistoryRow(4, { name: 'Delta', irrPct: 14 }),
-        buildRealHistoryRow(5, { name: 'Echo', irrPct: 15 }),
-        buildRealHistoryRow(6, { name: 'Foxtrot', irrPct: 16 }),
-        buildRealHistoryRow(7, { name: 'Golf', irrPct: 17 }),
-        buildRealHistoryRow(8, { name: 'Hotel', irrPct: 18 }),
-        buildRealHistoryRow(9, { name: 'India', irrPct: 19 }),
-        buildRealHistoryRow(10, { name: 'Juliet', irrPct: 20 }),
-        buildRealHistoryRow(11, { name: 'Zulu', irrPct: 99, createdAt: '2024-05-30T00:00:00.000Z' }),
+        buildSimulationHistoryRowMock(1, { name: 'Alpha', irrPct: 11 }),
+        buildSimulationHistoryRowMock(2, { name: 'Bravo', irrPct: 12 }),
+        buildSimulationHistoryRowMock(3, { name: 'Charlie', irrPct: 13 }),
+        buildSimulationHistoryRowMock(4, { name: 'Delta', irrPct: 14 }),
+        buildSimulationHistoryRowMock(5, { name: 'Echo', irrPct: 15 }),
+        buildSimulationHistoryRowMock(6, { name: 'Foxtrot', irrPct: 16 }),
+        buildSimulationHistoryRowMock(7, { name: 'Golf', irrPct: 17 }),
+        buildSimulationHistoryRowMock(8, { name: 'Hotel', irrPct: 18 }),
+        buildSimulationHistoryRowMock(9, { name: 'India', irrPct: 19 }),
+        buildSimulationHistoryRowMock(10, { name: 'Juliet', irrPct: 20 }),
+        buildSimulationHistoryRowMock(11, { name: 'Zulu', irrPct: 99, createdAt: '2024-05-30T00:00:00.000Z' }),
       ],
       total: 11,
     })

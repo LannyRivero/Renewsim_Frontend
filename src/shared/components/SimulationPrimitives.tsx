@@ -5,6 +5,7 @@ export {
   SimulationSectionHeader,
   SimulationToolbar,
 } from './simulation/layout'
+export { SimulationPageHeader } from './simulation/page-header'
 export { SubSectionHeader } from './section/SubSectionHeader'
 export {
   SimulationStatusBadge,
@@ -14,6 +15,12 @@ export {
 } from './simulation/feedback'
 export {
   SimulationActionButton,
+  SimulationAdvancedEconomicsFields,
+  SimulationAdvancedSettingsPanel,
+  SimulationLossesFields,
+  SimulationLocationSearchBar,
+  SimulationMonthlyConsumptionFields,
+  SimulationTechnicalSettingsFields,
   SimulationTextInput,
   SimulationSelect,
   SimulationReadonlyInput,

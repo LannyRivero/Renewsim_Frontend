@@ -1,31 +1,35 @@
 import type { EditSimulationValues } from '../schemas/simulationSchema'
 import type { SimulationDetailsResponse, SimulationResult } from '@/shared/types'
-
-export type EnergySourceOption = 'Paneles solares' | 'Turbina eólica' | 'Hidroeléctrica'
+import {
+  buildSimulationDemandDefaults,
+  buildSimulationEconomicsDefaults,
+  buildSimulationSystemDefaults,
+  parseSimulationDemand,
+  parseSimulationEconomics,
+  parseSimulationSystem,
+} from './editSimulationDomain'
 
 export type EditSimulationFormDefaults = EditSimulationValues & {
-  energySource: EnergySourceOption
+  technologyLabel: string
 }
 
-const DEFAULT_FORM_VALUES: Omit<EditSimulationFormDefaults, 'simulationName' | 'location' | 'energySource'> = {
-  systemSizeKw: 7.5,
-  annualConsumptionKwh: 10000,
-  incentives: 0,
-  electricityRate: 0.18,
-}
-
-function toEnergySourceOption(energyType?: string | null): EnergySourceOption {
+function toTechnologyLabel(energyType?: string | null): string {
   const normalized = energyType?.toLowerCase()
 
-  if (normalized === 'wind') return 'Turbina eólica'
+  if (normalized === 'wind') return 'Eólica'
   if (normalized === 'hydro') return 'Hidroeléctrica'
-  return 'Paneles solares'
+  return 'Solar'
 }
 
-export function toNormalizedEnergyType(energySource: string): 'solar' | 'wind' | 'hydro' {
-  if (energySource === 'Turbina eólica') return 'wind'
-  if (energySource === 'Hidroeléctrica') return 'hydro'
-  return 'solar'
+function buildDefaultIdentity(data: SimulationDetailsResponse | null | undefined, lastResult: SimulationResult | null) {
+  const energyType = data?.technology ?? lastResult?.energyType ?? 'solar'
+
+  return {
+    name: data?.input.name ?? lastResult?.name ?? `${toTechnologyLabel(energyType)} Simulación`,
+    location: data?.location.label ?? lastResult?.location ?? 'San Francisco, CA',
+    technology: 'solar' as const,
+    technologyLabel: toTechnologyLabel(energyType),
+  }
 }
 
 export function buildEditSimulationFormDefaults({
@@ -35,29 +39,21 @@ export function buildEditSimulationFormDefaults({
   data: SimulationDetailsResponse | null | undefined
   lastResult: SimulationResult | null
 }): EditSimulationFormDefaults {
-  const energyType = data?.technology ?? lastResult?.energyType ?? 'Energía'
-  const location = data?.location.label ?? lastResult?.location ?? 'San Francisco, CA'
-  const simulationName = data?.input.name ?? lastResult?.name ?? `${energyType} Simulación`
-
   return {
-    simulationName,
-    location,
-    energySource: toEnergySourceOption(data?.technology ?? lastResult?.energyType),
-    systemSizeKw: data?.input.system.installedCapacityKw ?? DEFAULT_FORM_VALUES.systemSizeKw,
-    annualConsumptionKwh: data?.input.demand.annualConsumptionKwh ?? DEFAULT_FORM_VALUES.annualConsumptionKwh,
-    incentives: DEFAULT_FORM_VALUES.incentives,
-    electricityRate: data?.input.economics.electricityPurchasePricePerKwh ?? DEFAULT_FORM_VALUES.electricityRate,
+    ...buildDefaultIdentity(data, lastResult),
+    ...buildSimulationSystemDefaults(data),
+    ...buildSimulationDemandDefaults(data),
+    ...buildSimulationEconomicsDefaults(data),
   }
 }
 
 export function parseEditSimulationForm(form: FormData): EditSimulationValues {
   return {
-    simulationName: String(form.get('simulationName') ?? ''),
+    name: String(form.get('name') ?? ''),
     location: String(form.get('location') ?? ''),
-    energySource: String(form.get('energySource') ?? ''),
-    systemSizeKw: Number(form.get('systemSizeKw') ?? 0),
-    annualConsumptionKwh: Number(form.get('annualConsumptionKwh') ?? 0),
-    incentives: Number(form.get('incentives') ?? 0),
-    electricityRate: Number(form.get('electricityRate') ?? 0),
+    technology: 'solar',
+    ...parseSimulationSystem(form),
+    ...parseSimulationDemand(form),
+    ...parseSimulationEconomics(form),
   }
 }
