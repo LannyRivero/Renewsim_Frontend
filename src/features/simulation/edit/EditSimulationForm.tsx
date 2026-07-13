@@ -5,6 +5,7 @@ import {
   SimulationReadonlyFormInput,
   SimulationTextInput,
 } from '@/shared/components'
+import { SIMULATION_FORM_LABELS } from '@/shared/components/simulation/form-copy'
 import { useBrowserLocationResolution } from '../hooks/useBrowserLocationResolution'
 import { EditSimulationAdvancedSettingsSection } from './EditSimulationAdvancedSettingsSection'
 import { EditSimulationLocationField } from './EditSimulationLocationField'
@@ -49,24 +50,24 @@ export function EditSimulationForm({
         />
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <FormField label="Nombre del proyecto" htmlFor="name">
+          <FormField label={SIMULATION_FORM_LABELS.projectName} htmlFor="name">
             <SimulationTextInput id="name" name="name" type="text" defaultValue={defaults.name} />
           </FormField>
 
-          <FormField label="Tecnología" htmlFor="technologyLabel">
+          <FormField label={SIMULATION_FORM_LABELS.technology} htmlFor="technologyLabel">
             <SimulationReadonlyFormInput id="technologyLabel" value={defaults.technologyLabel} />
             <input type="hidden" name="technology" value={defaults.technology} />
           </FormField>
 
-          <FormField label="Potencia instalada (kW)" htmlFor="installedCapacityKw">
+          <FormField label={SIMULATION_FORM_LABELS.installedCapacityKw} htmlFor="installedCapacityKw">
             <SimulationTextInput id="installedCapacityKw" name="installedCapacityKw" type="number" min={0} step="0.1" defaultValue={defaults.installedCapacityKw} />
           </FormField>
 
-          <FormField label="Consumo anual (kWh)" htmlFor="annualConsumptionKwh">
+          <FormField label={SIMULATION_FORM_LABELS.annualConsumptionKwh} htmlFor="annualConsumptionKwh">
             <SimulationTextInput id="annualConsumptionKwh" name="annualConsumptionKwh" type="number" min={0} defaultValue={defaults.annualConsumptionKwh} />
           </FormField>
 
-          <FormField label="Precio de electricidad" htmlFor="electricityPurchasePricePerKwh">
+          <FormField label={SIMULATION_FORM_LABELS.electricityPurchasePricePerKwh} htmlFor="electricityPurchasePricePerKwh">
             <SimulationTextInput
               id="electricityPurchasePricePerKwh"
               name="electricityPurchasePricePerKwh"
@@ -77,7 +78,7 @@ export function EditSimulationForm({
             />
           </FormField>
 
-          <FormField label="Inversión estimada" htmlFor="capexTotal">
+          <FormField label={SIMULATION_FORM_LABELS.capexTotal} htmlFor="capexTotal">
             <SimulationTextInput id="capexTotal" name="capexTotal" type="number" min={0} defaultValue={defaults.capexTotal} />
           </FormField>
 
