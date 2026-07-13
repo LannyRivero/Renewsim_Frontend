@@ -14,6 +14,12 @@ export {
 } from './simulation/feedback'
 export {
   SimulationActionButton,
+  SimulationAdvancedEconomicsFields,
+  SimulationAdvancedSettingsPanel,
+  SimulationLossesFields,
+  SimulationLocationSearchBar,
+  SimulationMonthlyConsumptionFields,
+  SimulationTechnicalSettingsFields,
   SimulationTextInput,
   SimulationSelect,
   SimulationReadonlyInput,
