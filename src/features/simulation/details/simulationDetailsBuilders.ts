@@ -4,12 +4,7 @@ export {
   buildSummarySnapshotSection,
 } from './simulationDetailsDecisionBuilders'
 export {
-  buildFinancialChart,
-  buildFinancialPendingPlaceholder,
   buildFinancialSection,
 } from './simulationDetailsFinancialBuilders'
 export { buildClimateSection } from './simulationDetailsClimateBuilders'
-export {
-  buildComparisonPlaceholder,
-  buildComparisonSection,
-} from './simulationDetailsComparisonBuilders'
+export { buildComparisonPlaceholder } from './simulationDetailsComparisonBuilders'

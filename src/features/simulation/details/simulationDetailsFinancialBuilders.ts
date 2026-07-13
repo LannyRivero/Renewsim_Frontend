@@ -1,4 +1,4 @@
-import type { DetailChartDatum, DetailPlaceholderContent, DetailSectionContent } from './simulationDetailsTypes'
+import type { DetailSectionContent } from './simulationDetailsTypes'
 
 export function buildFinancialSection({
   capex,
@@ -51,7 +51,7 @@ export function buildFinancialSection({
   return {
     sectionLabel: 'Financiero',
     title: 'Caso financiero',
-    summary: 'Lectura economica del escenario para validar si la inversion se recupera, crea valor y sostiene una defensa frente a negocio.',
+    summary: 'Lectura económica del escenario para validar si la inversión se recupera, crea valor y sostiene una defensa frente a negocio.',
     primaryMetrics: [
       { label: 'Inversión inicial', value: capex, helper: 'Capital requerido para activar el escenario.' },
       { label: 'Tiempo de retorno', value: paybackYears, helper: paybackHelper },
@@ -66,45 +66,4 @@ export function buildFinancialSection({
       { label: 'Tasa interna', value: irr, helper: irrHelper },
     ],
   }
-}
-
-export function buildFinancialPendingPlaceholder(): DetailPlaceholderContent {
-  return {
-    sectionLabel: 'Financiero',
-    title: 'Señales pendientes para comité financiero',
-    description:
-      'Este bloque ya reserva el espacio para información que todavía depende del backend: sensibilidad del escenario (base, optimista y conservador), tasa de descuento o costo de capital usado para NPV e IRR, horizonte temporal explícito del modelo y desglose claro entre ingresos y ahorros.',
-  }
-}
-
-export function buildFinancialChart({
-  capex,
-  budget,
-  revenue,
-  netAnnualFlow,
-}: {
-  capex: number | null
-  budget: number | null
-  revenue: number | null
-  netAnnualFlow: number | null
-}): DetailChartDatum[] {
-  const points: DetailChartDatum[] = []
-
-  if (capex !== null) {
-    points.push({ label: 'CAPEX', value: capex, tone: 'capital' })
-  }
-
-  if (budget !== null) {
-    points.push({ label: 'Presupuesto', value: budget, tone: 'budget' })
-  }
-
-  if (revenue !== null) {
-    points.push({ label: 'Ingreso anual', value: revenue, tone: 'revenue' })
-  }
-
-  if (netAnnualFlow !== null) {
-    points.push({ label: 'Flujo neto anual', value: netAnnualFlow, tone: 'net' })
-  }
-
-  return points
 }

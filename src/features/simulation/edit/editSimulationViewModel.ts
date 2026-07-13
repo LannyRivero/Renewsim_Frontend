@@ -13,7 +13,6 @@ export type EditSimulationFormDefaults = EditSimulationValues & {
   technologyLabel: string
 }
 
-const LOSS_FIELDS = ['inverter', 'temperature', 'wiring', 'soiling', 'other'] as const
 function toTechnologyLabel(energyType?: string | null): string {
   const normalized = energyType?.toLowerCase()
 
@@ -58,5 +57,3 @@ export function parseEditSimulationForm(form: FormData): EditSimulationValues {
     ...parseSimulationEconomics(form),
   }
 }
-
-export { LOSS_FIELDS }
