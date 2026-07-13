@@ -1,5 +1,6 @@
 import { StepsSection } from './components/StepsSection'
 import { CtaSection } from './components/CtaSection'
+import { FeaturesSection } from '../home/components/FeaturesSection'
 
 const SUMMARY_ITEMS = [
   { value: '01', label: 'Captura estructurada del contexto' },
@@ -44,6 +45,7 @@ export function HowItWorksPage() {
         </section>
 
         <StepsSection />
+        <FeaturesSection />
         <CtaSection />
       </div>
     </div>
