@@ -1,98 +1,19 @@
-import { FilePenLine } from 'lucide-react'
+import { FilePenLine, RotateCcw, Save } from 'lucide-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useToastStore } from '@/stores/toastStore'
 import { useSimulationStore } from '@/stores/simulationStore'
 import { editSimulationSchema } from '../schemas/simulationSchema'
 import type { EditSimulationValues } from '../schemas/simulationSchema'
-import { getRealSimulationById, searchLocations, updateSimulationById } from '../services/simulationService'
-import type { MonthlySeries, RealCreateSimulationRequest } from '@/shared/types'
-import { SimulationBreadcrumbs, SimulationPageContent, SimulationPageShell, SimulationSectionHeader } from '@/shared/components'
+import { getRealSimulationById, updateSimulationById } from '../services/simulationService'
+import { SimulationActionButton, SimulationPageContent, SimulationPageHeader, SimulationPageShell, SimulationStateMessage } from '@/shared/components'
 import type { BreadcrumbItem } from '@/shared/components'
 import { EditSimulationForm } from './EditSimulationForm'
+import { buildUpdatedSimulationPayload } from './editSimulationPayload'
 import {
   buildEditSimulationFormDefaults,
   parseEditSimulationForm,
-  toNormalizedEnergyType,
 } from './editSimulationViewModel'
-
-function scaleMonthlyConsumptionKwh(currentMonthly: MonthlySeries, nextAnnualConsumptionKwh: number): MonthlySeries {
-  const currentTotal = currentMonthly.reduce((sum, value) => sum + value, 0)
-
-  if (currentTotal <= 0) {
-    const monthlyBase = Number((nextAnnualConsumptionKwh / 12).toFixed(2))
-    const values = Array.from({ length: 12 }, () => monthlyBase)
-    values[11] = Number((nextAnnualConsumptionKwh - monthlyBase * 11).toFixed(2))
-    return values as MonthlySeries
-  }
-
-  const scaled = currentMonthly.map((value) => Number(((value / currentTotal) * nextAnnualConsumptionKwh).toFixed(2)))
-  const scaledTotal = scaled.reduce((sum, value) => sum + value, 0)
-  scaled[11] = Number((scaled[11] + (nextAnnualConsumptionKwh - scaledTotal)).toFixed(2))
-
-  return scaled as MonthlySeries
-}
-
-async function resolveEditedLocation(
-  currentPayload: RealCreateSimulationRequest,
-  nextLocationLabel: string,
-): Promise<RealCreateSimulationRequest['location']> {
-  if (nextLocationLabel === currentPayload.location.label) {
-    return currentPayload.location
-  }
-
-  const matches = await searchLocations(nextLocationLabel, 1)
-  const bestMatch = matches[0]
-
-  if (!bestMatch) {
-    throw new Error('No se pudo resolver la nueva ubicación seleccionada.')
-  }
-
-  return {
-    label: bestMatch.label,
-    lat: bestMatch.lat,
-    lon: bestMatch.lon,
-    country: bestMatch.country,
-    countryCode: bestMatch.countryCode,
-  }
-}
-
-async function buildUpdatedSimulationPayload(
-  currentSimulation: Awaited<ReturnType<typeof getRealSimulationById>>,
-  values: EditSimulationValues,
-): Promise<RealCreateSimulationRequest> {
-  const currentPayload = currentSimulation.input
-  const normalizedEnergyType = toNormalizedEnergyType(values.energySource)
-
-  if (normalizedEnergyType !== 'solar') {
-    throw new Error('Por ahora el backend real solo soporta simulaciones solares.')
-  }
-
-  const location = await resolveEditedLocation(currentPayload, values.location)
-  const capexWithoutIncentives = Math.max(0, currentPayload.economics.capexTotal - values.incentives)
-
-  return {
-    name: values.simulationName,
-    technology: normalizedEnergyType,
-    location,
-    system: {
-      ...currentPayload.system,
-      installedCapacityKw: values.systemSizeKw,
-    },
-    demand: {
-      annualConsumptionKwh: values.annualConsumptionKwh,
-      monthlyConsumptionKwh: scaleMonthlyConsumptionKwh(
-        currentPayload.demand.monthlyConsumptionKwh,
-        values.annualConsumptionKwh,
-      ),
-    },
-    economics: {
-      ...currentPayload.economics,
-      capexTotal: capexWithoutIncentives,
-      electricityPurchasePricePerKwh: values.electricityRate,
-    },
-  }
-}
 
 export function EditSimulationPage() {
   const navigate = useNavigate()
@@ -104,7 +25,7 @@ export function EditSimulationPage() {
   const setLastRunInput = useSimulationStore((state) => state.setLastRunInput)
   const simulationId = searchParams.get('id') ?? lastResult?.id ?? null
 
-  const { data } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['simulation-details', simulationId],
     queryFn: async () => {
       if (!simulationId) return null
@@ -127,12 +48,10 @@ export function EditSimulationPage() {
     },
     onSuccess: (_data, values) => {
       if (simulationId) {
-        const normalizedEnergyType = toNormalizedEnergyType(values.energySource)
-
         setLastResult({
           id: simulationId,
           location: values.location,
-          energyType: normalizedEnergyType,
+          energyType: values.technology,
           roi: lastResult?.roi,
           efficiency: lastResult?.efficiency,
         })
@@ -140,8 +59,8 @@ export function EditSimulationPage() {
         if (lastRunInput) {
           setLastRunInput({
             ...lastRunInput,
-            name: values.simulationName,
-            technology: 'solar',
+            name: values.name,
+            technology: values.technology,
             locationSearch: values.location,
             location: {
               ...lastRunInput.location,
@@ -176,6 +95,15 @@ export function EditSimulationPage() {
   })
 
   const formDefaults = buildEditSimulationFormDefaults({ data, lastResult })
+  const formKey = [
+    simulationId ?? 'new',
+    formDefaults.name,
+    formDefaults.location,
+    formDefaults.installedCapacityKw,
+    formDefaults.annualConsumptionKwh,
+    formDefaults.electricityPurchasePricePerKwh,
+    formDefaults.capexTotal,
+  ].join('|')
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -186,24 +114,50 @@ export function EditSimulationPage() {
   const simName = data?.input?.name ?? lastResult?.name ?? 'Simulación'
 
   return (
-    <SimulationPageShell>
-      <SimulationPageContent className="mx-auto w-full max-w-3xl">
-        <SimulationBreadcrumbs
-          className="mb-1"
+    <SimulationPageShell className="lg:h-auto" contentClassName="rounded-md px-3 pt-4 pb-4 sm:px-4 lg:p-5" bodyClassName="lg:h-auto">
+      <SimulationPageContent spacing="compact" className="lg:h-auto">
+        <SimulationPageHeader
           items={[
             { label: 'Simulador', href: '/simulador' },
             { label: 'Historial', href: '/simulador/historial' },
             { label: simName, href: `/simulador/detalles?id=${encodeURIComponent(simulationId ?? '')}` },
             { label: 'Editar' },
           ] satisfies BreadcrumbItem[]}
-        />
-        <SimulationSectionHeader
           eyebrow="Editor de escenarios"
           eyebrowIcon={<FilePenLine className="h-3.5 w-3.5" />}
           title="Editar simulación"
           description="Ajustá el escenario actual con un formulario más preciso que concentre los datos económicos importantes en una sola vista."
+          actions={
+            <div className="flex w-full flex-col gap-2 md:w-auto md:min-w-fit md:flex-row">
+              <SimulationActionButton
+                type="reset"
+                form="edit-simulation-form"
+                variant="outline"
+                disabled={updateMutation.isPending}
+                className="w-full px-3 py-1.5 text-sm md:w-auto"
+              >
+                <RotateCcw className="h-4 w-4" />
+                Reiniciar cambios
+              </SimulationActionButton>
+              <SimulationActionButton
+                type="submit"
+                form="edit-simulation-form"
+                variant="primary"
+                disabled={updateMutation.isPending}
+                className="w-full px-3 py-1.5 text-sm md:w-auto"
+              >
+                <Save className="h-4 w-4" />
+                {updateMutation.isPending ? 'Guardando...' : 'Guardar cambios'}
+              </SimulationActionButton>
+            </div>
+          }
         />
+        {simulationId && isLoading ? <SimulationStateMessage>Cargando simulación para editar...</SimulationStateMessage> : null}
+        {simulationId && isError ? (
+          <SimulationStateMessage tone="error">No se pudo cargar la simulación para edición. Intentá nuevamente.</SimulationStateMessage>
+        ) : null}
         <EditSimulationForm
+          key={formKey}
           defaults={formDefaults}
           isSubmitting={updateMutation.isPending}
           onSubmit={handleSubmit}
