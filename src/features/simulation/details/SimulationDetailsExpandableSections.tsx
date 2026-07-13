@@ -30,7 +30,7 @@ function ExpandableSectionShell({
       >
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-content-dark/55">{eyebrow}</p>
-          <h3 className="mt-1.5 text-[1.15rem] font-bold tracking-[-0.03em] text-[#16231c] dark:text-content-dark">{title}</h3>
+          <h3 className="mt-1.5 text-[1.1rem] font-semibold tracking-[-0.02em] text-[#16231c] dark:text-content-dark">{title}</h3>
           {isOpen && summary ? <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-content-dark/60">{summary}</p> : null}
         </div>
         <span className="inline-flex shrink-0 items-center gap-1.5 rounded-sm border border-[#dce3de] bg-[#f7faf8] px-2.5 py-1 text-[10px] font-medium text-slate-600 shadow-[0_10px_22px_-20px_rgba(15,23,42,0.24)] transition-colors dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark/62">
