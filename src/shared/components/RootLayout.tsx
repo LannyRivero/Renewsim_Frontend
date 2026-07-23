@@ -106,7 +106,11 @@ export function RootLayout() {
   const isConsolePublicRoute =
     pathname === '/' ||
     pathname === '/como-funciona' ||
-    pathname === '/how-it-works'
+    pathname === '/how-it-works' ||
+    pathname === '/login' ||
+    pathname === '/iniciar-sesion' ||
+    pathname === '/register' ||
+    pathname === '/registro'
 
   return (
     <div

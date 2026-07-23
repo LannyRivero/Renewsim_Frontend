@@ -3,6 +3,13 @@ import { LoginForm } from './components/LoginForm'
 import { useAuthStore } from '@/stores/authStore'
 import { useToastStore } from '@/stores/toastStore'
 import { readUserFromToken } from '@/shared/utils/authToken'
+import { SimulationCard, SimulationSectionHeader } from '@/shared/components/SimulationPrimitives'
+
+const LOGIN_SIGNALS = [
+  { label: 'Portafolio activo', value: '12 escenarios en seguimiento' },
+  { label: 'Lectura ejecutiva', value: 'ROI, payback y viabilidad en una misma vista' },
+  { label: 'Continuidad', value: 'Retomá decisiones sin reconstruir contexto' },
+]
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -46,45 +53,45 @@ export function LoginPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-      <div className="grid w-full max-w-5xl gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(420px,0.9fr)] lg:items-center">
-        <section className="rounded-[2rem] border border-[#d5ddd4] bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(246,249,245,0.96)_100%)] p-6 shadow-[0_24px_60px_-44px_rgba(15,23,42,0.38)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.025)_100%)] lg:p-8">
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6a45] dark:text-emerald-300">
-            Acceso seguro
-          </p>
-          <h1 className="mt-4 text-4xl font-black tracking-[-0.05em] text-slate-950 dark:text-content-dark md:text-5xl">
-            Entra a tu espacio de simulación con una experiencia más sobria.
-          </h1>
-          <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 dark:text-content-dark/62">
-            Accede a tus escenarios, resultados y comparativas desde una interfaz pensada para trabajo real, no para una demo pasajera.
-          </p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
-            {[
-              'Seguimiento de simulaciones',
-              'Lectura técnica y financiera',
-              'Continuidad entre equipos',
-            ].map((item) => (
-              <div key={item} className="rounded-2xl bg-[#f6f9f5] px-4 py-4 text-sm leading-6 text-slate-700 dark:bg-white/[0.03] dark:text-content-dark/62">
-                {item}
+    <div className="overflow-hidden bg-[radial-gradient(circle_at_top,rgba(52,88,69,0.08),transparent_30%),linear-gradient(180deg,#f4f7f2_0%,#edf2eb_48%,#f3f7f2_100%)] px-3 py-6 sm:px-4 lg:min-h-[calc(100vh-138px)] lg:px-5 lg:py-8 dark:bg-[radial-gradient(circle_at_top,rgba(34,84,59,0.28),rgba(8,16,13,0)_30%),linear-gradient(180deg,#0c1511_0%,#0a120f_100%)]">
+      <div className="mx-auto flex w-full max-w-[1180px] items-center justify-center lg:min-h-[calc(100vh-202px)]">
+        <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,560px)_280px] lg:items-center xl:grid-cols-[minmax(0,600px)_300px]">
+          <SimulationCard className="rounded-sm border-[#cfd8ce] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(247,250,246,0.98)_100%)] p-6 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.28)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,32,29,0.98)_0%,rgba(17,25,22,0.98)_100%)] lg:p-7">
+            <SimulationSectionHeader
+              eyebrow="Iniciar sesion"
+              title="Accedé a tu consola"
+              description="Retomá escenarios, comparativas y resultados desde una capa de trabajo sobria y profesional."
+            />
+
+            <div className="mt-6">
+              <LoginForm onSuccess={handleSuccess} />
+            </div>
+          </SimulationCard>
+
+          <div className="grid gap-3">
+            <SimulationCard tone="soft" className="rounded-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/55">
+                RenewSim access
+              </p>
+              <p className="mt-2 text-lg font-bold tracking-[-0.03em] text-[#1b2a22] dark:text-content-dark">
+                Entrada al espacio de trabajo
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-content-dark/64">
+                Una entrada directa al producto, sin ruido de landing ni decoracion innecesaria.
+              </p>
+            </SimulationCard>
+
+            <SimulationCard className="rounded-sm">
+              <div className="space-y-3">
+                {LOGIN_SIGNALS.map((item) => (
+                  <div key={item.label} className="border-b border-[#dde5dc] pb-3 last:border-b-0 last:pb-0 dark:border-white/8">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/55">{item.label}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-800 dark:text-content-dark/72">{item.value}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </SimulationCard>
           </div>
-        </section>
-
-        <div className="rounded-[2rem] border border-[#d5ddd4] bg-white/80 p-6 shadow-[0_24px_60px_-44px_rgba(15,23,42,0.38)] dark:border-white/10 dark:bg-white/[0.04] lg:p-8">
-          <div className="mb-8 text-center lg:text-left">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
-              Iniciar sesión
-            </p>
-            <h2 className="mt-3 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark">
-              Accede a tu cuenta
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-content-dark/58">
-              Continúa donde dejaste tus análisis en RenewSim.
-            </p>
-          </div>
-
-          <LoginForm onSuccess={handleSuccess} />
         </div>
       </div>
     </div>
