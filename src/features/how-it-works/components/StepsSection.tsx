@@ -1,6 +1,7 @@
+import { SimulationCard } from '@/shared/components/SimulationPrimitives'
+
 interface Step {
   number: string
-  icon: string
   title: string
   description: string
   checkpoint: string
@@ -9,70 +10,59 @@ interface Step {
 const STEPS: Step[] = [
   {
     number: '01',
-    icon: 'database',
     title: 'Captura del contexto energético',
     description:
-      'Se organiza ubicación, consumo, restricciones y preferencia tecnológica para partir de una base comparable y sin ambigüedad.',
-    checkpoint: 'Entrada clara y trazable',
+      'Se ordenan ubicación, consumo, restricciones y preferencia tecnológica para partir de una base comparable.',
+    checkpoint: 'Entrada clara y consistente',
   },
   {
     number: '02',
-    icon: 'model_training',
     title: 'Simulación técnica con lectura económica',
     description:
       'El motor cruza variables operativas con rendimiento esperado, costos y retorno para aterrizar escenarios viables.',
-    checkpoint: 'Análisis con criterio técnico-financiero',
+    checkpoint: 'Análisis técnico-financiero',
   },
   {
     number: '03',
-    icon: 'fact_check',
-    title: 'Resultado listo para defender decisiones',
+    title: 'Resultado listo para defender',
     description:
-      'La salida resume comparativas, impacto y narrativa ejecutiva para que negocio, operaciones y dirección hablen el mismo idioma.',
+      'La salida resume comparativas, impacto y recomendación ejecutiva para que negocio y operaciones tomen una decisión con contexto.',
     checkpoint: 'Conclusión accionable',
   },
 ]
 
-function StepCard({ number, icon, title, description, checkpoint }: Step) {
+function StepCard({ number, title, description, checkpoint }: Step) {
   return (
-    <article className="rounded-[1.8rem] border border-[#d5ddd4] bg-[linear-gradient(180deg,rgba(255,255,255,0.88)_0%,rgba(246,249,245,0.96)_100%)] p-6 shadow-[0_24px_52px_-42px_rgba(15,23,42,0.38)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.025)_100%)]">
-      <div className="flex items-start justify-between gap-4">
-        <span className="text-4xl font-black leading-none tracking-[-0.06em] text-[#cfdbd1] dark:text-white/10">
-          {number}
-        </span>
-        <div className="rounded-2xl bg-[#eaf1eb] p-3 dark:bg-emerald-400/10">
-          <span className="material-symbols-outlined text-xl text-[#1a6a45] dark:text-emerald-300">{icon}</span>
+    <SimulationCard className="rounded-sm">
+      <div className="flex items-start justify-between gap-4 border-b border-[#dde5dc] pb-2.5 dark:border-white/8">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#51665a] dark:text-content-dark/72">
+            {checkpoint}
+          </p>
+          <h3 className="mt-2 text-[1.05rem] font-bold tracking-[-0.03em] text-[#1c2a22] dark:text-content-dark">
+            {title}
+          </h3>
         </div>
+        <span className="text-2xl font-black tracking-[-0.05em] text-[#1a6a45] dark:text-emerald-300">{number}</span>
       </div>
-
-      <div className="mt-6">
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/56">
-          {checkpoint}
-        </p>
-        <h3 className="mt-3 text-xl font-black tracking-[-0.03em] text-slate-950 dark:text-content-dark">
-          {title}
-        </h3>
-        <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-content-dark/62">
-          {description}
-        </p>
-      </div>
-    </article>
+      <p className="mt-3 text-sm leading-6 text-slate-700 dark:text-content-dark/64">{description}</p>
+    </SimulationCard>
   )
 }
 
 export function StepsSection() {
   return (
-    <section className="mt-14">
-      <div className="max-w-2xl">
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
+    <section className="grid gap-2 lg:h-full xl:grid-cols-[260px_minmax(0,1fr)] xl:items-start">
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#627468] dark:text-content-dark/72">
           Flujo de simulación
         </p>
-        <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
-          Tres pasos. Mucha más profundidad que una landing común.
+        <h2 className="mt-2 text-[1.45rem] font-black leading-[0.98] tracking-[-0.05em] text-[#122033] dark:text-content-dark sm:text-[1.65rem]">
+          Tres pasos para pasar de datos a criterio.
         </h2>
       </div>
 
-      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-2 xl:h-full xl:grid-cols-3">
         {STEPS.map((step) => (
           <StepCard key={step.title} {...step} />
         ))}

@@ -1,87 +1,71 @@
-interface Feature {
-  icon: string
-  title: string
-  description: string
-}
+import { SimulationCard, SimulationSectionHeader } from '@/shared/components/SimulationPrimitives'
 
-const FEATURES: Feature[] = [
+const DECISION_FLOW = [
   {
-    icon: 'account_tree',
-    title: 'Escenarios comparables',
-    description: 'Contrasta alternativas tecnológicas bajo la misma lógica para decidir con menos ruido y más criterio.',
+    step: '01',
+    title: 'Entrada estructurada',
+    description: 'Tecnología, ubicación, capacidad, supuestos económicos y restricciones operativas se ordenan antes del análisis.',
   },
   {
-    icon: 'finance_mode',
-    title: 'Lectura financiera clara',
-    description: 'Resume retorno, ahorro y exposición económica con un lenguaje útil para negocio y dirección.',
+    step: '02',
+    title: 'Comparación consistente',
+    description: 'Todos los escenarios se leen bajo la misma lógica para evitar comparaciones sesgadas o narrativas parciales.',
   },
   {
-    icon: 'monitoring',
-    title: 'Analitica accionable',
-    description: 'Convierte datos técnicos en señales entendibles para priorizar inversiones y planes energéticos.',
-  },
-  {
-    icon: 'verified',
-    title: 'Presentacion sobria',
-    description: 'Interfaz limpia, consistente y preparada para mostrar resultados con confianza frente a stakeholders.',
+    step: '03',
+    title: 'Salida defendible',
+    description: 'El resultado final resume viabilidad, retorno y prioridad para sostener una decisión ante negocio y dirección.',
   },
 ]
 
-const OPERATING_PRINCIPLES = [
-  'Menos adornos, más claridad ejecutiva',
-  'Comparación técnica y financiera en una sola lectura',
-  'Preparado para equipos que necesitan justificar decisiones',
+const READING_MODES = [
+  {
+    title: 'Lectura tecnica',
+    description: 'Producción, desempeño del sistema, sensibilidad y consistencia del escenario.',
+  },
+  {
+    title: 'Lectura financiera',
+    description: 'ROI, ahorro, payback y exposición económica explicados para negocio.',
+  },
+  {
+    title: 'Lectura ejecutiva',
+    description: 'Una conclusión útil para priorizar, presentar o descartar una inversión.',
+  },
 ]
-
-function FeatureCard({ icon, title, description }: Feature) {
-  return (
-    <div className="rounded-[1.6rem] border border-[#d5ddd4] bg-[linear-gradient(180deg,rgba(255,255,255,0.86)_0%,rgba(246,249,245,0.95)_100%)] p-6 shadow-[0_20px_44px_-38px_rgba(15,23,42,0.38)] transition-all duration-200 hover:-translate-y-0.5 dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.04)_0%,rgba(255,255,255,0.025)_100%)]">
-      <div className="flex size-12 items-center justify-center rounded-2xl bg-[#e9f1eb] dark:bg-emerald-400/10">
-        <span className="material-symbols-outlined text-2xl text-[#1a6a45] dark:text-emerald-300">{icon}</span>
-      </div>
-      <h3 className="mt-5 text-lg font-black tracking-[-0.03em] text-slate-950 dark:text-content-dark">{title}</h3>
-      <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-content-dark/60">{description}</p>
-    </div>
-  )
-}
 
 export function FeaturesSection() {
   return (
-    <section className="border-t border-[#d9e1d8] py-24 dark:border-white/8">
-      <div className="container mx-auto px-6">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
-          <div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#1a6a45] dark:text-emerald-300">
-              Capacidades clave
-            </p>
-            <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark md:text-4xl">
-              Una home con presencia enterprise necesita comunicar control, no gritar.
-            </h2>
-            <p className="mt-5 max-w-xl text-base leading-8 text-slate-600 dark:text-content-dark/62">
-              RenewSim tiene que verse como un producto serio: menos landing genérica,
-              más estructura, jerarquía y confianza visual. Esta base ya empuja esa dirección.
-            </p>
+    <section className="border-t border-[#d9e1d8] px-3 py-8 sm:px-4 lg:px-5 lg:py-10 dark:border-white/8">
+      <div className="mx-auto grid w-full max-w-[1600px] gap-3 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)]">
+        <SimulationCard className="rounded-sm shadow-[0_18px_34px_-32px_rgba(15,23,42,0.18)]">
+          <SimulationSectionHeader
+            eyebrow="Cómo funciona"
+            title="Una simulación útil no termina en un número"
+            description="La plataforma está pensada para pasar de datos dispersos a una recomendación que un equipo pueda usar de verdad."
+          />
 
-            <div className="mt-8 rounded-[1.7rem] border border-[#d5ddd4] bg-white/75 p-5 shadow-[0_24px_54px_-42px_rgba(15,23,42,0.34)] dark:border-white/10 dark:bg-white/[0.035]">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/55">
-                Principios de producto
-              </p>
-              <div className="mt-4 space-y-3">
-                {OPERATING_PRINCIPLES.map((item) => (
-                  <div key={item} className="flex items-start gap-3 rounded-2xl bg-[#f6f9f5] px-4 py-3 dark:bg-white/[0.03]">
-                    <span className="material-symbols-outlined mt-0.5 text-[18px] text-[#1a6a45] dark:text-emerald-300">done</span>
-                    <p className="text-sm leading-6 text-slate-700 dark:text-content-dark/65">{item}</p>
-                  </div>
-                ))}
+          <div className="mt-4 grid gap-3">
+            {DECISION_FLOW.map((item) => (
+              <div key={item.step} className="grid gap-3 border-b border-[#dde5dc] pb-3 last:border-b-0 last:pb-0 dark:border-white/8 sm:grid-cols-[48px_minmax(0,1fr)]">
+                <p className="text-xl font-black tracking-[-0.045em] text-[#1a6a45] dark:text-emerald-300">{item.step}</p>
+                <div>
+                  <p className="text-sm font-bold text-slate-900 dark:text-content-dark">{item.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-700 dark:text-content-dark/64">{item.description}</p>
+                </div>
               </div>
-            </div>
-          </div>
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            {FEATURES.map((feature) => (
-              <FeatureCard key={feature.title} {...feature} />
             ))}
           </div>
+        </SimulationCard>
+
+        <div className="grid gap-3">
+          {READING_MODES.map((item) => (
+            <SimulationCard key={item.title} tone="soft" className="rounded-sm shadow-[0_16px_30px_-30px_rgba(15,23,42,0.12)]">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#51665a] dark:text-content-dark/72">
+                {item.title}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-slate-700 dark:text-content-dark/64">{item.description}</p>
+            </SimulationCard>
+          ))}
         </div>
       </div>
     </section>

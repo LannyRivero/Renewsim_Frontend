@@ -16,9 +16,6 @@ export function ProfileSettingsPage() {
             <Link to="/how-it-works" className="text-sm font-medium transition-colors hover:text-primary">
               Learn
             </Link>
-            <Link to="/about" className="text-sm font-medium transition-colors hover:text-primary">
-              Community
-            </Link>
           </nav>
           <div className="flex items-center gap-4">
             <button

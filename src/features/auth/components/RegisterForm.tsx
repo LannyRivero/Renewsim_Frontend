@@ -43,9 +43,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
-      {/* Name */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-on-surface dark:text-content-dark" htmlFor="reg-name">
+        <label className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#526559] dark:text-content-dark/72" htmlFor="reg-name">
           Nombre
         </label>
         <input
@@ -53,14 +52,13 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Ingresa tu nombre"
-          className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
+          placeholder="Tu nombre"
+          className="h-12 w-full rounded-sm border border-[#ced8cd] bg-[#f7faf6] px-4 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-[#97b19f] focus:outline-none focus:ring-2 focus:ring-[#c7d5cb] dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark dark:placeholder:text-content-dark/36 dark:focus:border-white/16 dark:focus:ring-white/10"
         />
       </div>
 
-      {/* Email */}
       <div className="flex flex-col gap-2">
-        <label className="text-sm font-medium text-on-surface dark:text-content-dark" htmlFor="reg-email">
+        <label className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#526559] dark:text-content-dark/72" htmlFor="reg-email">
           Email
         </label>
         <input
@@ -68,12 +66,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Ingresa tu email"
-          className="w-full h-14 px-4 rounded-lg text-base text-on-surface dark:text-content-dark bg-primary-container/10 dark:bg-primary-container/15 border border-outline-variant dark:border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-container transition-colors placeholder:text-on-surface-variant/50 dark:placeholder:text-content-dark/40"
+          placeholder="tu@empresa.com"
+          className="h-12 w-full rounded-sm border border-[#ced8cd] bg-[#f7faf6] px-4 text-sm text-slate-900 transition-colors placeholder:text-slate-400 focus:border-[#97b19f] focus:outline-none focus:ring-2 focus:ring-[#c7d5cb] dark:border-white/10 dark:bg-white/[0.04] dark:text-content-dark dark:placeholder:text-content-dark/36 dark:focus:border-white/16 dark:focus:ring-white/10"
         />
       </div>
 
-      {/* Password */}
       <PasswordInput
         id="reg-password"
         label="Contraseña"
@@ -85,27 +82,25 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         errors={passwordErrors}
       />
 
-      {/* Server error */}
       {serverError && (
-        <div role="alert" className="flex items-center gap-2 p-3 rounded-lg bg-error-container/20 border border-error/30 text-sm text-error">
+        <div role="alert" className="flex items-center gap-2 rounded-sm border border-[#d7b8b8] bg-[#fff5f5] p-3 text-sm text-[#8f2f2f] dark:border-[#6c3434] dark:bg-[#2b1717] dark:text-[#f2b8b8]">
           <span className="material-symbols-outlined text-base">error</span>
           {serverError}
         </div>
       )}
 
-      {/* Submit */}
       <button
         type="submit"
         disabled={isLoading}
-        className="mt-2 h-12 rounded-lg text-base font-bold bg-primary-container text-on-primary hover:brightness-95 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        className="mt-2 h-12 rounded-sm bg-[#0d5a37] text-sm font-bold text-white shadow-[0_12px_24px_-18px_rgba(13,90,55,0.34)] transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-emerald-400 dark:text-slate-950"
         aria-label={isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
       >
         {isLoading ? 'Creando cuenta...' : 'Crear cuenta'}
       </button>
 
-      <p className="text-sm text-on-surface-variant dark:text-content-dark/50 text-center pt-2">
+      <p className="pt-1 text-center text-sm text-slate-500 dark:text-content-dark/52">
         ¿Ya tenés cuenta?{' '}
-        <Link to="/iniciar-sesion" className="font-semibold text-primary dark:text-primary-inverse hover:underline">
+        <Link to="/iniciar-sesion" className="font-semibold text-[#1d5a3c] hover:underline dark:text-emerald-300">
           Iniciar sesión
         </Link>
       </p>

@@ -1,6 +1,13 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { RegisterForm } from './components/RegisterForm'
 import { useToastStore } from '@/stores/toastStore'
+import { SimulationCard, SimulationSectionHeader } from '@/shared/components/SimulationPrimitives'
+
+const REGISTER_SIGNALS = [
+  { label: 'Alta simple', value: 'Creá tu acceso sin friccion innecesaria.' },
+  { label: 'Lectura compartida', value: 'Ordená escenarios, resultados y criterio en un mismo lugar.' },
+  { label: 'Trabajo continuo', value: 'Empezá a construir casos sin depender de hojas dispersas.' },
+]
 
 export function RegisterPage() {
   const navigate = useNavigate()
@@ -15,51 +22,42 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-      <div className="grid w-full max-w-5xl gap-5 lg:grid-cols-[minmax(0,0.92fr)_minmax(420px,0.9fr)] lg:items-center">
-        <section className="rounded-[2rem] border border-[#d5ddd4] bg-[linear-gradient(135deg,rgba(26,106,69,0.98)_0%,rgba(43,88,68,0.98)_100%)] p-5 text-white shadow-[0_28px_70px_-44px_rgba(26,106,69,0.55)] dark:border-white/10 dark:bg-[linear-gradient(135deg,rgba(18,71,49,1)_0%,rgba(25,52,40,1)_100%)] lg:p-6">
-          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/68">
-            Activación de cuenta
-          </p>
-          <h1 className="mt-3 text-3xl font-black leading-[1.02] tracking-[-0.05em] md:text-[3.35rem]">
-            Crea tu acceso y empieza a construir decisiones más defendibles.
-          </h1>
-          <p className="mt-4 max-w-xl text-[15px] leading-7 text-white/78">
-            Registro simple, lectura clara y una plataforma lista para comparar escenarios energéticos con criterio técnico y de negocio.
-          </p>
-          <div className="mt-5 space-y-2.5">
-            {[
-              'Configura tu acceso en minutos',
-              'Centraliza simulaciones y resultados',
-              'Comparte una misma lectura dentro del equipo',
-            ].map((item) => (
-              <div key={item} className="rounded-2xl border border-white/12 bg-white/8 px-4 py-2.5 text-sm leading-6 text-white/82">
-                {item}
+    <div className="overflow-hidden bg-[radial-gradient(circle_at_top,rgba(52,88,69,0.08),transparent_30%),linear-gradient(180deg,#f4f7f2_0%,#edf2eb_48%,#f3f7f2_100%)] px-3 py-6 sm:px-4 lg:min-h-[calc(100vh-138px)] lg:px-5 lg:py-8 dark:bg-[radial-gradient(circle_at_top,rgba(34,84,59,0.28),rgba(8,16,13,0)_30%),linear-gradient(180deg,#0c1511_0%,#0a120f_100%)]">
+      <div className="mx-auto flex w-full max-w-[1180px] items-center justify-center lg:min-h-[calc(100vh-202px)]">
+        <div className="grid w-full gap-4 lg:grid-cols-[minmax(0,600px)_240px] lg:items-center xl:grid-cols-[minmax(0,640px)_260px]">
+          <SimulationCard className="rounded-sm border-[#cfd8ce] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(247,250,246,0.98)_100%)] p-6 shadow-[0_28px_70px_-42px_rgba(15,23,42,0.28)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,32,29,0.98)_0%,rgba(17,25,22,0.98)_100%)] lg:p-7">
+            <SimulationSectionHeader
+              eyebrow="Registro"
+              title="Abrí tu acceso"
+              description="Configurá tu cuenta para empezar a trabajar con escenarios, resultados y comparativas en una sola capa de lectura."
+            />
+
+            <div className="mt-6">
+              <RegisterForm onSuccess={handleSuccess} />
+            </div>
+          </SimulationCard>
+
+          <div className="grid gap-3">
+            <SimulationCard tone="soft" className="rounded-sm">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-content-dark/55">
+                Activacion de cuenta
+              </p>
+              <p className="mt-2 text-lg font-bold tracking-[-0.03em] text-[#1b2a22] dark:text-content-dark">
+                Entrada al producto
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-content-dark/64">
+                Una incorporacion simple para entrar al simulador con una base mas ordenada y mas profesional.
+              </p>
+              <div className="mt-5 space-y-3 border-t border-[#dde5dc] pt-4 dark:border-white/8">
+                {REGISTER_SIGNALS.map((item) => (
+                  <div key={item.label} className="border-b border-[#dde5dc] pb-3 last:border-b-0 last:pb-0 dark:border-white/8">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-content-dark/55">{item.label}</p>
+                    <p className="mt-1 text-sm leading-6 text-slate-800 dark:text-content-dark/72">{item.value}</p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </SimulationCard>
           </div>
-          <div className="mt-5 text-sm text-white/72">
-            ¿Ya tienes cuenta?{' '}
-            <Link to="/iniciar-sesion" className="font-semibold text-white underline-offset-4 hover:underline">
-              Inicia sesión
-            </Link>
-          </div>
-        </section>
-
-        <div className="rounded-[2rem] border border-[#d5ddd4] bg-white/80 p-5 shadow-[0_24px_60px_-44px_rgba(15,23,42,0.38)] dark:border-white/10 dark:bg-white/[0.04] lg:p-6">
-          <div className="mb-5 text-center lg:text-left">
-            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500 dark:text-content-dark/56">
-              Registro
-            </p>
-            <h2 className="mt-2.5 text-[2rem] font-black tracking-[-0.04em] text-slate-950 dark:text-content-dark">
-              Crea tu cuenta
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 dark:text-content-dark/58">
-              Abre tu acceso a RenewSim y organiza tus análisis desde el primer escenario.
-            </p>
-          </div>
-
-          <RegisterForm onSuccess={handleSuccess} />
         </div>
       </div>
     </div>

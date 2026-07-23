@@ -7,7 +7,6 @@ import { RequireRole } from './shared/components/RequireRole'
 import { RouteSkeleton } from './shared/components'
 import { HomePage } from './features/home/HomePage'
 import { HowItWorksPage } from './features/how-it-works/HowItWorksPage'
-import { AboutPage } from './features/about/AboutPage'
 import { RegisterPage } from './features/auth/RegisterPage'
 import { LoginPage } from './features/auth/LoginPage'
 import { SimuladorLayout } from './features/simulation/SimuladorLayout'
@@ -35,11 +34,9 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'how-it-works', element: <HowItWorksPage /> },
-      { path: 'about', element: <AboutPage /> },
       { path: 'register', element: <RegisterPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'como-funciona', element: <HowItWorksPage /> },
-      { path: 'acerca-de', element: <AboutPage /> },
       { path: 'registro', element: <RegisterPage /> },
       { path: 'iniciar-sesion', element: <LoginPage /> },
     ],
