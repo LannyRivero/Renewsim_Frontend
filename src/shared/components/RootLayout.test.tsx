@@ -84,8 +84,9 @@ describe('RootLayout auth actions', () => {
     expect(mobileMenu).not.toBeNull()
 
     const menu = within(mobileMenu as HTMLElement)
+    expect(menu.getByRole('link', { name: 'Inicio' })).toBeInTheDocument()
     expect(menu.getByRole('link', { name: 'Cómo funciona' })).toBeInTheDocument()
-    expect(menu.getByRole('link', { name: 'Acerca de' })).toBeInTheDocument()
+    expect(menu.getByRole('link', { name: 'Simulador' })).toBeInTheDocument()
     expect(menu.getByRole('link', { name: 'Iniciar sesión' })).toBeInTheDocument()
     expect(menu.getByRole('link', { name: 'Crear cuenta' })).toBeInTheDocument()
   })
