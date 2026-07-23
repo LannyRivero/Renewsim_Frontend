@@ -52,7 +52,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       <PasswordInput
         id="login-password"
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />

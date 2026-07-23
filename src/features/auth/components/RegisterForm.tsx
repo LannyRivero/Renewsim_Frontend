@@ -73,7 +73,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
       <PasswordInput
         id="reg-password"
-        label="Contrasena"
+        label="Contraseña"
         value={password}
         onChange={(e) => {
           setPassword(e.target.value)
