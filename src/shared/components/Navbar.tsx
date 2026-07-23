@@ -17,7 +17,6 @@ interface NavbarProps {
 const DEFAULT_LINKS: NavLink[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Cómo funciona', href: '/como-funciona' },
-  { label: 'Acerca de', href: '/acerca-de' },
   { label: 'Simulador', href: '#' },
 ]
 
