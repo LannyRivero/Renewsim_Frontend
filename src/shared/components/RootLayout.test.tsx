@@ -11,7 +11,6 @@ function renderLayout(initialPath = '/') {
           <Route path="/" element={<RootLayout />}>
             <Route index element={<p>Home content</p>} />
             <Route path="login" element={<p>Login page</p>} />
-            <Route path="iniciar-sesion" element={<p>Login page</p>} />
           </Route>
         </Routes>
       </MemoryRouter>,

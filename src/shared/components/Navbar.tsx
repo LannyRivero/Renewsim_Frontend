@@ -24,7 +24,7 @@ function DefaultActions(isMobile: boolean, onNavigate?: () => void) {
   return (
     <div className={`flex ${isMobile ? 'flex-col' : 'items-center'} gap-2`}>
       <Link
-        to="/iniciar-sesion"
+        to="/login"
         onClick={onNavigate}
         className={`rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface transition-colors hover:bg-surface-container-low dark:border-white/10 dark:text-content-dark dark:hover:bg-white/5 ${isMobile ? 'text-center' : ''}`}
       >

@@ -53,7 +53,7 @@ function NavActions({ isDark, isMobile, onNavigate, onToggle }: NavActionsProps)
   function handleLogout() {
     useAuthStore.getState().clearAuth()
     localStorage.removeItem('renewsim-token')
-    navigate('/iniciar-sesion')
+    navigate('/login')
   }
 
   return (
@@ -80,7 +80,7 @@ function NavActions({ isDark, isMobile, onNavigate, onToggle }: NavActionsProps)
       ) : (
         <>
           <Link
-            to="/iniciar-sesion"
+            to="/login"
             onClick={onNavigate}
             className={`rounded-sm border border-[#c8d2c7] bg-[#f7faf6] px-4 py-2 text-sm font-semibold text-[#304439] transition-colors hover:border-[#b8c6b8] hover:bg-[#f1f5ef] dark:border-white/10 dark:bg-white/5 dark:text-content-dark dark:hover:bg-white/8 ${isMobile ? 'text-center' : ''}`}
           >
@@ -108,7 +108,6 @@ export function RootLayout() {
     pathname === '/como-funciona' ||
     pathname === '/how-it-works' ||
     pathname === '/login' ||
-    pathname === '/iniciar-sesion' ||
     pathname === '/register' ||
     pathname === '/registro'
 

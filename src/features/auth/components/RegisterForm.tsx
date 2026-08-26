@@ -100,7 +100,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
       <p className="pt-1 text-center text-sm text-slate-500 dark:text-content-dark/52">
         ¿Ya tenés cuenta?{' '}
-        <Link to="/iniciar-sesion" className="font-semibold text-[#1d5a3c] hover:underline dark:text-emerald-300">
+        <Link to="/login" className="font-semibold text-[#1d5a3c] hover:underline dark:text-emerald-300">
           Iniciar sesión
         </Link>
       </p>

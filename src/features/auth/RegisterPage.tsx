@@ -18,7 +18,7 @@ export function RegisterPage() {
       description: 'Tu cuenta fue creada. Inicia sesión para continuar.',
       variant: 'success',
     })
-    navigate('/iniciar-sesion')
+    navigate('/login')
   }
 
   return (
