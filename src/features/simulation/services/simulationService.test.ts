@@ -58,7 +58,6 @@ describe('simulationService', () => {
         },
         input: {
           name: 'Solar - Sevilla industrial roof',
-          technology: 'solar',
           location: {
             label: 'Sevilla, Andalucia, ES',
             lat: 37.3891,
@@ -133,7 +132,7 @@ describe('simulationService', () => {
 
     const result = await createRealSimulation({
       name: 'Solar - Sevilla industrial roof',
-      technology: 'solar',
+      energyType: 'solar',
       location: {
         label: 'Sevilla, Andalucia, ES',
         lat: 37.3891,
@@ -195,7 +194,6 @@ describe('simulationService', () => {
         },
         input: {
           name: 'Solar - Cordoba roof',
-          technology: 'solar',
           location: {
             label: 'Cordoba, Andalucia, ES',
             lat: 37.8882,
@@ -374,7 +372,7 @@ describe('simulationService', () => {
   it('sends the real contract on update', async () => {
     const payload: RealCreateSimulationRequest = {
       name: 'Solar Madrid Updated',
-      technology: 'solar',
+      energyType: 'solar',
       location: {
         label: 'Madrid, ES',
         lat: 40.4168,

@@ -5,6 +5,7 @@ import { simulationCreateSchema, type SimulationCreateFormValues } from '../../s
 import { createRealSimulation } from '../../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
 import type { MonthlySeries, RealCreateSimulationRequest, SimulationResult } from '@/shared/types'
+import { resolveCountryName } from '@/shared/utils/countryName'
 
 function buildMonthlyConsumptionKwh(annualConsumptionKwh: number): MonthlySeries {
   const monthlyBase = Number((annualConsumptionKwh / 12).toFixed(2))
@@ -20,20 +21,26 @@ function hasMeaningfulMonthlyConsumption(monthlyConsumptionKwh: MonthlySeries): 
 }
 
 function buildRealSimulationPayload(draft: SimulationCreateFormValues): RealCreateSimulationRequest {
+  const monthlyConsumptionKwh = hasMeaningfulMonthlyConsumption(draft.demand.monthlyConsumptionKwh as MonthlySeries)
+    ? (draft.demand.monthlyConsumptionKwh as MonthlySeries)
+    : buildMonthlyConsumptionKwh(draft.demand.annualConsumptionKwh)
+
   return {
     name: draft.name.trim(),
-    technology: draft.technology,
+    energyType: draft.technology.trim().toLowerCase(),
     location: {
-      ...draft.location,
+      label: draft.location.label.trim(),
+      lat: draft.location.lat,
+      lon: draft.location.lon,
+      country: resolveCountryName(draft.location.country, draft.location.countryCode),
+      countryCode: draft.location.countryCode.trim().toUpperCase(),
     },
     system: {
       ...draft.system,
     },
     demand: {
       annualConsumptionKwh: draft.demand.annualConsumptionKwh,
-      monthlyConsumptionKwh: hasMeaningfulMonthlyConsumption(draft.demand.monthlyConsumptionKwh as MonthlySeries)
-        ? (draft.demand.monthlyConsumptionKwh as MonthlySeries)
-        : buildMonthlyConsumptionKwh(draft.demand.annualConsumptionKwh),
+      monthlyConsumptionKwh: monthlyConsumptionKwh.slice(0, 12) as MonthlySeries,
     },
     economics: {
       ...draft.economics,

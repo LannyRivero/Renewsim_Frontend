@@ -1,2 +1,2 @@
-export { toSimulationDetails, toSimulationResult } from './simulationResponseMappers.detailsLegacy'
+export { toSimulationDetails, toSimulationResult } from './simulationResponseMappers.detailsResult'
 export { toSimulationDetailsResponse } from './simulationResponseMappers.detailsResponse'

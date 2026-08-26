@@ -4,7 +4,6 @@ import type {
   RecommendationStatus,
   SimulationRunStatus,
   SimulationSystemLosses,
-  SimulationTechnology,
   WarningSeverity,
 } from './simulation'
 import type { ResolvedLocation } from './simulation-location'
@@ -34,7 +33,7 @@ export interface RealSimulationEconomicsInput {
 
 export interface RealCreateSimulationRequest {
   name: string
-  technology: SimulationTechnology
+  energyType: string
   location: {
     label: string
     lat: number
