@@ -1,4 +1,4 @@
-import type { SimulationDetails} from '../schemas/simulationSchema'
+import type { SimulationDetails } from '../schemas/simulationSchema'
 import type { SimulationDetailsResponse, SimulationResult } from '@/shared/types'
 
 export type EffectiveSimulationResult = SimulationResult & Partial<SimulationDetails>
