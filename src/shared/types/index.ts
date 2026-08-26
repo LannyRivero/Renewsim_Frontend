@@ -38,6 +38,6 @@ export type {
 export type {
   SimulationHistoryItem,
   SimulationResult,
-} from './simulation-legacy'
+} from './simulation-view'
 export type { TechnologyItem, CreateTechnologyPayload, UpdateTechnologyPayload } from './technology'
 export type { AdminUser } from './user'

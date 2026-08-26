@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from 'vitest'
 import { MemoryRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { SimulationHistoryPage } from './SimulationHistoryPage'
-import { getRealSimulationHistory } from '../services/simulationService'
+import { deleteSimulationById, getRealSimulationHistory } from '../services/simulationService'
 import { buildSimulationHistoryRowMock } from '../test/simulationTestFactories'
 
 vi.mock('../services/simulationService', () => ({
@@ -12,6 +12,7 @@ vi.mock('../services/simulationService', () => ({
 }))
 
 const mockedGetRealSimulationHistory = vi.mocked(getRealSimulationHistory)
+const mockedDeleteSimulationById = vi.mocked(deleteSimulationById)
 
 function renderPage() {
   const queryClient = new QueryClient()
@@ -81,6 +82,34 @@ describe('SimulationHistoryPage', () => {
     expect(screen.getAllByLabelText('Ver simulación solar').length).toBeGreaterThan(0)
     expect(screen.getAllByLabelText('Editar simulación solar').length).toBeGreaterThan(0)
     expect(screen.getAllByLabelText('Eliminar simulación solar').length).toBeGreaterThan(0)
+  })
+
+  it('asks for confirmation before deleting a simulation', async () => {
+    mockedGetRealSimulationHistory.mockResolvedValue({
+      items: [
+        buildSimulationHistoryRowMock(1, {
+          id: 'sim-1',
+          name: 'SOLAR - Sevilla, Spain',
+          technology: 'solar',
+        }),
+      ],
+      total: 1,
+    })
+    mockedDeleteSimulationById.mockResolvedValueOnce(undefined)
+    renderPage()
+
+    fireEvent.click((await screen.findAllByLabelText('Acciones de simulación solar'))[0])
+    fireEvent.click(screen.getAllByLabelText('Eliminar simulación solar')[0])
+
+    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(screen.getByText('¿Seguro que querés eliminar "SOLAR - Sevilla, Spain"? Esta acción no se puede deshacer.')).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }))
+
+    await waitFor(() => {
+      expect(mockedDeleteSimulationById).toHaveBeenCalled()
+      expect(mockedDeleteSimulationById.mock.calls[0]?.[0]).toBe('sim-1')
+    })
   })
 
   it('filters visible simulations by search and technology', async () => {

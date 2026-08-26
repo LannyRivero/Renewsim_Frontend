@@ -34,7 +34,7 @@ export interface RealSimulationEconomicsInput {
 
 export interface RealCreateSimulationRequest {
   name: string
-  technology: SimulationTechnology
+  energyType: SimulationTechnology
   location: {
     label: string
     lat: number

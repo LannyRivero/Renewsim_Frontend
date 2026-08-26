@@ -30,7 +30,7 @@ export function buildSimulationDetailsResponseMock(
     },
     input: {
       name: 'Wind Demo',
-      technology: 'solar' as const,
+      energyType: 'solar' as const,
       location: {
         label: 'Valencia, ES',
         lat: 39.4699,

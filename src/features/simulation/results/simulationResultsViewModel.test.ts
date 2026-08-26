@@ -28,7 +28,7 @@ describe('buildSimulationResultsViewModel', () => {
         },
         input: {
           name: 'Solar - Sevilla industrial roof',
-          technology: 'solar',
+          energyType: 'solar',
           location: {
             label: 'Sevilla, Andalucia, ES',
             lat: 37.3891,

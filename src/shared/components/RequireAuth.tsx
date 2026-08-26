@@ -8,8 +8,8 @@ interface RequireAuthProps {
 export function RequireAuth({ children }: RequireAuthProps) {
   const location = useLocation()
   const accessToken = useAuthStore((state) => state.accessToken)
-  const legacyToken = localStorage.getItem('renewsim-token')
-  const hasToken = Boolean(accessToken ?? legacyToken)
+  const storedToken = localStorage.getItem('renewsim-token')
+  const hasToken = Boolean(accessToken ?? storedToken)
 
   if (!hasToken) {
     return <Navigate to="/login" state={{ from: location }} replace />

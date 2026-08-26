@@ -1,6 +1,7 @@
 import { getRealSimulationById, searchLocations } from '../services/simulationService'
 import type { EditSimulationValues } from '../schemas/simulationSchema'
 import type { RealCreateSimulationRequest } from '@/shared/types'
+import { resolveCountryName } from '@/shared/utils/countryName'
 import {
   buildSimulationDemandPayload,
   buildSimulationEconomicsPayload,
@@ -26,8 +27,8 @@ async function resolveEditedLocation(
     label: bestMatch.label,
     lat: bestMatch.lat,
     lon: bestMatch.lon,
-    country: bestMatch.country,
-    countryCode: bestMatch.countryCode,
+    country: resolveCountryName(bestMatch.country, bestMatch.countryCode),
+    countryCode: bestMatch.countryCode.trim().toUpperCase(),
   }
 }
 
@@ -45,7 +46,7 @@ export async function buildUpdatedSimulationPayload(
 
   return {
     name: values.name,
-    technology: values.technology,
+    energyType: values.technology,
     location,
     system: buildSimulationSystemPayload(values),
     demand: buildSimulationDemandPayload(currentPayload.demand.monthlyConsumptionKwh, values),

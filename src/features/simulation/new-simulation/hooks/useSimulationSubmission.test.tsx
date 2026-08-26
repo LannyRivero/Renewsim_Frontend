@@ -117,7 +117,6 @@ describe('useSimulationSubmission', () => {
       },
       input: {
         name: 'SOLAR - Madrid',
-        technology: 'solar',
         location: {
           label: 'Madrid, ES',
           lat: 40.4168,
@@ -212,7 +211,7 @@ describe('useSimulationSubmission', () => {
             label: 'Madrid, ES',
             lat: 40.4168,
             lon: -3.7038,
-            country: 'Spain',
+            country: 'ES',
             countryCode: 'ES',
           },
           system: {
@@ -245,7 +244,7 @@ describe('useSimulationSubmission', () => {
     expect(mockCreateRealSimulation).toHaveBeenCalledTimes(1)
     expect(mockCreateRealSimulation.mock.calls[0]?.[0]).toEqual({
       name: 'SOLAR - Madrid',
-      technology: 'solar',
+      energyType: 'solar',
       location: {
         label: 'Madrid, ES',
         lat: 40.4168,
@@ -298,7 +297,7 @@ describe('useSimulationSubmission', () => {
         label: 'Madrid, ES',
         lat: 40.4168,
         lon: -3.7038,
-        country: 'Spain',
+        country: 'ES',
         countryCode: 'ES',
       },
       system: {

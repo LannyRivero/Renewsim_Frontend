@@ -136,7 +136,7 @@ export function toRealSimulationInput(value: unknown): RealCreateSimulationReque
 
   return {
     name: readString(candidate?.name, 'Simulation'),
-    technology: 'solar',
+    energyType: 'solar',
     location: {
       label: readString(location?.label, 'N/A'),
       lat: readNumber(location?.lat),
