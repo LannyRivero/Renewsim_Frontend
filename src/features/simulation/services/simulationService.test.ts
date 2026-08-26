@@ -58,6 +58,7 @@ describe('simulationService', () => {
         },
         input: {
           name: 'Solar - Sevilla industrial roof',
+          energyType: 'solar',
           location: {
             label: 'Sevilla, Andalucia, ES',
             lat: 37.3891,
@@ -194,6 +195,7 @@ describe('simulationService', () => {
         },
         input: {
           name: 'Solar - Cordoba roof',
+          energyType: 'solar',
           location: {
             label: 'Cordoba, Andalucia, ES',
             lat: 37.8882,

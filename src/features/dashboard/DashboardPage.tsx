@@ -21,6 +21,15 @@ import { getDashboardData } from './services/dashboardService'
 import type { DashboardData } from './services/dashboardTypes'
 
 const EMPTY_DASHBOARD_DATA: DashboardData = {
+  summary: {
+    totalSimulations: 0,
+    activeSimulations: null,
+    averageRoiPercent: null,
+    medianPaybackYears: null,
+    totalEnergyGeneratedKwh: null,
+    totalCo2SavedKg: null,
+    atRiskCount: null,
+  },
   stats: [
     { label: 'Simulaciones totales', value: '0', icon: 'insights' },
     { label: 'CO2 evitado', value: 'N/D', icon: 'eco' },
@@ -29,8 +38,12 @@ const EMPTY_DASHBOARD_DATA: DashboardData = {
   ],
   energyBySource: [],
   distribution: [],
+  statusDistribution: [],
   efficiencyMetrics: [],
   targetVsActual: [],
+  recommendedScenario: null,
+  prioritizedScenarios: [],
+  riskAlerts: [],
 }
 
 function parseNumericValue(value: string) {

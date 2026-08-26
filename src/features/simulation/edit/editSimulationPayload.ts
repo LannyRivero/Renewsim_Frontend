@@ -46,6 +46,7 @@ export async function buildUpdatedSimulationPayload(
 
   return {
     name: values.name,
+    energyType: values.technology,
     location,
     system: buildSimulationSystemPayload(values),
     demand: buildSimulationDemandPayload(currentPayload.demand.monthlyConsumptionKwh, values),

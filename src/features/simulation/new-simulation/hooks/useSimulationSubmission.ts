@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { simulationCreateSchema, type SimulationCreateFormValues } from '../../schemas/simulationSchema'
 import { createRealSimulation } from '../../services/simulationService'
 import { useToastStore } from '@/stores/toastStore'
-import type { MonthlySeries, RealCreateSimulationRequest, SimulationResult } from '@/shared/types'
+import type { MonthlySeries, RealCreateSimulationRequest, SimulationResult, SimulationTechnology } from '@/shared/types'
 import { resolveCountryName } from '@/shared/utils/countryName'
 
 function buildMonthlyConsumptionKwh(annualConsumptionKwh: number): MonthlySeries {
@@ -27,7 +27,7 @@ function buildRealSimulationPayload(draft: SimulationCreateFormValues): RealCrea
 
   return {
     name: draft.name.trim(),
-    energyType: draft.technology.trim().toLowerCase(),
+    energyType: draft.technology.trim().toLowerCase() as SimulationTechnology,
     location: {
       label: draft.location.label.trim(),
       lat: draft.location.lat,
