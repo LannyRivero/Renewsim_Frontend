@@ -40,6 +40,33 @@ function shouldUseSpanishFallback(realData: SimulationDetailsResponse) {
   return texts.some((text) => isLikelyEnglishText(text))
 }
 
+function decisionCopyFor(recommendation: string, primaryReason?: string, summary?: string) {
+  if (recommendation === 'recommended') {
+    return {
+      mainSignal:
+        primaryReason ?? summary ?? 'La producción estimada y el retorno financiero sostienen la viabilidad del proyecto.',
+      mainRisk: 'La reserva principal es confirmar precios finales, consumo esperado y condiciones reales de instalación.',
+      nextAction: 'Avanzar a validación final de costos, permisos y cierre financiero.',
+    }
+  }
+
+  if (recommendation === 'viable_with_reservations') {
+    return {
+      mainSignal:
+        primaryReason ?? summary ?? 'El proyecto tiene potencial, pero todavía depende de validar supuestos clave.',
+      mainRisk: 'El riesgo principal es que el ahorro real baje si consumo, coste o recurso solar se desvían del escenario estimado.',
+      nextAction: 'Comparar sensibilidad de consumo, CAPEX y autoconsumo antes de priorizar inversión.',
+    }
+  }
+
+  return {
+    mainSignal:
+      primaryReason ?? summary ?? 'La inversión no se justifica con la generación y el ahorro estimados en este escenario.',
+    mainRisk: 'El riesgo principal es inmovilizar presupuesto en un caso con retorno insuficiente o recuperación demasiado larga.',
+    nextAction: 'Reducir CAPEX, ajustar tamaño o cambiar supuestos antes de volver a evaluar.',
+  }
+}
+
 export function buildSimulationDetailsViewModel({
   data,
   realData,
@@ -87,7 +114,15 @@ export function buildSimulationDetailsViewModel({
                 ? 'Viable con reservas'
                 : 'No recomendado',
         }
-      : {
+      : (() => {
+        const primaryReason = realData.summary.reasons[0]?.message
+        const decisionCopy = decisionCopyFor(
+          realData.summary.recommendation,
+          primaryReason,
+          realData.summary.summary,
+        )
+
+        return {
         decisionStatus:
           realData.summary.recommendation === 'recommended'
             ? 'Recomendado'
@@ -97,17 +132,13 @@ export function buildSimulationDetailsViewModel({
         decisionHeadline: realData.summary.headline,
         decisionSummary: realData.summary.summary,
         decisionDrivers: realData.summary.reasons.map((reason) => reason.message),
-        mainSignal: realData.summary.reasons[0]?.message ?? 'El backend entregó una lectura consolidada del escenario.',
+        mainSignal: decisionCopy.mainSignal,
         mainRisk:
           realData.summary.reasons.find((reason) => reason.severity === 'critical' || reason.severity === 'warning')?.message ??
-          'Conviene validar sensibilidad y supuestos antes de comprometer inversión final.',
-        nextAction:
-          realData.summary.recommendation === 'recommended'
-            ? 'Pasar a validación final con supuestos y cierre financiero.'
-            : realData.summary.recommendation === 'viable_with_reservations'
-              ? 'Comparar sensibilidad y cerrar validaciones antes de priorizar.'
-              : 'Revisar supuestos técnicos y económicos antes de volver a presentarlo.',
+          decisionCopy.mainRisk,
+        nextAction: decisionCopy.nextAction,
         }
+      })()
     : generatedDecisionSummary
   const roi = roiNumber !== null ? `${formatNumber(roiNumber)}%` : 'N/D'
   const capex = capexNumber !== null ? formatCurrency(capexNumber) : realData ? formatCurrency(realData.input.economics.capexTotal) : 'N/D'
