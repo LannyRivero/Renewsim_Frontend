@@ -46,7 +46,7 @@ export function EditSimulationAdvancedSettingsSection({ defaults }: { defaults: 
       <SimulationMonthlyConsumptionFields
         renderField={(month, index) => (
           <FormField key={month} label={month} htmlFor={`monthly-${index}`}>
-            <SimulationTextInput id={`monthly-${index}`} name={`monthlyConsumptionKwh.${index}`} type="number" min={0} defaultValue={defaults.monthlyConsumptionKwh[index]} />
+            <SimulationTextInput id={`monthly-${index}`} name={`monthlyConsumptionKwh.${index}`} type="number" min={0} step="0.01" defaultValue={defaults.monthlyConsumptionKwh[index]} />
           </FormField>
         )}
       />

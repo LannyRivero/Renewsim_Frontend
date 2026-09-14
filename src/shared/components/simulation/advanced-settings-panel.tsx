@@ -63,11 +63,15 @@ export function SimulationAdvancedSettingsPanel({
         </span>
       </SimulationActionButton>
 
-      {isOpen ? (
-        <div className={cn('mt-4 space-y-5 pt-4 dark:border-white/8', tone === 'detail' ? 'border-t border-[#e3e9e4]' : 'border-t border-[#e1e6ee]')}>
-          {children}
-        </div>
-      ) : null}
+      <div
+        className={cn(
+          'mt-4 space-y-5 pt-4 dark:border-white/8',
+          tone === 'detail' ? 'border-t border-[#e3e9e4]' : 'border-t border-[#e1e6ee]',
+          !isOpen && 'hidden',
+        )}
+      >
+        {children}
+      </div>
     </div>
   )
 }

@@ -2,13 +2,18 @@ import type { ComponentPropsWithoutRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
-export function SimulationTextInput({ className, ...props }: ComponentPropsWithoutRef<'input'>) {
+export function SimulationTextInput({ className, defaultValue, value, ...props }: ComponentPropsWithoutRef<'input'>) {
+  const inputKey = value === undefined && defaultValue !== undefined ? String(defaultValue) : undefined
+
   return (
     <Input
+      key={inputKey}
       className={cn(
         'h-9 w-full rounded border border-[#cfd8ce] bg-[#fafcf9] px-3.5 py-2.5 text-sm text-[#415447] shadow-[0_8px_20px_-20px_rgba(89,103,92,0.14)] outline-none placeholder:text-[#8c9e92] focus:border-[#9fb49f] focus:ring-4 focus:ring-[#dfe8de] dark:border-white/10 dark:bg-[#111d18] dark:text-content-dark dark:placeholder:text-content-dark/45 dark:focus:border-white/20 dark:focus:ring-white/10',
         className,
       )}
+      defaultValue={defaultValue}
+      value={value}
       {...props}
     />
   )

@@ -121,8 +121,8 @@ export function parseSimulationEconomics(form: FormData): Pick<
   }
 }
 
-function scaleMonthlyConsumptionKwh(currentMonthly: MonthlySeries, nextAnnualConsumptionKwh: number): MonthlySeries {
-  const currentTotal = currentMonthly.reduce((sum, value) => sum + value, 0)
+function scaleMonthlyConsumptionKwh(monthlyPattern: MonthlySeries, nextAnnualConsumptionKwh: number): MonthlySeries {
+  const currentTotal = monthlyPattern.reduce((sum, value) => sum + value, 0)
 
   if (currentTotal <= 0) {
     const monthlyBase = Number((nextAnnualConsumptionKwh / 12).toFixed(2))
@@ -131,11 +131,16 @@ function scaleMonthlyConsumptionKwh(currentMonthly: MonthlySeries, nextAnnualCon
     return values as MonthlySeries
   }
 
-  const scaled = currentMonthly.map((value) => Number(((value / currentTotal) * nextAnnualConsumptionKwh).toFixed(2)))
+  const scaled = monthlyPattern.map((value) => Number(((value / currentTotal) * nextAnnualConsumptionKwh).toFixed(2)))
   const scaledTotal = scaled.reduce((sum, value) => sum + value, 0)
   scaled[11] = Number((scaled[11] + (nextAnnualConsumptionKwh - scaledTotal)).toFixed(2))
 
   return scaled as MonthlySeries
+}
+
+function monthlyConsumptionApproximatelyMatchesAnnual(monthlyConsumptionKwh: MonthlySeries, annualConsumptionKwh: number) {
+  const monthlyTotal = monthlyConsumptionKwh.reduce((sum, value) => sum + value, 0)
+  return Math.abs(monthlyTotal - annualConsumptionKwh) <= 0.5
 }
 
 export function buildSimulationSystemPayload(values: EditSimulationValues): RealCreateSimulationRequest['system'] {
@@ -152,12 +157,15 @@ export function buildSimulationDemandPayload(
   currentMonthly: MonthlySeries,
   values: EditSimulationValues,
 ): RealCreateSimulationRequest['demand'] {
+  const submittedMonthly = values.monthlyConsumptionKwh as MonthlySeries
+  const monthlyPattern = submittedMonthly.some((value) => value > 0) ? submittedMonthly : currentMonthly
+  const monthlyConsumptionKwh = monthlyConsumptionApproximatelyMatchesAnnual(monthlyPattern, values.annualConsumptionKwh)
+    ? monthlyPattern
+    : scaleMonthlyConsumptionKwh(monthlyPattern, values.annualConsumptionKwh)
+
   return {
     annualConsumptionKwh: values.annualConsumptionKwh,
-    monthlyConsumptionKwh:
-      values.monthlyConsumptionKwh.some((value) => value > 0)
-        ? (values.monthlyConsumptionKwh as MonthlySeries)
-        : scaleMonthlyConsumptionKwh(currentMonthly, values.annualConsumptionKwh),
+    monthlyConsumptionKwh,
   }
 }
 
