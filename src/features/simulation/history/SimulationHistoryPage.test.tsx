@@ -152,21 +152,25 @@ describe('SimulationHistoryPage', () => {
     expect(screen.queryAllByText('Corredor Eolico Sur')).toHaveLength(0)
   })
 
-  it('sorts and paginates visible simulations', async () => {
+  function paginatedHistoryRows() {
+    return [
+      buildSimulationHistoryRowMock(1, { name: 'Alpha', irrPct: 11 }),
+      buildSimulationHistoryRowMock(2, { name: 'Bravo', irrPct: 12 }),
+      buildSimulationHistoryRowMock(3, { name: 'Charlie', irrPct: 13 }),
+      buildSimulationHistoryRowMock(4, { name: 'Delta', irrPct: 14 }),
+      buildSimulationHistoryRowMock(5, { name: 'Echo', irrPct: 15 }),
+      buildSimulationHistoryRowMock(6, { name: 'Foxtrot', irrPct: 16 }),
+      buildSimulationHistoryRowMock(7, { name: 'Golf', irrPct: 17 }),
+      buildSimulationHistoryRowMock(8, { name: 'Hotel', irrPct: 18 }),
+      buildSimulationHistoryRowMock(9, { name: 'India', irrPct: 19 }),
+      buildSimulationHistoryRowMock(10, { name: 'Juliet', irrPct: 20 }),
+      buildSimulationHistoryRowMock(11, { name: 'Zulu', irrPct: 99, createdAt: '2024-05-30T00:00:00.000Z' }),
+    ]
+  }
+
+  it('sorts visible simulations', async () => {
     mockedGetRealSimulationHistory.mockResolvedValueOnce({
-      items: [
-        buildSimulationHistoryRowMock(1, { name: 'Alpha', irrPct: 11 }),
-        buildSimulationHistoryRowMock(2, { name: 'Bravo', irrPct: 12 }),
-        buildSimulationHistoryRowMock(3, { name: 'Charlie', irrPct: 13 }),
-        buildSimulationHistoryRowMock(4, { name: 'Delta', irrPct: 14 }),
-        buildSimulationHistoryRowMock(5, { name: 'Echo', irrPct: 15 }),
-        buildSimulationHistoryRowMock(6, { name: 'Foxtrot', irrPct: 16 }),
-        buildSimulationHistoryRowMock(7, { name: 'Golf', irrPct: 17 }),
-        buildSimulationHistoryRowMock(8, { name: 'Hotel', irrPct: 18 }),
-        buildSimulationHistoryRowMock(9, { name: 'India', irrPct: 19 }),
-        buildSimulationHistoryRowMock(10, { name: 'Juliet', irrPct: 20 }),
-        buildSimulationHistoryRowMock(11, { name: 'Zulu', irrPct: 99, createdAt: '2024-05-30T00:00:00.000Z' }),
-      ],
+      items: paginatedHistoryRows(),
       total: 11,
     })
     renderPage()
@@ -185,6 +189,16 @@ describe('SimulationHistoryPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Estado operativo' }))
     expect(screen.getByRole('columnheader', { name: 'Estado operativo' })).toHaveAttribute('aria-sort', 'ascending')
+  })
+
+  it('paginates visible simulations', async () => {
+    mockedGetRealSimulationHistory.mockResolvedValueOnce({
+      items: paginatedHistoryRows(),
+      total: 11,
+    })
+    renderPage()
+
+    expect(await screen.findByRole('button', { name: 'Página actual, 1' })).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Siguiente' }))
     expect(screen.getByRole('button', { name: 'Página actual, 2' })).toBeInTheDocument()

@@ -52,12 +52,15 @@ describe('AdminPage', () => {
     })
   })
 
-  it('saves roles and deletes user', async () => {
+  function mockSingleAdminUser() {
     mockedGetAllUsers.mockResolvedValue([
       { id: '1', username: 'admin', roles: ['ADMIN'] },
     ])
+  }
+
+  it('saves user roles', async () => {
+    mockSingleAdminUser()
     mockedUpdateUserRoles.mockResolvedValueOnce()
-    mockedDeleteUser.mockResolvedValueOnce()
 
     renderAdmin()
 
@@ -69,6 +72,15 @@ describe('AdminPage', () => {
     await waitFor(() => {
       expect(mockedUpdateUserRoles).toHaveBeenCalledWith('1', ['ADMIN', 'USER'])
     })
+  })
+
+  it('deletes user after confirmation', async () => {
+    mockSingleAdminUser()
+    mockedDeleteUser.mockResolvedValueOnce()
+
+    renderAdmin()
+
+    await screen.findByText('admin')
 
     fireEvent.click(screen.getByRole('button', { name: 'Delete User' }))
     fireEvent.click(screen.getByRole('button', { name: 'Delete' }))

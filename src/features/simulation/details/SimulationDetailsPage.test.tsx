@@ -156,8 +156,9 @@ describe('SimulationDetailsPage', () => {
 
     renderPage(['/simulador/detalles?id=sim-url-1'])
 
-    expect(await screen.findByText('Siguiente')).toBeInTheDocument()
+    expect(await screen.findByText('El escenario presenta una señal sólida.')).toBeInTheDocument()
     expect(await screen.findByText('Recomendado')).toBeInTheDocument()
+    expect(screen.getByText('Avanzar a validación final de costos, permisos y cierre financiero.')).toBeInTheDocument()
     expect(mockedGetRealSimulationById).toHaveBeenCalledWith('sim-url-1')
   })
 
