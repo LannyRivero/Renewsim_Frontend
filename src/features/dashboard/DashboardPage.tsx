@@ -19,6 +19,7 @@ import {
 } from '@/shared/components'
 import { getDashboardData } from './services/dashboardService'
 import type { DashboardData } from './services/dashboardTypes'
+import { useAuthStore } from '@/stores/authStore'
 
 const EMPTY_DASHBOARD_DATA: DashboardData = {
   summary: {
@@ -151,9 +152,17 @@ function buildPriorityRead(sharePercent: number) {
 }
 
 export function DashboardPage() {
-  const { data, isError, error } = useQuery({
-    queryKey: ['dashboard-data'],
+  const accessToken = useAuthStore((state) => state.accessToken)
+  const username = useAuthStore((state) => state.user?.username)
+  const storedToken = localStorage.getItem('renewsim-token')
+  const authIdentity = username ?? accessToken ?? storedToken ?? 'anonymous'
+  const hasAuthContext = Boolean(accessToken ?? storedToken)
+
+  const { data, isError, error, isFetching, isPending } = useQuery({
+    queryKey: ['dashboard-data', authIdentity],
     queryFn: getDashboardData,
+    enabled: hasAuthContext,
+    refetchOnMount: 'always',
     staleTime: 60_000,
   })
 
@@ -174,6 +183,7 @@ export function DashboardPage() {
   const hasOperationalData = energyBySource.length > 0 || distribution.length > 0 || efficiencyMetrics.length > 0 || targetVsActual.length > 0
   const totalSimulationCount = parseNumericValue(totalSimulations) ?? 0
   const hasDashboardData = totalSimulationCount > 0 || hasOperationalData
+  const shouldShowLoadingState = isPending || (isFetching && !hasDashboardData)
   const distributionTotal = Math.max(1, (distribution ?? []).reduce((sum, item) => sum + item.kwh, 0))
   const summaryCards = [
     { label: 'Simulaciones', value: totalSimulations, href: '/simulador/historial' },
@@ -192,7 +202,23 @@ export function DashboardPage() {
           className="gap-2 md:items-end"
         />
 
-        {!hasDashboardData ? (
+        {shouldShowLoadingState ? (
+          <SimulationCard className="rounded-sm border-[#cfd8ce] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(247,250,246,0.98)_100%)] p-6 shadow-[0_24px_52px_-40px_rgba(15,23,42,0.2)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,32,29,0.98)_0%,rgba(17,25,22,0.98)_100%)] lg:p-7">
+            <div className="max-w-3xl">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#627468] dark:text-content-dark/72">
+                Dashboard ejecutivo
+              </p>
+              <h2 className="mt-3 text-[2rem] font-black leading-[1] tracking-[-0.05em] text-[#122033] dark:text-content-dark lg:text-[2.35rem]">
+                Cargando lectura de portafolio.
+              </h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-content-dark/66 sm:text-base">
+                Estamos sincronizando tus simulaciones antes de decidir si existe señal suficiente para construir el dashboard.
+              </p>
+            </div>
+          </SimulationCard>
+        ) : null}
+
+        {!shouldShowLoadingState && !hasDashboardData ? (
           <SimulationCard className="rounded-sm border-[#cfd8ce] bg-[linear-gradient(180deg,rgba(255,255,255,0.92)_0%,rgba(247,250,246,0.98)_100%)] p-6 shadow-[0_24px_52px_-40px_rgba(15,23,42,0.2)] dark:border-white/10 dark:bg-[linear-gradient(180deg,rgba(22,32,29,0.98)_0%,rgba(17,25,22,0.98)_100%)] lg:p-7">
             <div className="max-w-3xl">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#627468] dark:text-content-dark/72">
@@ -208,7 +234,7 @@ export function DashboardPage() {
           </SimulationCard>
         ) : null}
 
-        {hasDashboardData ? (
+        {!shouldShowLoadingState && hasDashboardData ? (
         <div className="grid gap-3 xl:grid-cols-[minmax(0,1.7fr)_290px] xl:items-stretch">
           <div className="flex h-full flex-col gap-3">
             <SimulationCard className="rounded-sm">
