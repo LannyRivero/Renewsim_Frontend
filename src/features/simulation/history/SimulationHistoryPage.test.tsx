@@ -40,7 +40,7 @@ describe('SimulationHistoryPage', () => {
 
     expect(screen.getByRole('heading', { level: 1, name: 'Simulaciones disponibles para seguimiento' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Nueva simulación' })).toBeInTheDocument()
-    expect(screen.getByLabelText('Buscar simulación')).toBeInTheDocument()
+    expect(screen.getByLabelText('Buscar por nombre')).toBeInTheDocument()
     expect(screen.getByLabelText('Abrir filtros')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Fecha' })).toBeInTheDocument()
   })
@@ -112,9 +112,8 @@ describe('SimulationHistoryPage', () => {
     })
   })
 
-  it('filters visible simulations by search and technology', async () => {
-    mockedGetRealSimulationHistory.mockResolvedValueOnce({
-      items: [
+  it('filters visible simulations by name and location', async () => {
+    const items = [
         buildSimulationHistoryRowMock(1, {
           id: 'sim-1',
           name: 'Parque Solar Norte',
@@ -132,23 +131,27 @@ describe('SimulationHistoryPage', () => {
           createdAt: '2024-05-16T00:00:00.000Z',
           irrPct: 9,
         }),
-      ],
-      total: 2,
+      ]
+    mockedGetRealSimulationHistory.mockImplementation(async (query) => {
+      const filteredItems = query?.location
+        ? items.filter((item) => item.locationLabel.toLocaleLowerCase().includes(query.location!.toLocaleLowerCase()))
+        : items
+      return { items: filteredItems, total: filteredItems.length }
     })
     renderPage()
 
     expect((await screen.findAllByText('Parque Solar Norte')).length).toBeGreaterThan(0)
     expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0)
 
-    fireEvent.change(screen.getByLabelText('Buscar simulación'), { target: { value: 'cadiz' } })
+    fireEvent.change(screen.getByLabelText('Buscar por nombre'), { target: { value: 'corredor' } })
     expect(screen.queryAllByText('Parque Solar Norte')).toHaveLength(0)
     expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0)
 
-    fireEvent.change(screen.getByLabelText('Buscar simulación'), { target: { value: '' } })
+    fireEvent.change(screen.getByLabelText('Buscar por nombre'), { target: { value: '' } })
     fireEvent.click(screen.getByLabelText('Abrir filtros'))
-    fireEvent.change(screen.getByLabelText('Filtrar por tecnología'), { target: { value: 'solar' } })
+    fireEvent.change(screen.getByLabelText('Filtrar por ubicación'), { target: { value: 'Sevilla' } })
     fireEvent.click(screen.getByRole('button', { name: 'Aplicar' }))
-    expect(screen.getAllByText('Parque Solar Norte').length).toBeGreaterThan(0)
+    expect((await screen.findAllByText('Parque Solar Norte')).length).toBeGreaterThan(0)
     expect(screen.queryAllByText('Corredor Eolico Sur')).toHaveLength(0)
   })
 
@@ -169,9 +172,20 @@ describe('SimulationHistoryPage', () => {
   }
 
   it('sorts visible simulations', async () => {
-    mockedGetRealSimulationHistory.mockResolvedValueOnce({
-      items: paginatedHistoryRows(),
-      total: 11,
+    const historyRows = paginatedHistoryRows()
+    mockedGetRealSimulationHistory.mockImplementation(async (query) => {
+      const sortField = query?.sortBy ?? 'createdAt'
+      const direction = query?.direction ?? 'desc'
+      const sortedRows = [...historyRows].sort((left, right) => {
+        const leftValue = String(left[sortField] ?? '').toLocaleLowerCase()
+        const rightValue = String(right[sortField] ?? '').toLocaleLowerCase()
+        const comparison = leftValue.localeCompare(rightValue)
+        return direction === 'asc' ? comparison : -comparison
+      })
+      const page = query?.page ?? 0
+      const size = query?.size ?? 10
+
+      return { items: sortedRows.slice(page * size, (page + 1) * size), total: historyRows.length }
     })
     renderPage()
 
