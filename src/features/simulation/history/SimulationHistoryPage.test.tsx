@@ -177,8 +177,10 @@ describe('SimulationHistoryPage', () => {
       const sortField = query?.sortBy ?? 'createdAt'
       const direction = query?.direction ?? 'desc'
       const sortedRows = [...historyRows].sort((left, right) => {
-        const leftValue = String(left[sortField] ?? '').toLocaleLowerCase()
-        const rightValue = String(right[sortField] ?? '').toLocaleLowerCase()
+        const leftFieldValue = sortField === 'location' ? left.locationLabel : left[sortField]
+        const rightFieldValue = sortField === 'location' ? right.locationLabel : right[sortField]
+        const leftValue = String(leftFieldValue ?? '').toLocaleLowerCase()
+        const rightValue = String(rightFieldValue ?? '').toLocaleLowerCase()
         const comparison = leftValue.localeCompare(rightValue)
         return direction === 'asc' ? comparison : -comparison
       })

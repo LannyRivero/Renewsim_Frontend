@@ -8,7 +8,6 @@ interface LocationFieldModel {
   shouldShowSearchingMessage: boolean
   isLocationSearchError: boolean
   hasSearchedLocation: boolean
-  hasLocationSuggestions: boolean
   locationAssistMessage: string | null
   locationSuggestions: ResolvedLocation[]
   startBrowserLocationResolution: () => void

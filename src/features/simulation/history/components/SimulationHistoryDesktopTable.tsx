@@ -69,10 +69,9 @@ export function SimulationHistoryDesktopTable({
           </SimulationTableHeadCell>
           <SimulationTableHeadCell
             scope="col"
-            aria-sort={sortField === 'roi' ? (sortDirection === 'asc' ? 'ascending' : 'descending') : 'none'}
             className="w-[6rem] px-3 py-2 text-[11px] tracking-[0.14em] text-[#5e7066]"
           >
-            <SimulationHistorySortButton field="roi" label="ROI" activeField={sortField} direction={sortDirection} onSortChange={onSortChange} />
+            ROI
           </SimulationTableHeadCell>
           <SimulationTableHeadCell scope="col" className="py-2 text-[11px] tracking-[0.14em] text-[#5e7066]">
             Ubicación
