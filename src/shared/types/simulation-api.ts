@@ -172,6 +172,7 @@ export interface ListUserSimulationsResponse {
 }
 
 export interface SimulationHistoryQuery {
+  name?: string
   location?: string
   page?: number
   size?: number

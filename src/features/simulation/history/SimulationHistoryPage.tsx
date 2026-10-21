@@ -36,6 +36,7 @@ export function SimulationHistoryPage() {
     handleApplyFilters,
     handleResetFilters,
     handleSortChange,
+    handleHistoryItemDeleted,
   } = useSimulationHistoryViewState()
   const [simulationIdToDelete, setSimulationIdToDelete] = useState<string | null>(null)
   const simulationToDelete = rows.find((row) => row.id === simulationIdToDelete) ?? null
@@ -101,6 +102,7 @@ export function SimulationHistoryPage() {
             if (!simulationIdToDelete) return
 
             deleteMutation.mutate(simulationIdToDelete, {
+              onSuccess: handleHistoryItemDeleted,
               onSettled: () => setSimulationIdToDelete(null),
             })
           }}

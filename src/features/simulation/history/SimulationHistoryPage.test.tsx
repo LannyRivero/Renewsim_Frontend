@@ -131,12 +131,18 @@ describe('SimulationHistoryPage', () => {
           createdAt: '2024-05-16T00:00:00.000Z',
           irrPct: 9,
         }),
-      ]
+    ]
     mockedGetRealSimulationHistory.mockImplementation(async (query) => {
-      const filteredItems = query?.location
-        ? items.filter((item) => item.locationLabel.toLocaleLowerCase().includes(query.location!.toLocaleLowerCase()))
-        : items
-      return { items: filteredItems, total: filteredItems.length }
+      const normalizedName = query?.name?.toLocaleLowerCase()
+      const normalizedLocation = query?.location?.toLocaleLowerCase()
+      const filteredItems = items.filter((item) => {
+        const matchesName = !normalizedName || item.name.toLocaleLowerCase().includes(normalizedName)
+        const matchesLocation = !normalizedLocation || item.locationLabel.toLocaleLowerCase().includes(normalizedLocation)
+        return matchesName && matchesLocation
+      })
+      const size = query?.size ?? 10
+      const page = query?.page ?? 0
+      return { items: filteredItems.slice(page * size, (page + 1) * size), total: filteredItems.length }
     })
     renderPage()
 
@@ -144,15 +150,45 @@ describe('SimulationHistoryPage', () => {
     expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0)
 
     fireEvent.change(screen.getByLabelText('Buscar por nombre'), { target: { value: 'corredor' } })
-    expect(screen.queryAllByText('Parque Solar Norte')).toHaveLength(0)
-    expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0)
+    await waitFor(() => {
+      expect(screen.queryAllByText('Parque Solar Norte')).toHaveLength(0)
+      expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0)
+    })
 
     fireEvent.change(screen.getByLabelText('Buscar por nombre'), { target: { value: '' } })
+    await waitFor(() => expect(screen.getAllByText('Corredor Eolico Sur').length).toBeGreaterThan(0))
     fireEvent.click(screen.getByLabelText('Abrir filtros'))
     fireEvent.change(screen.getByLabelText('Filtrar por ubicación'), { target: { value: 'Sevilla' } })
     fireEvent.click(screen.getByRole('button', { name: 'Aplicar' }))
     expect((await screen.findAllByText('Parque Solar Norte')).length).toBeGreaterThan(0)
     await waitFor(() => expect(screen.queryAllByText('Corredor Eolico Sur')).toHaveLength(0))
+  })
+
+  it('searches by name before applying server pagination', async () => {
+    const items = paginatedHistoryRows()
+    mockedGetRealSimulationHistory.mockImplementation(async (query) => {
+      const normalizedName = query?.name?.toLocaleLowerCase()
+      const matchingItems = normalizedName
+        ? items.filter((item) => item.name.toLocaleLowerCase().includes(normalizedName))
+        : items
+      const page = query?.page ?? 0
+      const size = query?.size ?? 10
+      return { items: matchingItems.slice(page * size, (page + 1) * size), total: matchingItems.length }
+    })
+    renderPage()
+
+    expect((await screen.findAllByText('Alpha')).length).toBeGreaterThan(0)
+    const searchInput = screen.getByLabelText('Buscar por nombre')
+    fireEvent.change(searchInput, { target: { value: 'zulu' } })
+    expect(searchInput).toHaveValue('zulu')
+
+    await waitFor(() => {
+      expect(mockedGetRealSimulationHistory).toHaveBeenLastCalledWith(
+        expect.objectContaining({ name: 'zulu', page: 0 }),
+      )
+    })
+    expect((await screen.findAllByText('Zulu')).length).toBeGreaterThan(0)
+    expect(screen.queryAllByText('Alpha')).toHaveLength(0)
   })
 
   function paginatedHistoryRows() {
@@ -218,5 +254,38 @@ describe('SimulationHistoryPage', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Siguiente' }))
     expect(screen.getByRole('button', { name: 'Página actual, 2' })).toBeInTheDocument()
+  })
+
+  it('returns to a valid page when deleting the only item on the last page', async () => {
+    let items = paginatedHistoryRows()
+    mockedGetRealSimulationHistory.mockImplementation(async (query) => {
+      const sortField = query?.sortBy ?? 'createdAt'
+      const direction = query?.direction ?? 'desc'
+      const sortedItems = [...items].sort((left, right) => {
+        const leftFieldValue = sortField === 'location' ? left.locationLabel : left[sortField]
+        const rightFieldValue = sortField === 'location' ? right.locationLabel : right[sortField]
+        const comparison = String(leftFieldValue ?? '').localeCompare(String(rightFieldValue ?? ''))
+        return direction === 'asc' ? comparison : -comparison
+      })
+      const page = query?.page ?? 0
+      const size = query?.size ?? 10
+      return { items: sortedItems.slice(page * size, (page + 1) * size), total: items.length }
+    })
+    mockedDeleteSimulationById.mockImplementation(async (simulationId) => {
+      items = items.filter((item) => item.id !== simulationId)
+    })
+    renderPage()
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Siguiente' }))
+    expect((await screen.findAllByText('Alpha')).length).toBeGreaterThan(0)
+    fireEvent.click(screen.getAllByLabelText('Acciones de simulación solar')[0])
+    fireEvent.click(screen.getAllByLabelText('Eliminar simulación solar')[0])
+    fireEvent.click(screen.getByRole('button', { name: 'Eliminar' }))
+
+    await waitFor(() => {
+      expect(mockedGetRealSimulationHistory).toHaveBeenLastCalledWith(expect.objectContaining({ page: 0 }))
+      expect(screen.queryByText('Alpha')).not.toBeInTheDocument()
+    })
+    expect((await screen.findAllByText('Zulu')).length).toBeGreaterThan(0)
   })
 })
