@@ -110,6 +110,8 @@ export function useSimulationLocation({ form }: UseSimulationLocationParams) {
     isResolvingBrowserLocation,
     isSearchingLocation: locationSuggestionsQuery.isFetching,
     shouldShowSearchingMessage: normalizedLocation.length >= 2 && locationSuggestionsQuery.isFetching,
+    isLocationSearchError: locationSuggestionsQuery.isError,
+    hasSearchedLocation: locationSuggestionsQuery.isFetched && normalizedLocation.length >= 2,
     locationAssistMessage,
     locationSuggestions: locationSuggestionsQuery.data ?? [],
     startBrowserLocationResolution,

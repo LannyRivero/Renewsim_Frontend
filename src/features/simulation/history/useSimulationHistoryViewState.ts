@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import type { SimulationHistoryItem, SimulationHistoryRow } from '@/shared/types'
-import { formatDisplayDate, formatPercent, formatStatusLabel, parseDate, parsePercentage } from './historyTable.utils'
+import { formatDisplayDate, formatPercent, formatStatusLabel } from './historyTable.utils'
 import type { HistorySortDirection, HistorySortField } from './historyTable.utils'
 
 const ROWS_PER_PAGE = 10
@@ -19,114 +20,61 @@ function toHistoryTableItem(row: SimulationHistoryRow): SimulationHistoryItem {
   }
 }
 
-export function useSimulationHistoryViewState(rowsData: SimulationHistoryRow[] | undefined) {
+export function useSimulationHistoryViewState() {
   const [search, setSearch] = useState('')
-  const [energyFilter, setEnergyFilter] = useState<'all' | 'solar' | 'wind' | 'hydro'>('all')
-  const [draftEnergyFilter, setDraftEnergyFilter] = useState<'all' | 'solar' | 'wind' | 'hydro'>('all')
+  const [location, setLocation] = useState('')
+  const [draftLocation, setDraftLocation] = useState('')
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false)
-  const [sort, setSort] = useState<{ field: HistorySortField; direction: HistorySortDirection }>({
-    field: 'createdAt',
-    direction: 'desc',
-  })
+  const [sort, setSort] = useState<{ field: HistorySortField; direction: HistorySortDirection }>({ field: 'createdAt', direction: 'desc' })
   const [currentPage, setCurrentPage] = useState(1)
-
-  const rows = useMemo(() => (rowsData ?? []).map(toHistoryTableItem), [rowsData])
-  const normalizedSearch = search.trim().toLowerCase()
-
-  const filteredRows = useMemo(() => {
-    const baseRows = rows
-      .filter((row) => {
-        if (energyFilter === 'all') return true
-        return row.energyType.trim().toLowerCase() === energyFilter
-      })
-      .filter((row) => {
-        if (!normalizedSearch) return true
-
-        return [row.name, row.location, row.status, row.energyType].some((value) => value.toLowerCase().includes(normalizedSearch))
-      })
-
-    return [...baseRows].sort((left, right) => {
-      const directionMultiplier = sort.direction === 'asc' ? 1 : -1
-
-      if (sort.field === 'name') {
-        return left.name.localeCompare(right.name) * directionMultiplier
-      }
-
-      if (sort.field === 'status') {
-        const statusComparison = left.status.localeCompare(right.status) * directionMultiplier
-        if (statusComparison !== 0) return statusComparison
-
-        return left.energyType.localeCompare(right.energyType) * directionMultiplier
-      }
-
-      if (sort.field === 'createdAt') {
-        return (parseDate(left.createdAt) - parseDate(right.createdAt)) * directionMultiplier
-      }
-
-      return (parsePercentage(left.roi) - parsePercentage(right.roi)) * directionMultiplier
-    })
-  }, [rows, energyFilter, normalizedSearch, sort])
-
-  const totalPages = Math.max(1, Math.ceil(filteredRows.length / ROWS_PER_PAGE))
-  const safeCurrentPage = Math.min(currentPage, totalPages)
-  const start = (safeCurrentPage - 1) * ROWS_PER_PAGE
-  const paginatedRows = filteredRows.slice(start, start + ROWS_PER_PAGE)
+  const query = { location: location || undefined, page: currentPage - 1, size: ROWS_PER_PAGE, sortBy: sort.field, direction: sort.direction } as const
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['simulation-history', query],
+    queryFn: () => import('../services/simulationService').then(({ getRealSimulationHistory }) => getRealSimulationHistory(query)),
+    placeholderData: (previousData) => previousData,
+  })
+  const rows = (data?.items ?? []).map(toHistoryTableItem)
+  const normalizedSearch = search.trim().toLocaleLowerCase()
+  const filteredRows = rows.filter((row) => row.name.toLocaleLowerCase().includes(normalizedSearch))
+  const totalPages = Math.max(1, Math.ceil((data?.total ?? 0) / ROWS_PER_PAGE))
 
   function handleSearchChange(value: string) {
     setSearch(value)
     setCurrentPage(1)
   }
 
-  function handleEnergyFilterChange(value: 'all' | 'solar' | 'wind' | 'hydro') {
-    setEnergyFilter(value)
-    setCurrentPage(1)
+  function handleLocationChange(value: string) {
+    setDraftLocation(value)
   }
 
   function handleApplyFilters() {
-    handleEnergyFilterChange(draftEnergyFilter)
+    setLocation(draftLocation.trim())
+    setCurrentPage(1)
     setIsFilterPanelOpen(false)
   }
 
   function handleResetFilters() {
-    setDraftEnergyFilter('all')
-    handleEnergyFilterChange('all')
+    setLocation('')
+    setDraftLocation('')
+    setCurrentPage(1)
     setIsFilterPanelOpen(false)
   }
 
   function handleSortChange(field: HistorySortField) {
-    setSort((currentSort) => {
-      if (currentSort.field === field) {
-        return {
-          field,
-          direction: currentSort.direction === 'asc' ? 'desc' : 'asc',
-        }
-      }
-
-      return {
-        field,
-        direction: field === 'name' || field === 'status' ? 'asc' : 'desc',
-      }
-    })
+    setSort((current) => ({ field, direction: current.field === field && current.direction === 'asc' ? 'desc' : 'asc' }))
     setCurrentPage(1)
   }
 
   return {
-    search,
-    draftEnergyFilter,
-    isFilterPanelOpen,
-    sortField: sort.field,
-    sortDirection: sort.direction,
-    rows,
-    filteredRows,
-    paginatedRows,
-    safeCurrentPage,
-    totalPages,
-    setDraftEnergyFilter,
+    search, draftLocation, isFilterPanelOpen, sortField: sort.field, sortDirection: sort.direction,
+    rows, filteredRows, paginatedRows: filteredRows, safeCurrentPage: currentPage, totalPages,
     setIsFilterPanelOpen,
     setCurrentPage,
     handleSearchChange,
+    handleLocationChange,
     handleApplyFilters,
     handleResetFilters,
     handleSortChange,
+    isLoading, isError, total: data?.total ?? 0,
   }
 }

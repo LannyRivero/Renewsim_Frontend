@@ -58,7 +58,7 @@ describe('NewSimulationPage', () => {
     renderPage()
 
     expect(screen.getByRole('button', { name: 'Usar mi ubicación' })).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Ingresá ciudad o región')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText('Ingresá ciudad o región')).toHaveAttribute('autocomplete', 'off')
   })
 
   it('does not render climate preview on this page', () => {

@@ -13,6 +13,7 @@ interface SimulationSearchFiltersProps {
   isFilterPanelOpen: boolean
   onTogglePanel: () => void
   children?: ReactNode
+  showFilterToggle?: boolean
 }
 
 export function SimulationSearchFilters({
@@ -24,11 +25,12 @@ export function SimulationSearchFilters({
   isFilterPanelOpen,
   onTogglePanel,
   children,
+  showFilterToggle = true,
 }: SimulationSearchFiltersProps) {
   return (
     <SimulationCard
       density="compact"
-      className={`rounded-sm border-[#d8dee8] bg-[#f6f8fb] p-4 backdrop-blur-sm dark:border-white/10 dark:bg-[#15191d] ${isFilterPanelOpen ? 'relative z-30' : 'relative'}`}
+      className={`rounded-sm border-[#d8dee8] bg-[#f6f8fb] p-4 backdrop-blur-sm dark:border-white/10 dark:bg-[#15191d] ${isFilterPanelOpen ? 'relative z-50' : 'relative'}`}
     >
       <div className="relative">
         <label htmlFor={searchId} className="sr-only">{searchLabel}</label>
@@ -42,7 +44,7 @@ export function SimulationSearchFilters({
             placeholder={searchPlaceholder}
             className="h-full border-none bg-transparent px-0 shadow-none focus-visible:ring-0 dark:bg-transparent"
           />
-          <div className="relative ml-2 shrink-0">
+          {showFilterToggle ? <div className="relative ml-2 shrink-0">
             <SimulationActionButton
               type="button"
               variant="outline"
@@ -56,11 +58,11 @@ export function SimulationSearchFilters({
             </SimulationActionButton>
 
             {isFilterPanelOpen ? (
-              <div className="absolute right-0 top-full z-20 mt-1 min-w-[260px] rounded-sm border border-[#d8dee8] bg-[#f6f8fb] p-4 shadow-[0_22px_50px_-28px_rgba(15,23,42,0.28)] backdrop-blur-sm dark:border-white/10 dark:bg-[#15191d]">
+              <div className="absolute right-0 top-full z-50 mt-1 min-w-[280px] rounded-sm border border-[#d8dee8] bg-[#f6f8fb] p-4 shadow-[0_22px_50px_-28px_rgba(15,23,42,0.28)] backdrop-blur-sm dark:border-white/10 dark:bg-[#15191d]">
                 {children}
               </div>
             ) : null}
-          </div>
+          </div> : null}
         </div>
       </div>
     </SimulationCard>

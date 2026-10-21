@@ -6,6 +6,9 @@ import type { SimulationCreateFormController } from '../hooks/useSimulationLocat
 interface LocationFieldModel {
   isResolvingBrowserLocation: boolean
   shouldShowSearchingMessage: boolean
+  isLocationSearchError: boolean
+  hasSearchedLocation: boolean
+  hasLocationSuggestions: boolean
   locationAssistMessage: string | null
   locationSuggestions: ResolvedLocation[]
   startBrowserLocationResolution: () => void
@@ -41,6 +44,7 @@ function LocationSearchInput({
         <input
           id="location"
           type="text"
+          autoComplete="off"
           placeholder={SIMULATION_FORM_PLACEHOLDERS.location}
           className="w-full border-none bg-transparent py-2.5 text-sm text-[#415447] outline-none placeholder:text-[#8c9e92] dark:text-content-dark dark:placeholder:text-content-dark/45"
           {...locationSearchField}
@@ -85,10 +89,16 @@ function LocationSuggestionList({
 function LocationMessages({
   form,
   shouldShowSearchingMessage,
+  isLocationSearchError,
+  hasSearchedLocation,
+  hasLocationSuggestions,
   locationAssistMessage,
 }: {
   form: SimulationCreateFormController
   shouldShowSearchingMessage: boolean
+  isLocationSearchError: boolean
+  hasSearchedLocation: boolean
+  hasLocationSuggestions: boolean
   locationAssistMessage: string | null
 }) {
   const locationSearchError = form.formState.errors.locationSearch?.message
@@ -98,6 +108,14 @@ function LocationMessages({
     <>
       {shouldShowSearchingMessage ? (
         <SimulationStateMessage className="mt-2 text-xs">Buscando ubicaciones...</SimulationStateMessage>
+      ) : null}
+      {isLocationSearchError ? (
+        <SimulationStateMessage tone="error" className="mt-2 text-xs">
+          No se pudieron buscar ubicaciones. Intentá nuevamente.
+        </SimulationStateMessage>
+      ) : null}
+      {!isLocationSearchError && hasSearchedLocation && !shouldShowSearchingMessage && !hasLocationSuggestions ? (
+        <SimulationStateMessage className="mt-2 text-xs">No encontramos ubicaciones para esa búsqueda.</SimulationStateMessage>
       ) : null}
       {locationSearchError ? (
         <SimulationStateMessage tone="error" className="mt-2 text-xs">
@@ -130,6 +148,9 @@ export function LocationField({ form, location }: LocationFieldProps) {
         <LocationMessages
           form={form}
           shouldShowSearchingMessage={location.shouldShowSearchingMessage}
+          isLocationSearchError={location.isLocationSearchError}
+          hasSearchedLocation={location.hasSearchedLocation}
+          hasLocationSuggestions={location.locationSuggestions.length > 0}
           locationAssistMessage={location.locationAssistMessage}
         />
         <LocationSuggestionList

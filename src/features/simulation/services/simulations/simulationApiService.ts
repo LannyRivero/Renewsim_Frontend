@@ -3,19 +3,12 @@ import type {
   ListUserSimulationsResponse,
   RealCreateSimulationRequest,
   SimulationDetailsResponse,
+  SimulationHistoryQuery,
 } from '@/shared/types'
 import { toListUserSimulationsResponse, toSimulationDetailsResponse } from '../mappers/simulationResponseMappers'
 
 type ApiResponse<T> = {
   data?: T
-}
-
-function isHttpNotFound(error: unknown): boolean {
-  if (!error || typeof error !== 'object') return false
-  if (!('response' in error)) return false
-
-  const response = (error as { response?: { status?: unknown } }).response
-  return response?.status === 404
 }
 
 export async function createRealSimulation(payload: RealCreateSimulationRequest): Promise<SimulationDetailsResponse> {
@@ -38,18 +31,8 @@ export async function getRealSimulationById(simulationId: string): Promise<Simul
   return toSimulationDetailsResponse(raw)
 }
 
-export async function getRealSimulationHistory(): Promise<ListUserSimulationsResponse> {
-  let response: { data: unknown }
-
-  try {
-    response = await httpClient.get('/simulations/user')
-  } catch (error) {
-    if (!isHttpNotFound(error)) {
-      throw error
-    }
-
-    response = await httpClient.get('/simulations/history')
-  }
+export async function getRealSimulationHistory(query: SimulationHistoryQuery = {}): Promise<ListUserSimulationsResponse> {
+  const response = await httpClient.get('/simulations/my-simulations', { params: query })
 
   const rawData =
     response.data && typeof response.data === 'object' && 'data' in response.data
@@ -57,6 +40,13 @@ export async function getRealSimulationHistory(): Promise<ListUserSimulationsRes
       : response.data
 
   return toListUserSimulationsResponse(rawData)
+}
+
+export async function getSavedLocationSuggestions(query: string, limit = 5): Promise<string[]> {
+  const response = await httpClient.get<string[]>('/simulations/user/locations', {
+    params: { q: query, limit },
+  })
+  return response.data
 }
 
 export async function updateSimulationById(simulationId: string, payload: RealCreateSimulationRequest): Promise<void> {
