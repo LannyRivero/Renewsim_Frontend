@@ -152,7 +152,7 @@ describe('SimulationHistoryPage', () => {
     fireEvent.change(screen.getByLabelText('Filtrar por ubicación'), { target: { value: 'Sevilla' } })
     fireEvent.click(screen.getByRole('button', { name: 'Aplicar' }))
     expect((await screen.findAllByText('Parque Solar Norte')).length).toBeGreaterThan(0)
-    expect(screen.queryAllByText('Corredor Eolico Sur')).toHaveLength(0)
+    await waitFor(() => expect(screen.queryAllByText('Corredor Eolico Sur')).toHaveLength(0))
   })
 
   function paginatedHistoryRows() {
