@@ -166,6 +166,18 @@ export interface SimulationHistoryRow {
 export interface ListUserSimulationsResponse {
   items: SimulationHistoryRow[]
   total: number
+  page?: number
+  size?: number
+  totalPages?: number
+}
+
+export interface SimulationHistoryQuery {
+  name?: string
+  location?: string
+  page?: number
+  size?: number
+  sortBy?: 'createdAt' | 'name' | 'technology' | 'location' | 'status'
+  direction?: 'asc' | 'desc'
 }
 
 export interface SimulationReportResponse extends SimulationDetailsResponse {

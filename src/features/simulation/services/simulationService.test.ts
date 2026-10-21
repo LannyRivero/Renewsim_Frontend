@@ -3,6 +3,7 @@ import {
   createRealSimulation,
   getRealSimulationById,
   getRealSimulationHistory,
+  getSavedLocationSuggestions,
   resolveLocation,
   searchLocations,
   updateSimulationById,
@@ -272,6 +273,17 @@ describe('simulationService', () => {
     expect(result.location.label).toBe('Cordoba, Andalucia, ES')
     expect(result.summary.recommendation).toBe('recommended')
     expect(result.financial.npv).toBe(145000)
+  })
+
+  it('requests saved location suggestions from the authenticated simulation history endpoint', async () => {
+    mockedGet.mockResolvedValueOnce({ data: ['Sevilla, ES'] } as never)
+
+    const result = await getSavedLocationSuggestions('Sevilla', 5)
+
+    expect(mockedGet).toHaveBeenCalledWith('/simulations/user/locations', {
+      params: { q: 'Sevilla', limit: 5 },
+    })
+    expect(result).toEqual(['Sevilla, ES'])
   })
 
   it('normalizes real simulation history response', async () => {

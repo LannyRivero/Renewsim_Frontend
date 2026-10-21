@@ -1,4 +1,4 @@
-export type HistorySortField = 'name' | 'status' | 'createdAt' | 'roi'
+export type HistorySortField = 'name' | 'status' | 'createdAt' | 'technology' | 'location'
 export type HistorySortDirection = 'asc' | 'desc'
 
 export function parsePercentage(value: string) {

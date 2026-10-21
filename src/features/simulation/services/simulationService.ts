@@ -6,6 +6,7 @@ export {
   deleteSimulationById,
   getRealSimulationById,
   getRealSimulationHistory,
+  getSavedLocationSuggestions,
   updateSimulationById,
 } from './simulations/simulationApiService'
 export type { ResolvedLocation }

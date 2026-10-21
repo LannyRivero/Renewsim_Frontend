@@ -1,14 +1,11 @@
 import { useState } from 'react'
 import { Clock3, Plus } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { getRealSimulationHistory } from '../services/simulationService'
 import {
   SimulationActionButton,
   SimulationPageContent,
   SimulationPageHeader,
   SimulationPageShell,
-  SimulationStateMessage,
 } from '@/shared/components'
 import type { BreadcrumbItem } from '@/shared/components'
 import { SimulationHistoryTable } from './SimulationHistoryTable'
@@ -19,31 +16,28 @@ import { useSimulationHistoryDelete } from './useSimulationHistoryDelete'
 import { useSimulationHistoryViewState } from './useSimulationHistoryViewState'
 
 export function SimulationHistoryPage() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['simulation-history'],
-    queryFn: getRealSimulationHistory,
-  })
-
   const deleteMutation = useSimulationHistoryDelete()
   const {
     search,
-    draftEnergyFilter,
+    draftLocation,
+    isLoading,
+    isError,
     isFilterPanelOpen,
     sortField,
     sortDirection,
     rows,
-    filteredRows,
     paginatedRows,
     safeCurrentPage,
     totalPages,
-    setDraftEnergyFilter,
     setIsFilterPanelOpen,
     setCurrentPage,
     handleSearchChange,
+    handleLocationChange,
     handleApplyFilters,
     handleResetFilters,
     handleSortChange,
-  } = useSimulationHistoryViewState(data?.items)
+    handleHistoryItemDeleted,
+  } = useSimulationHistoryViewState()
   const [simulationIdToDelete, setSimulationIdToDelete] = useState<string | null>(null)
   const simulationToDelete = rows.find((row) => row.id === simulationIdToDelete) ?? null
 
@@ -73,20 +67,14 @@ export function SimulationHistoryPage() {
 
         <SimulationHistoryFilters
           search={search}
+          draftLocation={draftLocation}
           isFilterPanelOpen={isFilterPanelOpen}
-          draftEnergyFilter={draftEnergyFilter}
           onSearchChange={handleSearchChange}
+          onLocationChange={handleLocationChange}
           onTogglePanel={() => setIsFilterPanelOpen((current) => !current)}
-          onDraftFilterChange={(value) => setDraftEnergyFilter(value)}
           onApplyFilters={handleApplyFilters}
           onResetFilters={handleResetFilters}
         />
-
-        {!isLoading && !isError && rows.length > 0 && filteredRows.length === 0 ? (
-          <SimulationStateMessage>
-            No hay simulaciones que coincidan con los filtros actuales.
-          </SimulationStateMessage>
-        ) : null}
 
         <SimulationHistoryTable
           rows={paginatedRows}
@@ -114,6 +102,7 @@ export function SimulationHistoryPage() {
             if (!simulationIdToDelete) return
 
             deleteMutation.mutate(simulationIdToDelete, {
+              onSuccess: handleHistoryItemDeleted,
               onSettled: () => setSimulationIdToDelete(null),
             })
           }}

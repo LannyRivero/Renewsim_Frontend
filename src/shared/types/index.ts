@@ -30,6 +30,7 @@ export type {
   SimulationDetailsResponse,
   SimulationFinancialResponse,
   SimulationHistoryRow,
+  SimulationHistoryQuery,
   SimulationReportResponse,
   SimulationSummaryResponse,
   SimulationTechnicalResponse,
